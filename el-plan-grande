@@ -1,0 +1,82 @@
+# ze board
+Will assume its an array containingthe pieces.
+Will make a separate module for it called display using ANSI(rb) for colours and shite
+	Have it contain the functions to move the pieces
+	#move_piece(piece_moveset, location)
+	
+	
+
+#pieces
+	Rook:
+	moveset:
+		moves in a straight line horizontally or vertically accross the board.
+		The rook may not jump over other pieces.
+
+	Bishop:
+	moveset:
+		moves in a straight diagonal line, may not ump over other pieces.
+
+	Queen:
+	moveset:
+		Possesses the ombined moves of the rook and the bishop:
+			may move in any straight line - horizontal, vertical, or diagonal.
+
+	Knight:
+	moveset:
+		Moves one (or two) steps in any direction, and then two (or one) steps up or down.
+		The knight jumps: meaning it is allowed to pass over other pieces.
+	Pawn:
+	moveset:
+		Moves differently regarding whether it moves to an empty square, or whether it takes a piece of the opponent:
+			When a pawn does not take it, it moves one square straight forward. Else it moves one square diagonally forward.
+			When the pawn is at te second row (from the owning players view): it may take 2 steps forward.
+
+		The pawn is capable of En-Passant:
+			When a pawn takes a double step from the second row to the fourth row, and there is an enemy pawn on an adjacent sqaure on the fourth row,
+			then this enemy pawn in the next move may move diagonally to the square that was passed over by the double stepping pawn, which is on the third row.
+			In this same move, the double-stepping pawn is taken. This taking en-passant must be done directly: if the player who could take en-passant does not do this
+			in the first move after the double step, this pawn cannot be taken anymore by an en-passant move.
+		Promotion:
+			Pawns that reach the last row of the board promote. It may be promoted to a queen, rook, knight, or bishop.
+	King:
+	moveset:
+		The king moves one square in any direction.
+		May commit castling with rook.
+
+		Castling:
+			Certain conditinos first must be met:
+			The king that makes the castling move has not yet moved in the game.
+			The rook that makes the castling move has not yet moved in the game.
+			The king is not in check.
+			The king does not move over by a square that is attacked by an enemy piece during the castling move.
+			You may not end the move with the king in check.
+			All squares between the rook and king before the castling move are empty.
+			The king and rook must occupy the same rank (row)
+		
+		Check: When the king of a player can be taken by a piece of the opponent, the king is in check.
+			Any further movements are forbidden, the player must move the king.
+			The player may not move the king to a square that would also result the king in the state of check.
+		Mate: When a player is in check, and he cannot make a move such that after the move, the king is not in check, then he is mated.
+			The player that is mated loses the game, and the player that matched him wins the game.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Cute rules:
+	Resignation: after a player makes a move he may resign and lose the game.
+	Draw proposal: After making a move, a player can propose a draw: his opponent can accept the proposal in which case the game ends in a draw, otherwise continues.
+	50 move rules:
+		If there have been 50 consecutive moves of white and black without:
+			Any piece taken or any pawn move
+		Then the player can claim a draw.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Piece template
+	Each piece is a class of its own.
+	It holds its own display value.
+	I'm not yet sure about the moveset.
+	
+		
+
+
+
+
+
+
