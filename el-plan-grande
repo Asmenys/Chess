@@ -7,6 +7,7 @@ Will make a separate module for it called display using ANSI(rb) for colours and
 	
 
 #pieces
+#
 	Rook:
 	moveset:
 		moves in a straight line horizontally or vertically accross the board.
@@ -69,13 +70,10 @@ Cute rules:
 		Then the player can claim a draw.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Piece template
-	Each piece is a class of its own.
-	It holds its own display value.
-	I'm not yet sure about the moveset.
-	
-		
-
-
+	A general "piece" class:
+		It holds its own display value, its team color.
+		On initialize it inherits a module based on its name.
+		If the name is "rook" it inherits the Rook module.
 
 
 
