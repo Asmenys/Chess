@@ -21,7 +21,6 @@ module Display
   end
 
   def colorize_square(square, last_colour)
-    coloured_square = ''
     background_color_index = get_background_color(last_colour)
     if square.nil?
       coloured_square = '   '.bg_color(background_color_index)
