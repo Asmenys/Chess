@@ -9,6 +9,11 @@ require 'pieces.rb'
                     expected_location = [6,3]
                     expect(pawn.two_step(current_location)).to eq(expected_location)
                 end
+                it 'if the piece has been moved, should return nil' do
+                    current_location = [4,3]
+                    pawn.moved
+                    expect(pawn.two_step(current_location)).to be nil
+                end
             end
         end
     end
