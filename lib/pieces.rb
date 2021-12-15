@@ -4,12 +4,13 @@ require_relative 'moveset_modules'
 require_relative 'piece_values'
 
 class Piece
-  attr_reader :team, :display_value, :has_moved
+  attr_reader :team, :display_value, :has_moved, :name
 
   def initialize(team_colour, piece_name)
     @team = team_colour
     @display_value = PIECE_DISPLAY_VALUES[@team.to_sym][piece_name.to_sym]
     @has_moved = false
+    @name = piece_name
   end
 
   def moved
