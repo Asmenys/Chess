@@ -43,6 +43,11 @@ describe Bishop do
         expected_array_result = [[7, 6], [6, 5], [5, 4], [3, 2], [2, 1], [1, 0]]
         expect(bishop.diagonal_movement(location, 1, 1)).to eq(expected_array_result)
       end
+      it 'generates diagonal movements up to right' do
+        location = [3, 4]
+        expected_array_result = [[0, 1], [1, 2], [2, 3], [4, 5], [5, 6], [6, 7]]
+        expect(bishop.diagonal_movement(location, -1, -1)).to eq(expected_array_result)
+      end
     end
   end
 end
