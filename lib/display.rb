@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'string'
 
 module Display
   def display_board
@@ -8,7 +7,7 @@ module Display
     last_colour = 5
     @board.each do |row|
       column_index = 1
-      coloured_row = ''
+      coloured_row = "#{row_index}|".bold
       last_colour = get_background_color(last_colour)
       row.each do |square|
         coloured_row += colorize_square(square, last_colour)
@@ -16,17 +15,18 @@ module Display
         column_index += 1
       end
       row_index += 1
-      puts coloured_row
+      p coloured_row
     end
+    puts "    a    b    c    d    e    f    g    h  ".bold
   end
 
   def colorize_square(square, last_colour)
     background_color_index = get_background_color(last_colour)
     if square.nil?
-      coloured_square = '   '.bg_color(background_color_index)
+      coloured_square = '     '.bg_color(background_color_index)
     else
       text_colour_index = get_text_colour(square.team)
-      coloured_square = " #{square.display_value} ".text_color(text_colour_index).bg_color(text_colour_index)
+      coloured_square = "  #{square.display_value}  ".text_color(text_colour_index).bg_color(text_colour_index)
     end
     coloured_square
   end

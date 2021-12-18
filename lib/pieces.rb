@@ -1,8 +1,6 @@
 # frozen_string_literal: true
-
 require_relative 'moveset_modules'
-require_relative 'piece_values'
-
+require_relative 'piece_values.rb'
 class Piece
   attr_reader :team, :display_value, :has_moved, :name
 

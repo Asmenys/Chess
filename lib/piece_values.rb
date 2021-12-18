@@ -2,19 +2,19 @@
 
 PIECE_DISPLAY_VALUES = {
   black: {
-    king: "\u265A",
-    queen: "\u265B",
-    rook: "\u265C",
-    bishop: "\u265D",
-    knight: "\u265E",
-    pawn: "\u265F"
+    King: "\u265A",
+    Queen: "\u265B",
+    Rook: "\u265C",
+    Bishop: "\u265D",
+    Knight: "\u265E",
+    Pawn: "\u265F"
   },
   white: {
-    king: "\u2654",
-    queen: "\u2655",
-    rook: "\u2656",
-    bishop: "\u2657",
-    knight: "\u2658",
-    pawn: "\u2659"
+    King: "\u2654",
+    Queen: "\u2655",
+    Rook: "\u2656",
+    Bishop: "\u2657",
+    Knight: "\u2658",
+    Pawn: "\u2659"
   }
 }.freeze
