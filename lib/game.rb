@@ -1,16 +1,18 @@
 # frozen_string_literal: true
 
-require_relative 'board.rb'
-require_relative 'display.rb'
-require_relative 'moveset_modules.rb'
-require_relative 'piece_values.rb'
-require_relative 'pieces.rb'
-require_relative 'string.rb'
+require_relative 'board'
+require_relative 'display'
+require_relative 'moveset_modules'
+require_relative 'piece_values'
+require_relative 'pieces'
+require_relative 'string'
+
 class Game
   def initialize(board = Board.new)
     @board = board
     populate_the_board
   end
+
   def populate_the_board
     populate_the_knights
     populate_the_pawns
@@ -55,17 +57,18 @@ class Game
   def populate_the_queens
     @board.add_piece('black', 'Queen', notation_to_location('e8'))
     @board.add_piece('white', 'Queen', notation_to_location('e1'))
-end
+  end
 
   def populate_the_kings
     @board.add_piece('black', 'King', notation_to_location('d8'))
     @board.add_piece('white', 'King', notation_to_location('d1'))
   end
+
   def show_board
     @board.display_board
   end
 
   def notation_to_location(notation)
-    [notation[1].to_i-1, notation[0].ord - 97,]
+    [notation[1].to_i - 1, notation[0].ord - 97]
   end
 end

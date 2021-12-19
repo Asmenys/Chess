@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'board'
+require 'game'
 
 describe Board do
   describe '#add_piece' do

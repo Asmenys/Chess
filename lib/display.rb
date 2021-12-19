@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Display
   def display_board
     puts color_board
@@ -19,7 +20,7 @@ module Display
 
   def color_row(row_index, last_colour)
     column_index = 1
-    coloured_row = "#{row_index+1}"
+    coloured_row = (row_index + 1).to_s
     row = @board[row_index]
     row.each do |square|
       coloured_row += colorize_square(square, last_colour)
