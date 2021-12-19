@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Display
   def display_board
     puts color_board

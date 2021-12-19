@@ -12,6 +12,7 @@ class Game
     @board = board
     populate_the_board
   end
+
   def populate_the_board
     populate_the_knights
     populate_the_pawns
@@ -62,6 +63,7 @@ class Game
     @board.add_piece('black', 'King', notation_to_location('d8'))
     @board.add_piece('white', 'King', notation_to_location('d1'))
   end
+
   def show_board
     @board.display_board
   end
