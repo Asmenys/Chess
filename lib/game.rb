@@ -2,9 +2,7 @@
 
 require_relative 'board'
 require_relative 'display'
-require_relative 'moveset_modules'
-require_relative 'piece_values'
-require_relative 'pieces'
+require_relative 'pieces/piece_class'
 require_relative 'string'
 
 class Game
