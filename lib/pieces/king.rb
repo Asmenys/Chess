@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 class King < Piece
   def possible_moves(location, castling_viability)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Rook < Piece
   include Horizontal_moveset
   def possible_moves(location)
