@@ -3,8 +3,8 @@
 module Diagonal_moveset
   def diagonal_movement(location, index_one, _index_two)
     movement_array = []
-    movement_array += filter_the_array(generate_sub_array(location, index_one, index_one)).reverse
-    movement_array += filter_the_array(generate_sub_array(location, index_one * -1, index_one * -1))
+    movement_array << filter_the_array(generate_sub_array(location, index_one, index_one)).reverse
+    movement_array << filter_the_array(generate_sub_array(location, index_one * -1, index_one * -1))
     movement_array
   end
 
