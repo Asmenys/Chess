@@ -2,13 +2,18 @@
 
 require_relative 'pieces/piece_class'
 require_relative 'board'
+require_relative 'communication_module'
 
 class Board_populater
+  include Communication
+
+  def initialize
+    @board = Board.new
+  end
 
   def return_populated_board
-    board = Board.new
-    board.populate_the_board
-    board
+    populate_the_board
+    @board
   end
 
   def populate_the_board
