@@ -22,8 +22,6 @@ class Board
     end
   end
 
-  private
-
   def create_piece(colour, type)
     Object.const_get(type).new(colour, type)
   end
