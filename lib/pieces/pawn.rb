@@ -1,28 +1,16 @@
 # frozen_string_literal: true
 
 class Pawn < Piece
-  def possible_moves(location, _en_passant_viability = nil)
-    move_array = [two_step(location), basic_one_step(location),
-                  en_passant(location, en_passant_viable?)]
-  end
+  include Vertical_moveset
 
-  def vertical_move(location, change_value)
-    if @team == 'black'
-      location[0] + change_value
-    else
-      location[0] - change_value
+  def two_step(current_location)
+    unless @has_moved
+      final_location = [get_final_y_point(current_location[0], 2), current_location[1]]
+      generate_vertical_movements(current_location, final_location)
     end
   end
 
-  def two_step(location)
-    [vertical_move(location, 2), location[1]] if @has_moved == false
-  end
-
-  def basic_one_step(location)
-    [vertical_move(location, 1), location[1]]
-  end
-
-  def en_passant(location, en_passant_viability)
-    [vertical_move(location, 1), location[1] + (1 * en_passant_viability)] unless en_passant_viability.nil?
+  def one_step(location)
+    [[get_final_y_point(location[0], 1), location[1]]]
   end
 end

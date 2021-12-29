@@ -53,3 +53,31 @@ module Horizontal_moveset
     possible_moves
   end
 end
+
+module Vertical_moveset
+  def generate_vertical_movements(starting_point, finish_point)
+    result_array = []
+    unless starting_point == finish_point
+      next_point = [increment_y_axis(starting_point[0]), starting_point[1]]
+      result_array << next_point
+      result_array += generate_vertical_movements(next_point, finish_point)
+    end
+    result_array
+  end
+
+  def increment_y_axis(point)
+    point + (1 * get_vertical_movement_index)
+  end
+
+  def get_vertical_movement_index
+    if @team == 'black'
+      -1
+    else
+      1
+    end
+  end
+
+  def get_final_y_point(current_y_point, mod_index)
+    current_y_point + (get_vertical_movement_index * mod_index)
+  end
+end

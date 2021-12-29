@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../../lib/game'
+require_relative '../../lib/pieces/piece_class'
 
 describe Game do
   describe '#return_square_values_from' do
@@ -9,7 +9,7 @@ describe Game do
       it 'returns unmodified array when none of the indexes point to a value' do
         starting_array = [[4, 0], [4, 1], [4, 2], [4, 3], [4, 4], [4, 5], [4, 6], [4, 7]]
         temp_index = -1
-        expected_result_array = Array.new(8) { {index: [4, temp_index+=1], piece_class: nil}}
+        expected_result_array = Array.new(8) { { index: [4, temp_index += 1], piece_class: nil } }
         expect(game.return_square_values_from(starting_array)).to eq(expected_result_array)
       end
       it 'when all indexes point to a pawn returns an array full of pawns' do

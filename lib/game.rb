@@ -20,7 +20,7 @@ class Game
     array.map do |square|
       square_value = @board.get_value_of_square(square)
       if square_value.nil?
-        {index: square, piece_class: nil}
+        { index: square, piece_class: nil }
       else
         { index: square, piece_class: square_value.class }
       end
