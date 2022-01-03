@@ -3,6 +3,10 @@
 class Pawn < Piece
   include Vertical_moveset
 
+  def possible_paths(current_location)
+    [two_step(current_location), one_step(current_location)]
+  end
+
   def two_step(current_location)
     unless @has_moved
       final_location = [get_final_y_point(current_location[0], 2), current_location[1]]
