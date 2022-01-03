@@ -24,12 +24,18 @@ describe Vertical_moveset do
     end
     describe 'generate_vertical_movements' do
       describe 'returns the path a piece would have to along the vertical axis' do
-        it 'moves down to up for black pieces' do
+        it 'moves up for black pieces' do
           starting_point = [4, 3]
           finish_point = [1, 3]
           expected_result_array = [[3, 3], [2, 3], [1, 3]]
           expect(pawn_black.generate_vertical_movements(starting_point,
                                                         finish_point)).to eq(expected_result_array)
+        end
+        it 'moves down for white pieces' do
+          starting_point = [1, 3]
+          finish_point = [4, 3]
+          expected_result_array = [[2, 3], [3, 3], [4, 3]]
+          expect(pawn_white.generate_vertical_movements(starting_point, finish_point)).to eq(expected_result_array)
         end
       end
     end
