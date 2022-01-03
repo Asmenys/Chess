@@ -39,20 +39,25 @@ module Diagonal_moveset
 end
 
 module Horizontal_moveset
-  def moves_on_axis(location, movement_index)
-    current_location = location[movement_index]
-    temp_index = 0
-    possible_moves = []
-    while temp_index <= 7
-      if temp_index == current_location
-        temp_index += 1
-      else
-        location[movement_index] = temp_index
-        possible_moves << [location[0], location[1]]
-        temp_index += 1
-      end
+  def moves_on_axis(location)
+    [
+      get_path_on_axis(location, 0, 1),
+      get_path_on_axis(location, 0, -1),
+      get_path_on_axis(location, 1, -1),
+      get_path_on_axis(location, 1, 1)
+    ]
+  end
+
+  def get_path_on_axis(location, movement_index, direction)
+    current_location = [location[0], location[1]]
+    temp_index = current_location[movement_index]
+    path = []
+    while temp_index <= 6 && temp_index >= 1
+      temp_index += direction
+      current_location[movement_index] = temp_index
+      path << [current_location[0], current_location[1]]
     end
-    possible_moves
+    path
   end
 end
 
