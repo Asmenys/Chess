@@ -26,4 +26,18 @@ class Game
       end
     end
   end
+
+  def validate_path(array)
+    valid_path_nodes = []
+    end_of_path_reached = false
+    array.each do |node|
+      node_value = @board.get_value_of_square(node)
+      valid_path_nodes << node
+      if node_value.nil?
+      else
+        break
+      end
+    end
+    valid_path_nodes
+  end
 end

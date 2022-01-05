@@ -2,8 +2,11 @@
 
 module Diagonal_moveset
   def diagonal_movement_paths(location)
-    end_points = diagonal_movement_end_points(location, 1)
-    end_points += diagonal_movement_end_points(location, -1)
+    end_points = []
+    end_points << diagonal_movement_end_points(location, 1, -1)
+    end_points << diagonal_movement_end_points(location, 1, 1)
+    end_points << diagonal_movement_end_points(location, -1, -1)
+    end_points << diagonal_movement_end_points(location, -1, 1)
   end
 
   def diagonal_movement_end_points(location, index_one, index_two)
