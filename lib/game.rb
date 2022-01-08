@@ -39,7 +39,7 @@ class Game
   end
 
   def filter_empty_paths(array)
-    array.delete_if {|path| path.empty?}
+    array.delete_if(&:empty?)
     array
   end
 end

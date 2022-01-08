@@ -33,7 +33,7 @@ module Diagonal_moveset
   end
 
   def filter_the_array(array)
-    array.delete_if {|sub_array| sub_array.include?(nil)}
+    array.delete_if { |sub_array| sub_array.include?(nil) }
     array
   end
 
