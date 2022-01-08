@@ -18,6 +18,7 @@ class Game
 
   def validate_array_of_paths(array)
     valid_paths = []
+    array = filter_empty_paths(array)
     array.each do |path|
       valid_paths << valid_path(path)
     end
@@ -35,5 +36,10 @@ class Game
       end
     end
     valid_path_nodes
+  end
+
+  def filter_empty_paths(array)
+    array.delete_if {|path| path.empty?}
+    array
   end
 end

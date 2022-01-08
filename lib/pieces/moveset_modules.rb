@@ -21,14 +21,19 @@ module Diagonal_moveset
 
   def modify_dimension(dimension, index)
     array = []
-    array << dimension += index while dimension >= 1 && dimension <= 6
+    loop do
+      dimension += index
+      if dimension.negative? || dimension > 7
+        break
+      else
+        array << dimension
+      end
+    end
     array
   end
 
   def filter_the_array(array)
-    array.each do |sub_array|
-      array.delete(sub_array) if sub_array.include?(nil)
-    end
+    array.delete_if {|sub_array| sub_array.include?(nil)}
     array
   end
 
@@ -55,10 +60,14 @@ module Horizontal_moveset
     current_location = [location[0], location[1]]
     temp_index = current_location[movement_index]
     path = []
-    while temp_index <= 6 && temp_index >= 1
+    loop do
       temp_index += direction
-      current_location[movement_index] = temp_index
-      path << [current_location[0], current_location[1]]
+      if (temp_index > 7) || temp_index.negative?
+        break
+      else
+        current_location[movement_index] = temp_index
+        path << [current_location[0], current_location[1]]
+      end
     end
     path
   end
