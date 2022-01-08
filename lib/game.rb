@@ -16,14 +16,10 @@ class Game
     @board.display_board
   end
 
-  def return_square_values_from(array)
-    array.map do |square|
-      square_value = @board.get_value_of_square(square)
-      if square_value.nil?
-        { index: square, piece_class: nil }
-      else
-        { index: square, piece_class: square_value.class }
-      end
+  def validate_array_of_paths(array)
+    valid_paths = []
+    array.each do |path|
+      valid_paths << valid_path(path)
     end
   end
 
