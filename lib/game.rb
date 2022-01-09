@@ -16,6 +16,20 @@ class Game
     @board.display_board
   end
 
+  def get_earliest_piece_with_location(path)
+    piece = nil
+    location = nil
+    path.each do |node|
+      node_value = @board.get_value_of_square(node)
+      next if node_value.nil?
+
+      piece = node_value
+      location = node
+      break
+    end
+    [piece, location]
+  end
+
   def validate_array_of_paths(array)
     valid_paths = []
     array = filter_empty_paths(array)

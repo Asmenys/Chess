@@ -3,7 +3,7 @@
 require 'game'
 
 describe Game do
-  describe 'filter_empty_paths' do
+  describe '#filter_empty_paths' do
     context 'it removes empty paths from an array of paths' do
       game = described_class.new
 
@@ -23,7 +23,7 @@ describe Game do
       end
     end
   end
-  describe 'validate_path' do
+  describe '#validate_path' do
     context 'given a path returns a path to the earliest piece in the path' do
       board = Board.new
       game = Game.new(board)
@@ -34,8 +34,25 @@ describe Game do
       it 'when the path has a piece it returns the path up to the piece' do
         path = [[4, 3], [5, 3], [6, 3]]
         allow(board).to receive(:get_value_of_square).and_return(nil, 'piece')
-        expected_result = [[4,3], [5,3]]
+        expected_result = [[4, 3], [5, 3]]
         expect(game.validate_path(path)).to eq(expected_result)
+      end
+    end
+  end
+  describe '#get_earliest_piece_with_location' do
+    context 'given a path, returns the earliest encounter with a piece in the path' do
+      board = Board.new
+      game = Game.new(board)
+      it 'when the path does not include any pieces returns an array of nils' do
+        path = [[3, 4], [4, 5], [5, 6]]
+        expected_result = [nil, nil]
+        expect(game.get_earliest_piece_with_location(path)).to eq(expected_result)
+      end
+      it 'when the path includes a piece, it returns the piece and its location' do
+        path = [[3, 4], [4, 5], [5, 6]]
+        expected_result = ['piece', [4, 5]]
+        allow(board).to receive(:get_value_of_square).and_return(nil, 'piece', nil)
+        expect(game.get_earliest_piece_with_location(path)).to eq(expected_result)
       end
     end
   end
