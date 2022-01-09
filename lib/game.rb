@@ -20,13 +20,12 @@ class Game
     valid_paths = []
     array = filter_empty_paths(array)
     array.each do |path|
-      valid_paths << valid_path(path)
+      valid_paths << validate_path(path)
     end
   end
 
   def validate_path(array)
     valid_path_nodes = []
-    end_of_path_reached = false
     array.each do |node|
       node_value = @board.get_value_of_square(node)
       valid_path_nodes << node
