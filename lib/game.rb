@@ -19,15 +19,17 @@ class Game
   def get_earliest_piece_with_location(path)
     piece = nil
     location = nil
+    piece_found = false
     path.each do |node|
       node_value = @board.get_value_of_square(node)
       next if node_value.nil?
 
       piece = node_value
       location = node
+      piece_found = true
       break
     end
-    [piece, location]
+    [piece, location] if piece_found
   end
 
   def validate_array_of_paths(array)

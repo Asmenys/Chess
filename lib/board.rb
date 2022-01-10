@@ -44,7 +44,7 @@ class Board
 
   def valid_index?(index)
     result = false
-    result = true if index.positive? && (index < 8)
+    result = true if index >= 0 && (index < 8)
     result
   end
 

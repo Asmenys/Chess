@@ -45,7 +45,7 @@ describe Game do
       game = Game.new(board)
       it 'when the path does not include any pieces returns an array of nils' do
         path = [[3, 4], [4, 5], [5, 6]]
-        expected_result = [nil, nil]
+        expected_result = nil
         expect(game.get_earliest_piece_with_location(path)).to eq(expected_result)
       end
       it 'when the path includes a piece, it returns the piece and its location' do
