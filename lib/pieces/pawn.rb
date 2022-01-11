@@ -1,20 +1,34 @@
 # frozen_string_literal: true
 
 class Pawn < Piece
-  include Vertical_moveset
 
   def possible_paths(current_location)
     [two_step(current_location), one_step(current_location)]
   end
 
-  def two_step(current_location)
+  def one_step(location)
+    [[increment_y_axis(location[0]), location[1]]]
+  end
+
+  def two_step(location)
     unless @has_moved
-      final_location = [get_final_y_point(current_location[0], 2), current_location[1]]
-      generate_vertical_movements(current_location, final_location)
+      [
+        [increment_y_axis(location[0]), location[1]], 
+        [increment_y_axis(increment_y_axis(location[0])), location[1]]
+      ]
     end
   end
 
-  def one_step(location)
-    [[get_final_y_point(location[0], 1), location[1]]]
+  def increment_y_axis(point)
+    point + (1 * get_vertical_movement_index)
+  end
+
+
+  def get_vertical_movement_index
+    if @team == 'black'
+      -1
+    else
+      1
+    end
   end
 end
