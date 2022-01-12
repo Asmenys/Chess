@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Pawn < Piece
-
   def possible_paths(current_location)
     [two_step(current_location), one_step(current_location)]
   end
@@ -13,7 +12,7 @@ class Pawn < Piece
   def two_step(location)
     unless @has_moved
       [
-        [increment_y_axis(location[0]), location[1]], 
+        [increment_y_axis(location[0]), location[1]],
         [increment_y_axis(increment_y_axis(location[0])), location[1]]
       ]
     end
@@ -22,7 +21,6 @@ class Pawn < Piece
   def increment_y_axis(point)
     point + (1 * get_vertical_movement_index)
   end
-
 
   def get_vertical_movement_index
     if @team == 'black'

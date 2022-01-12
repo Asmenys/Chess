@@ -4,11 +4,14 @@ require_relative 'display/display'
 
 class Board
   attr_reader :board
+  attr_accessor :black_king_location, :white_king_location
 
   include Display
 
   def initialize
     @board = Array.new(8) { Array.new(8) }
+    @white_king_location
+    @black_king_location
   end
 
   def add_piece(team_colour, type, location)

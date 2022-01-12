@@ -65,5 +65,7 @@ class Board_populater
   def populate_the_kings
     @board.add_piece('black', 'King', notation_to_location('d8'))
     @board.add_piece('white', 'King', notation_to_location('d1'))
+    @board.black_king_location = notation_to_location('d8')
+    @board.white_king_location = notation_to_location('d1')
   end
 end
