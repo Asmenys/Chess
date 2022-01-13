@@ -2,13 +2,14 @@
 
 require_relative 'display/display'
 require_relative 'display/string'
-require_relative 'initialize_game'
+require_relative 'fen_to_board'
 require_relative 'communication_module'
+require_relative 'board'
 class Game
   include Communication
   attr_reader :board
 
-  def initialize(board = Board_populater.new.return_populated_board)
+  def initialize(board = Fen_to_board.new.board)
     @board = board
   end
 
