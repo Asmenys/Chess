@@ -2,15 +2,20 @@
 
 require_relative 'display/display'
 require_relative 'display/string'
-require_relative 'fen_to_board'
 require_relative 'communication_module'
 require_relative 'board'
+require_relative 'pieces/piece_class'
+
 class Game
   include Communication
   attr_reader :board
 
-  def initialize(board = Fen_to_board.new.board)
+  def initialize(board, active_color = nil, en_passant = nil, full_turn = nil, half_turn = nil)
     @board = board
+    @full_turns = full_turn
+    @half_turn = half_turn
+    @en_passant = en_passant
+    @active_color = active_color
   end
 
   def show_board

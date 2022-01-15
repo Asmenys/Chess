@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'game'
+require 'load_game.rb'
 
-describe Fen_to_board do
+describe Load_game do
   subject { described_class.new }
   describe '#name_to_color' do
     it 'given a black rook returns Black' do
@@ -17,6 +17,18 @@ describe Fen_to_board do
     end
   end
 
+  describe '#split_fen_into_array' do
+    it 'splits a fen string into an array of values' do
+    fen_string = 'pppppppp/8/pppppppp/8 w - - 0 0'
+    fen_array = subject.split_fen_into_array(fen_string)
+    expect(fen_array[0]).to eq('pppppppp/8/pppppppp/8')
+    expect(fen_array[1]).to eq("w")
+    expect(fen_array[2]).to eq("-")
+    expect(fen_array[3]).to eq("-")
+    expect(fen_array[4]).to eq('0')
+    expect(fen_array[5]).to eq('0')
+    end
+  end
   describe '#is_type_of_piece?' do
     it 'given a character corresponding to a piece returns true' do
       expect(subject.is_type_of_piece?('k')).to be true
@@ -54,15 +66,16 @@ describe Fen_to_board do
 
   describe '#initialize_pieces' do
     context 'given a board and a fen string it populates the board' do
-      fen_string = 'rnbqkbnr/8/pppppppp'
+      fen_string = 'rnbqkbnr/8/pppppppp w - - 0 0'
       subject(:initializer) { described_class.new(fen_string) }
-      it 'populates the board' do
-        subject.initialize_pieces(fen_string)
-        board = subject.board.board
+      it 'populates the board with pieces' do
+        board = subject.game.board.board
         first_board_row = board[0]
         second_row = board[1]
         third_row = board[2]
         expect(first_board_row[1].class).to be(Knight)
+        expect(second_row[2]).to be nil
+        expect(third_row[3].class).to be(Pawn)
       end
     end
   end

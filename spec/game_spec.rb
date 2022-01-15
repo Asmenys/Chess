@@ -5,7 +5,7 @@ require 'game'
 describe Game do
   describe '#filter_empty_paths' do
     context 'it removes empty paths from an array of paths' do
-      game = described_class.new
+      game = described_class.new(Board.new)
 
       it 'when there are no empty paths returns self' do
         array_of_paths = [[1], [2], [3], [4]]
