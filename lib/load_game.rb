@@ -7,7 +7,6 @@ class Load_game
 
   def initialize(fen_string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 0')
     setup_game_instance(fen_string)
-    @board = Board.new
   end
 
   def initialize_new_board

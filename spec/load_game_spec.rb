@@ -4,6 +4,17 @@ require 'load_game.rb'
 
 describe Load_game do
   subject { described_class.new }
+
+  describe '#setup_game_instance' do
+    it 'sets up a new Game class instance based on the given fen string' do
+      fen_string = 'pppppppp/8/pppppppp/8 w - - 0 0'
+      game_instance = subject.setup_game_instance(fen_string)
+      expect(game_instance.active_color).to eq("w")
+      expect(game_instance.en_passant).to eq("-")
+      expect(game_instance.board.board[0][1].class).to be(Pawn)
+    end
+  end
+
   describe '#name_to_color' do
     it 'given a black rook returns Black' do
       name = 'R'

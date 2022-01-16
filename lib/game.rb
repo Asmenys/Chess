@@ -8,7 +8,7 @@ require_relative 'pieces/piece_class'
 
 class Game
   include Communication
-  attr_reader :board
+  attr_reader :board, :full_turns, :half_turn, :en_passant, :active_color
 
   def initialize(board, active_color = nil, en_passant = nil, full_turn = nil, half_turn = nil)
     @board = board
