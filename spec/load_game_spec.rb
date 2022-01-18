@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'load_game.rb'
+require 'load_game'
 
 describe Load_game do
   subject { described_class.new }
@@ -9,8 +9,8 @@ describe Load_game do
     it 'sets up a new Game class instance based on the given fen string' do
       fen_string = 'pppppppp/8/pppppppp/8 w - - 0 0'
       game_instance = subject.setup_game_instance(fen_string)
-      expect(game_instance.active_color).to eq("w")
-      expect(game_instance.en_passant).to eq("-")
+      expect(game_instance.active_color).to eq('w')
+      expect(game_instance.en_passant).to eq('-')
       expect(game_instance.board.board[0][1].class).to be(Pawn)
     end
   end
@@ -30,14 +30,14 @@ describe Load_game do
 
   describe '#split_fen_into_array' do
     it 'splits a fen string into an array of values' do
-    fen_string = 'pppppppp/8/pppppppp/8 w - - 0 0'
-    fen_array = subject.split_fen_into_array(fen_string)
-    expect(fen_array[0]).to eq('pppppppp/8/pppppppp/8')
-    expect(fen_array[1]).to eq("w")
-    expect(fen_array[2]).to eq("-")
-    expect(fen_array[3]).to eq("-")
-    expect(fen_array[4]).to eq('0')
-    expect(fen_array[5]).to eq('0')
+      fen_string = 'pppppppp/8/pppppppp/8 w - - 0 0'
+      fen_array = subject.split_fen_into_array(fen_string)
+      expect(fen_array[0]).to eq('pppppppp/8/pppppppp/8')
+      expect(fen_array[1]).to eq('w')
+      expect(fen_array[2]).to eq('-')
+      expect(fen_array[3]).to eq('-')
+      expect(fen_array[4]).to eq('0')
+      expect(fen_array[5]).to eq('0')
     end
   end
   describe '#is_type_of_piece?' do

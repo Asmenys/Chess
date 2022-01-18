@@ -13,12 +13,6 @@ class Board
     set_square_to(location, piece)
   end
 
-  def validate_move_array(array)
-    array.each do |location|
-      array.delete(location) if valid_location?(location) == false
-    end
-  end
-
   def create_piece(colour, type)
     Object.const_get(type).new(colour, type)
   end
@@ -27,29 +21,17 @@ class Board
     @board[location[0]][location[1]] = value
   end
 
-  def valid_location?(location)
-    result = false
-    result = true if valid_dimensions?(location) && empty_location?(location)
-    result
-  end
-
-  def valid_dimensions?(location)
-    result = false
-    result = true if valid_index?(location[0]) && valid_index?(location[1])
-    result
-  end
-
-  def valid_index?(index)
-    result = false
-    result = true if index >= 0 && (index < 8)
-    result
-  end
-
   def get_value_of_square(location)
     @board[location[0]][location[1]]
   end
 
   def empty_location?(location)
     get_value_of_square(location).nil?
+  end
+
+  def valid_location?(location)
+    result = false
+    result = true if valid_dimensions?(location) && empty_location?(location)
+    result
   end
 end

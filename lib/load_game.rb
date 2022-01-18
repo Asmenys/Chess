@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'game.rb'
+require_relative 'game'
 
 class Load_game
   attr_reader :game, :board

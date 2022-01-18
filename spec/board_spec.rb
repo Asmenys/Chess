@@ -15,16 +15,7 @@ describe Board do
       end
     end
   end
-  describe '#validate_move_array' do
-    subject(:board) { described_class.new }
-    context 'validates an array of movements removing invalid ones.' do
-      it 'cleans the array of invalid inputs' do
-        array = [[-1, 0], [2, 0], [44, 32], [4, 3]]
-        clean_array = subject.validate_move_array(array)
-        expect(clean_array).to eq([[2, 0], [4, 3]])
-      end
-    end
-  end
+
   describe '#create_piece' do
     subject(:board) { described_class.new }
     it 'creates a play piece to initialize on the board' do
@@ -36,32 +27,7 @@ describe Board do
       expect(piece.name).to eq(piece_type)
     end
   end
-  describe '#valid_index?' do
-    subject(:board) { described_class.new }
-    context 'given an index returns whether bool based on the value of the index' do
-      it 'when given an index that is outside the board returns false' do
-        index = 9
-        expect(board.valid_index?(index)).to be false
-      end
-      it 'when given an index that belongs to the board returns true' do
-        index = 0
-        expect(board.valid_index?(index)).to be true
-      end
-    end
-  end
-  describe '#valid_dimensions?' do
-    subject(:board) { described_class.new }
-    context 'given an array of dimensions returns a boolean based on whether the dimensions belong to the board or not.' do
-      it 'when given a dimension that belongs on the board returns true' do
-        dimensions = [4, 3]
-        expect(board.valid_dimensions?(dimensions)).to be true
-      end
-      it 'when given an illegal set of dimensions returns false' do
-        dimensions = [4343, 23]
-        expect(board.valid_dimensions?(dimensions)).to be false
-      end
-    end
-  end
+
   describe '#empty_location?' do
     subject(:board) { described_class.new }
     context 'given a location returns whether the node is populated or not' do
@@ -76,6 +42,7 @@ describe Board do
       end
     end
   end
+
   describe '#set_square_to' do
     subject(:board) { described_class.new }
     it 'given a location and value sets the node of the corresponding location to the given value' do

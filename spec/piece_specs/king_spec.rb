@@ -3,12 +3,12 @@
 require_relative '../../lib/pieces/piece_class'
 
 describe King do
-  describe '#possible_moves' do
+  describe '#possible_paths' do
     subject(:king) { described_class.new('black', 'King') }
     it 'returns the paths of all possible moves' do
       current_location = [4, 3]
       expected_result_array = [[5, 3], [3, 3], [4, 4], [4, 2], [5, 4], [5, 2], [3, 2], [3, 4]]
-      expect(king.possible_moves(current_location)).to eq(expected_result_array)
+      expect(king.possible_paths(current_location)).to eq(expected_result_array)
     end
   end
 
@@ -25,7 +25,15 @@ describe King do
            [[5, 2], [6, 1], [7, 0]],
            [[5, 4], [6, 5], [7, 6]],
            [[3, 2], [2, 1], [1, 0]],
-           [[3, 4], [2, 5], [1, 6], [0, 7]]]
+           [[3, 4], [2, 5], [1, 6], [0, 7]],
+           [[5, 5]],
+           [[5, 1]],
+           [[6, 4]],
+           [[6, 2]],
+           [[2, 2]],
+           [[2, 4]],
+           [[3, 5]],
+           [[3, 1]]]
         expect(king.attack_paths(current_location)).to eq(expected_array_result)
       end
       it 'when at the corner of the board returns just the accessible axis' do
@@ -37,7 +45,15 @@ describe King do
                                  [],
                                  [],
                                  [],
-                                 [[6, 1], [5, 2], [4, 3], [3, 4], [2, 5], [1, 6], [0, 7]]]
+                                 [[6, 1], [5, 2], [4, 3], [3, 4], [2, 5], [1, 6], [0, 7]],
+                                 [[8, 2]],
+                                 [[8, -2]],
+                                 [[9, 1]],
+                                 [[9, -1]],
+                                 [[5, -1]],
+                                 [[5, 1]],
+                                 [[6, 2]],
+                                 [[6, -2]]]
         expect(king.attack_paths(current_location)).to eq(expected_array_result)
       end
       it 'when at the top of the board returns just the accesible axis' do
@@ -49,7 +65,15 @@ describe King do
                                  [[1, 3], [2, 2], [3, 1], [4, 0]],
                                  [[1, 5], [2, 6], [3, 7]],
                                  [],
-                                 []]
+                                 [],
+                                 [[1, 6]],
+                                 [[1, 2]],
+                                 [[2, 5]],
+                                 [[2, 3]],
+                                 [[-2, 3]],
+                                 [[-2, 5]],
+                                 [[-1, 6]],
+                                 [[-1, 2]]]
         expect(king.attack_paths(current_location)).to eq(expected_array_result)
       end
     end
