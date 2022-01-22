@@ -24,6 +24,16 @@ describe Game do
       end
     end
   end
+  describe '#get_possible_valid_end_points' do
+    context 'it returns the possible end points from a piece for movement' do
+      it 'from black pawn' do
+        current_loc = [4,3]
+        game = Load_game.new('8/8/8/8/3p4/8/8/8 w - - 0 1').game
+        expected_end_points = [[3, 3], [2,3]]
+        expect(game.get_possible_valid_end_points(current_loc)).to eq expected_end_points
+      end
+    end
+  end
   describe '#path_until_first_piece' do
     context 'given a path returns a path to the earliest piece in the path' do
       board = Board.new

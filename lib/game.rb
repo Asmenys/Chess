@@ -24,6 +24,24 @@ class Game
     @board.display_board
   end
 
+  def move_piece(current_location, result_location)
+    piece = @board.get_value_of_square(current_location)
+    @board.set_square_to(current_location, nil)
+    @board.set_square_to(result_location, piece)
+  end
+
+  def get_possible_valid_end_points(current_location)
+    valid_end_points = []
+    piece = @board.get_value_of_square(current_location)
+    possible_paths = piece.possible_paths(current_location)
+    valid_possible_paths = validate_array_of_paths(possible_paths)
+    valid_possible_paths.each do |path|
+      last_node = path.last
+      valid_end_points << last_node unless valid_end_points.include?(last_node)
+    end
+    valid_end_points
+  end
+
   def is_king_in_check?(kings_location)
     king = board.get_value_of_square(kings_location)
     attack_paths = king.attack_paths(kings_location)
