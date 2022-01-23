@@ -31,11 +31,11 @@ describe Pawn do
   describe '#possible_paths' do
     starting_location = [4, 3]
     it 'returns all the paths a white pawn may take' do
-      expected_result_array = [[[3, 3], [2, 3]], [[3, 3]]]
+      expected_result_array = [[[3, 3], [2, 3]]]
       expect(white_pawn.possible_paths(starting_location)).to eq(expected_result_array)
     end
     it 'returns all the paths a black pawn may take' do
-      expected_result_array = [[[5, 3], [6, 3]], [[5, 3]]]
+      expected_result_array = [[[5, 3], [6, 3]]]
       expect(black_pawn.possible_paths(starting_location)).to eq(expected_result_array)
     end
   end
