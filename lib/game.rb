@@ -36,10 +36,21 @@ class Game
     possible_paths = piece.possible_paths(current_location)
     valid_possible_paths = validate_array_of_paths(possible_paths)
     valid_possible_paths.each do |path|
-      last_node = path.last
-      valid_end_points << last_node unless valid_end_points.include?(last_node)
+      path.each do |node|
+        valid_end_points << node unless valid_end_points.include?(node) || is_square_friendly?(piece, node)
+      end
     end
     valid_end_points
+  end
+
+  def is_square_friendly?(current_piece, square_location)
+    friendly_color = current_piece.team
+    square_value = @board.get_value_of_square(square_location)
+    if square_value.nil?
+      false
+    else
+      square_value.team == friendly_color
+    end
   end
 
   def is_king_in_check?(kings_location)

@@ -28,9 +28,63 @@ describe Game do
       it 'from black pawn' do
         current_loc = [4, 3]
         game = Load_game.new('8/8/8/8/3P4/8/8/8 w - - 0 1').game
-        expected_end_points = [[2, 3], [3, 3]]
+        expected_end_points = [[3, 3], [2, 3]]
         expect(game.get_possible_valid_end_points(current_loc)).to eq expected_end_points
       end
+      it 'from a black pawn that has already moved' do
+        game = Load_game.new('8/8/8/8/3P4/8/8/8 w - - 0 1').game
+        pawn = game.board.get_value_of_square([4, 3])
+        pawn.moved
+        game.board.set_square_to([4, 3], pawn)
+        expected_end_points = [[3, 3]]
+        expect(game.get_possible_valid_end_points([4, 3])).to eq expected_end_points
+      end
+      it 'from a white rook' do
+        current_loc = [7, 0]
+        game = Load_game.new('8/8/8/8/8/8/8/R7 w - - 0 1').game
+        expected_end_points = [[6, 0], [5, 0], [4, 0], [3, 0], [2, 0], [1, 0], [0, 0], [7, 1], [7, 2], [7, 3], [7, 4],
+                               [7, 5], [7, 6], [7, 7]]
+        expect(game.get_possible_valid_end_points(current_loc)).to eq expected_end_points
+      end
+      it 'from a black bishop' do
+        current_loc = [4, 3]
+        game = Load_game.new('8/8/8/8/3b4/8/8/8 w - - 0 1').game
+        expected_end_points = [[3, 2], [2, 1], [1, 0], [5, 4], [6, 5], [7, 6], [5, 2], [6, 1], [7, 0], [3, 4], [2, 5], [1, 6],
+                               [0, 7]]
+        expect(game.get_possible_valid_end_points(current_loc)).to eq expected_end_points
+      end
+      it 'from a white knight' do
+        current_loc = [4, 3]
+        game = Load_game.new('8/8/8/8/3N4/8/8/8 w - - 0 1').game
+        expected_end_points = [[5, 5], [5, 1], [6, 4], [6, 2], [2, 2], [2, 4], [3, 5], [3, 1]]
+        expect(game.get_possible_valid_end_points(current_loc)).to eq expected_end_points
+      end
+      it 'from a white knight surrounded by friendly pieces' do
+        current_loc = [4, 3]
+        game = Load_game.new('8/8/2P1P3/1P3P2/3N4/1P3P2/2P1P3/8 w - - 0 1').game
+        expected_end_points = []
+        expect(game.get_possible_valid_end_points(current_loc)).to eq expected_end_points
+      end
+    end
+  end
+  describe '#is_square_friendly?' do
+    it 'returns true when square holds a piece of same color as the given piece' do
+      current_piece = Pawn.new('white', 'Pawn')
+      square_loc = [4, 3]
+      game = Load_game.new('8/8/8/8/3P4/8/8/8 w - - 0 1').game
+      expect(game.is_square_friendly?(current_piece, square_loc)).to be true
+    end
+    it 'false when square holds a piece of unequal color' do
+      current_loc = [4, 3]
+      current_piece = Pawn.new('white', 'Pawn')
+      game = Load_game.new('8/8/8/8/3p4/8/8/8 w - - 0 1').game
+      expect(game.is_square_friendly?(current_piece, current_loc)).to be false
+    end
+    it 'when square is empty returns false' do
+      current_loc = [4, 3]
+      current_piece = Pawn.new('white', 'Pawn')
+      game = Load_game.new('8/8/8/8/8/8/8/8 w - - 0 1').game
+      expect(game.is_square_friendly?(current_piece, current_loc)).to be false
     end
   end
   describe '#path_until_first_piece' do
