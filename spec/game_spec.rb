@@ -7,7 +7,6 @@ describe Game do
   describe '#filter_empty_paths' do
     context 'it removes empty paths from an array of paths' do
       game = described_class.new(Board.new)
-
       it 'when there are no empty paths returns self' do
         array_of_paths = [[1], [2], [3], [4]]
         expect(game.filter_empty_paths(array_of_paths)).to eq(array_of_paths)
@@ -27,9 +26,9 @@ describe Game do
   describe '#get_possible_valid_end_points' do
     context 'it returns the possible end points from a piece for movement' do
       it 'from black pawn' do
-        current_loc = [4,3]
-        game = Load_game.new('8/8/8/8/3p4/8/8/8 w - - 0 1').game
-        expected_end_points = [[3, 3], [2,3]]
+        current_loc = [4, 3]
+        game = Load_game.new('8/8/8/8/3P4/8/8/8 w - - 0 1').game
+        expected_end_points = [[2, 3], [3, 3]]
         expect(game.get_possible_valid_end_points(current_loc)).to eq expected_end_points
       end
     end

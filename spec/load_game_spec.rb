@@ -17,12 +17,12 @@ describe Load_game do
 
   describe '#name_to_color' do
     it 'given a black rook returns Black' do
-      name = 'R'
+      name = 'r'
       expected_result = 'black'
       expect(subject.name_to_color(name)).to eq(expected_result)
     end
     it 'given a white rook returns White' do
-      name = 'r'
+      name = 'R'
       expected_result = 'white'
       expect(subject.name_to_color(name)).to eq(expected_result)
     end

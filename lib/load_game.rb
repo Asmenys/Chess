@@ -67,9 +67,9 @@ class Load_game
 
   def name_to_color(name)
     if name.is_upper?
-      'black'
-    else
       'white'
+    else
+      'black'
     end
   end
 
