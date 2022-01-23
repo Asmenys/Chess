@@ -24,9 +24,9 @@ class Pawn < Piece
 
   def get_vertical_movement_index
     if @team == 'black'
-      -1
-    else
       1
+    else
+      -1
     end
   end
 end
