@@ -24,10 +24,10 @@ class Game
     @board.display_board
   end
 
-  def move_piece(current_location, result_location)
-    piece = @board.get_value_of_square(current_location)
-    @board.set_square_to(current_location, nil)
-    @board.set_square_to(result_location, piece)
+  def move_piece(current_location, result_location, board = @board)
+    piece = board.get_value_of_square(current_location)
+    board.set_square_to(current_location, nil)
+    board.set_square_to(result_location, piece)
   end
 
   def get_possible_valid_end_points(current_location)
@@ -41,6 +41,32 @@ class Game
       end
     end
     valid_end_points
+  end
+
+  def would_leave_king_in_check?(_current_location, _movement_destination)
+    alternate_board = @board
+  end
+
+  def find_king(kings_color)
+    team_hash = { 'black' => 'b', 'white' => 'w' }
+    kings_color = team_hash.key(kings_color)
+    location = nil
+    temp_row = 0
+    while temp_row <= 7
+      temp_column = 0
+      while temp_column <= 7
+        node_index = [temp_row, temp_column]
+        node_value = @board.get_value_of_square(node_index)
+        if node_value.instance_of?(King) && (node_value.team == kings_color)
+          location = node_index
+          break
+        end
+        temp_column += 1
+      end
+      temp_row += 1
+      temp_column = 0
+    end
+    location
   end
 
   def is_square_friendly?(current_piece, square_location)

@@ -67,6 +67,43 @@ describe Game do
       end
     end
   end
+  describe '#would_leave_king_in_check?' do
+    context 'returns a bool based on whether the move leaves own players king in check' do
+      xit 'when a pawn moves leaving the king in check for a bishop return true' do
+        game = Load_game.new('8/8/8/4b3/3P4/2Q5/8/8 w - - 0 1').game
+        current_loc = [4, 3]
+        destination_loc = [3, 3]
+        expect(game.would_leave_king_in_check?(current_loc, destination_loc)).to be true
+      end
+      xit 'when a pawn moves but the king is not left in check for a bishop' do
+        game = LOad_game.new('8/8/8/4b3/8/2QP4/8/8 w - - 0 1')
+        current_loc = [5, 3]
+        destination_loc = [4, 3]
+        expect(game.would_leave_king_in_check?(current_loc, destination_loc)).to be false
+      end
+    end
+  end
+  describe '#find_king' do
+    context 'returns the location of a given color king on the board' do
+      it 'when w king is on [4, 3] returns [4, 3]' do
+        game = Load_game.new('8/8/8/8/3K4/8/8/8 w - - 0 1').game
+        expected_result = [4, 3]
+        kings_color = 'w'
+        expect(game.find_king(kings_color)).to eq expected_result
+      end
+      it 'when theres no king return nil' do
+        game = Load_game.new('8/8/8/8/8/8/8/8 w - - 0 1').game
+        kings_color = 'w'
+        expect(game.find_king(kings_color)).to be nil
+      end
+      it 'when b king is on [7, 2] returns [7, 2]' do
+        game = Load_game.new('8/8/8/8/8/8/8/2k5 w - - 0 1').game
+        expected_result = [7, 2]
+        kings_color = 'b'
+        expect(game.find_king(kings_color)).to eq expected_result
+      end
+    end
+  end
   describe '#is_square_friendly?' do
     it 'returns true when square holds a piece of same color as the given piece' do
       current_piece = Pawn.new('white', 'Pawn')
