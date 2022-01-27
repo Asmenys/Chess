@@ -23,13 +23,13 @@ describe Game do
       end
     end
   end
-  describe '#get_possible_valid_end_points' do
+  describe '#get_possible_end_points' do
     context 'it returns the possible end points from a piece for movement' do
       it 'from black pawn' do
         current_loc = [4, 3]
         game = Load_game.new('8/8/8/8/3P4/8/8/8 w - - 0 1').game
         expected_end_points = [[3, 3], [2, 3]]
-        expect(game.get_possible_valid_end_points(current_loc)).to eq expected_end_points
+        expect(game.get_possible_end_points(current_loc)).to eq expected_end_points
       end
       it 'from a black pawn that has already moved' do
         game = Load_game.new('8/8/8/8/3P4/8/8/8 w - - 0 1').game
@@ -37,49 +37,33 @@ describe Game do
         pawn.moved
         game.board.set_square_to([4, 3], pawn)
         expected_end_points = [[3, 3]]
-        expect(game.get_possible_valid_end_points([4, 3])).to eq expected_end_points
+        expect(game.get_possible_end_points([4, 3])).to eq expected_end_points
       end
       it 'from a white rook' do
         current_loc = [7, 0]
         game = Load_game.new('8/8/8/8/8/8/8/R7 w - - 0 1').game
         expected_end_points = [[6, 0], [5, 0], [4, 0], [3, 0], [2, 0], [1, 0], [0, 0], [7, 1], [7, 2], [7, 3], [7, 4],
                                [7, 5], [7, 6], [7, 7]]
-        expect(game.get_possible_valid_end_points(current_loc)).to eq expected_end_points
+        expect(game.get_possible_end_points(current_loc)).to eq expected_end_points
       end
       it 'from a black bishop' do
         current_loc = [4, 3]
         game = Load_game.new('8/8/8/8/3b4/8/8/8 w - - 0 1').game
         expected_end_points = [[3, 2], [2, 1], [1, 0], [5, 4], [6, 5], [7, 6], [5, 2], [6, 1], [7, 0], [3, 4], [2, 5], [1, 6],
                                [0, 7]]
-        expect(game.get_possible_valid_end_points(current_loc)).to eq expected_end_points
+        expect(game.get_possible_end_points(current_loc)).to eq expected_end_points
       end
       it 'from a white knight' do
         current_loc = [4, 3]
         game = Load_game.new('8/8/8/8/3N4/8/8/8 w - - 0 1').game
         expected_end_points = [[5, 5], [5, 1], [6, 4], [6, 2], [2, 2], [2, 4], [3, 5], [3, 1]]
-        expect(game.get_possible_valid_end_points(current_loc)).to eq expected_end_points
+        expect(game.get_possible_end_points(current_loc)).to eq expected_end_points
       end
       it 'from a white knight surrounded by friendly pieces' do
         current_loc = [4, 3]
         game = Load_game.new('8/8/2P1P3/1P3P2/3N4/1P3P2/2P1P3/8 w - - 0 1').game
         expected_end_points = []
-        expect(game.get_possible_valid_end_points(current_loc)).to eq expected_end_points
-      end
-    end
-  end
-  describe '#would_leave_king_in_check?' do
-    context 'returns a bool based on whether the move leaves own players king in check' do
-      xit 'when a pawn moves leaving the king in check for a bishop return true' do
-        game = Load_game.new('8/8/8/4b3/3P4/2Q5/8/8 w - - 0 1').game
-        current_loc = [4, 3]
-        destination_loc = [3, 3]
-        expect(game.would_leave_king_in_check?(current_loc, destination_loc)).to be true
-      end
-      xit 'when a pawn moves but the king is not left in check for a bishop' do
-        game = LOad_game.new('8/8/8/4b3/8/2QP4/8/8 w - - 0 1')
-        current_loc = [5, 3]
-        destination_loc = [4, 3]
-        expect(game.would_leave_king_in_check?(current_loc, destination_loc)).to be false
+        expect(game.get_possible_end_points(current_loc)).to eq expected_end_points
       end
     end
   end
@@ -101,6 +85,24 @@ describe Game do
         expected_result = [7, 2]
         kings_color = 'b'
         expect(game.find_king(kings_color)).to eq expected_result
+      end
+    end
+  end
+  describe '#would_leave_king_in_check?' do
+    context 'returns a bool based on whether the move leaves own players king in check' do
+      it 'when a pawn moves leaving the king in check for a bishop return true' do
+        game = Load_game.new('8/8/8/4b3/3P4/2k5/8/8 w - - 0 1').game
+        current_loc = [4, 3]
+        kings_loc = game.find_king('b')
+        destination_loc = [3, 3]
+        expect(game.would_leave_king_in_check?(current_loc, destination_loc)).to be true
+      end
+      it 'when a pawn moves but the king is not left in check for a bishop' do
+        game = Load_game.new('8/8/8/4b3/8/2kP4/8/8 w - - 0 1').game
+        current_loc = [5, 3]
+        kings_loc = game.find_king('b')
+        destination_loc = [4, 3]
+        expect(game.would_leave_king_in_check?(current_loc, destination_loc)).to be false
       end
     end
   end

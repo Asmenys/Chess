@@ -6,11 +6,13 @@ require_relative 'board'
 require_relative 'node_validation_module'
 require_relative 'path_validation_module'
 require_relative 'pieces/piece_class'
+require_relative 'self_check.rb'
 
 class Game
   include Node_validation
   include Path_validation
-  attr_reader :board, :full_turns, :half_turn, :en_passant, :active_color
+  attr_reader :full_turns, :half_turn, :en_passant, :active_color
+  attr_accessor :board
 
   def initialize(board, active_color = nil, en_passant = nil, full_turn = nil, half_turn = nil)
     @board = board
@@ -18,33 +20,41 @@ class Game
     @half_turn = half_turn
     @en_passant = en_passant
     @active_color = active_color
+    @self_check = Self_check.new(self)
   end
 
   def show_board
     @board.display_board
   end
 
-  def move_piece(current_location, result_location, board = @board)
+  def move_piece(current_location, result_location)
     piece = board.get_value_of_square(current_location)
     board.set_square_to(current_location, nil)
     board.set_square_to(result_location, piece)
   end
 
-  def get_possible_valid_end_points(current_location)
+  def get_valid_end_points(current_location)
+    possible_end_points = get_possible_end_points(current_location)
     valid_end_points = []
-    piece = @board.get_value_of_square(current_location)
-    possible_paths = piece.possible_paths(current_location)
-    valid_possible_paths = validate_array_of_paths(possible_paths)
-    valid_possible_paths.each do |path|
-      path.each do |node|
-        valid_end_points << node unless valid_end_points.include?(node) || is_square_friendly?(piece, node)
+    possible_end_points.each do |end_point|
+      unless would_leave_king_in_check?(current_location, end_point)
+        valid_end_points << end_point
       end
     end
     valid_end_points
   end
 
-  def would_leave_king_in_check?(_current_location, _movement_destination)
-    alternate_board = @board
+  def get_possible_end_points(current_location)
+    end_points = []
+    piece = @board.get_value_of_square(current_location)
+    possible_paths = piece.possible_paths(current_location)
+    valid_possible_paths = validate_array_of_paths(possible_paths)
+    valid_possible_paths.each do |path|
+      path.each do |node|
+        end_points << node unless end_points.include?(node) || is_square_friendly?(piece, node)
+      end
+    end
+    end_points
   end
 
   def find_king(kings_color)
@@ -80,9 +90,13 @@ class Game
   end
 
   def is_king_in_check?(kings_location)
-    king = board.get_value_of_square(kings_location)
+    king = @board.get_value_of_square(kings_location)
     attack_paths = king.attack_paths(kings_location)
     check_paths_for_king_check(attack_paths, kings_location)
+  end
+
+  def would_leave_king_in_check?(current_location,  movement_destination)
+    @self_check.self_check?(current_location, movement_destination)
   end
 
   def check_paths_for_king_check(attack_paths, kings_location)
@@ -114,7 +128,7 @@ class Game
     location = nil
     piece_found = false
     path.each do |node|
-      node_value = @board.get_value_of_square(node)
+      node_value = board.get_value_of_square(node)
       next if node_value.nil?
 
       piece = node_value
@@ -136,7 +150,7 @@ class Game
   def path_until_first_piece(array)
     path = []
     array.each do |node|
-      node_value = @board.get_value_of_square(node)
+      node_value = board.get_value_of_square(node)
       path << node
       if node_value.nil?
       else
