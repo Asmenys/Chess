@@ -6,7 +6,7 @@ require_relative 'board'
 require_relative 'node_validation_module'
 require_relative 'path_validation_module'
 require_relative 'pieces/piece_class'
-require_relative 'self_check.rb'
+require_relative 'self_check'
 
 class Game
   include Node_validation
@@ -37,9 +37,7 @@ class Game
     possible_end_points = get_possible_end_points(current_location)
     valid_end_points = []
     possible_end_points.each do |end_point|
-      unless would_leave_king_in_check?(current_location, end_point)
-        valid_end_points << end_point
-      end
+      valid_end_points << end_point unless would_leave_king_in_check?(current_location, end_point)
     end
     valid_end_points
   end
@@ -95,7 +93,7 @@ class Game
     check_paths_for_king_check(attack_paths, kings_location)
   end
 
-  def would_leave_king_in_check?(current_location,  movement_destination)
+  def would_leave_king_in_check?(current_location, movement_destination)
     @self_check.self_check?(current_location, movement_destination)
   end
 
