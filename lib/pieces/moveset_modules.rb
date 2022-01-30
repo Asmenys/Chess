@@ -100,3 +100,18 @@ module Vertical_moveset
     current_y_point + (get_vertical_movement_index * mod_index)
   end
 end
+
+module Knight_moveset
+  def get_knight_movements(location)
+    [
+      [[location[0] + 1, location[1] + 2]],
+      [[location[0] + 1, location[1] - 2]],
+      [[location[0] + 2, location[1] + 1]],
+      [[location[0] + 2, location[1] - 1]],
+      [[location[0] - 2, location[1] - 1]],
+      [[location[0] - 2, location[1] + 1]],
+      [[location[0] - 1, location[1] + 2]],
+      [[location[0] - 1, location[1] - 2]]
+    ]
+  end
+end
