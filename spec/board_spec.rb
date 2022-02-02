@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'game'
+require 'load_game'
 
 describe Board do
   describe '#add_piece' do
@@ -50,6 +50,48 @@ describe Board do
       value = 'im a value'
       board.set_square_to(location, value)
       expect(board.get_value_of_square(location)).to eq(value)
+    end
+  end
+
+  describe '#find_king' do
+    context 'returns the location of a given color king on the board' do
+      it 'when w king is on [4, 3] returns [4, 3]' do
+        board = Load_game.new('8/8/8/8/3K4/8/8/8 w - - 0 1').board
+        expected_result = [4, 3]
+        kings_color = 'w'
+        expect(board.find_king(kings_color)).to eq expected_result
+      end
+      it 'when theres no king return nil' do
+        board = Load_game.new('8/8/8/8/8/8/8/8 w - - 0 1').board
+        kings_color = 'w'
+        expect(board.find_king(kings_color)).to be nil
+      end
+      it 'when b king is on [7, 2] returns [7, 2]' do
+        board = Load_game.new('8/8/8/8/8/8/8/2k5 w - - 0 1').board
+        expected_result = [7, 2]
+        kings_color = 'b'
+        expect(board.find_king(kings_color)).to eq expected_result
+      end
+    end
+  end
+  describe '#is_square_friendly?' do
+    it 'returns true when square holds a piece of same color as the given piece' do
+      current_piece = Pawn.new('white', 'Pawn')
+      square_loc = [4, 3]
+      board = Load_game.new('8/8/8/8/3P4/8/8/8 w - - 0 1').board
+      expect(board.is_square_friendly?(current_piece, square_loc)).to be true
+    end
+    it 'false when square holds a piece of unequal color' do
+      current_loc = [4, 3]
+      current_piece = Pawn.new('white', 'Pawn')
+      board = Load_game.new('8/8/8/8/3p4/8/8/8 w - - 0 1').board
+      expect(board.is_square_friendly?(current_piece, current_loc)).to be false
+    end
+    it 'when square is empty returns false' do
+      current_loc = [4, 3]
+      current_piece = Pawn.new('white', 'Pawn')
+      board = Load_game.new('8/8/8/8/8/8/8/8 w - - 0 1').board
+      expect(board.is_square_friendly?(current_piece, current_loc)).to be false
     end
   end
 end

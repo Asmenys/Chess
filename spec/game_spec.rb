@@ -67,27 +67,7 @@ describe Game do
       end
     end
   end
-  describe '#find_king' do
-    context 'returns the location of a given color king on the board' do
-      it 'when w king is on [4, 3] returns [4, 3]' do
-        game = Load_game.new('8/8/8/8/3K4/8/8/8 w - - 0 1').game
-        expected_result = [4, 3]
-        kings_color = 'w'
-        expect(game.find_king(kings_color)).to eq expected_result
-      end
-      it 'when theres no king return nil' do
-        game = Load_game.new('8/8/8/8/8/8/8/8 w - - 0 1').game
-        kings_color = 'w'
-        expect(game.find_king(kings_color)).to be nil
-      end
-      it 'when b king is on [7, 2] returns [7, 2]' do
-        game = Load_game.new('8/8/8/8/8/8/8/2k5 w - - 0 1').game
-        expected_result = [7, 2]
-        kings_color = 'b'
-        expect(game.find_king(kings_color)).to eq expected_result
-      end
-    end
-  end
+
   describe '#would_leave_king_in_check?' do
     context 'returns a bool based on whether the move leaves own players king in check' do
       it 'when a pawn moves leaving the king in check for a bishop return true' do
@@ -103,59 +83,6 @@ describe Game do
         kings_loc = game.find_king('b')
         destination_loc = [4, 3]
         expect(game.would_leave_king_in_check?(current_loc, destination_loc)).to be false
-      end
-    end
-  end
-  describe '#is_square_friendly?' do
-    it 'returns true when square holds a piece of same color as the given piece' do
-      current_piece = Pawn.new('white', 'Pawn')
-      square_loc = [4, 3]
-      game = Load_game.new('8/8/8/8/3P4/8/8/8 w - - 0 1').game
-      expect(game.is_square_friendly?(current_piece, square_loc)).to be true
-    end
-    it 'false when square holds a piece of unequal color' do
-      current_loc = [4, 3]
-      current_piece = Pawn.new('white', 'Pawn')
-      game = Load_game.new('8/8/8/8/3p4/8/8/8 w - - 0 1').game
-      expect(game.is_square_friendly?(current_piece, current_loc)).to be false
-    end
-    it 'when square is empty returns false' do
-      current_loc = [4, 3]
-      current_piece = Pawn.new('white', 'Pawn')
-      game = Load_game.new('8/8/8/8/8/8/8/8 w - - 0 1').game
-      expect(game.is_square_friendly?(current_piece, current_loc)).to be false
-    end
-  end
-  describe '#path_until_first_piece' do
-    context 'given a path returns a path to the earliest piece in the path' do
-      board = Board.new
-      game = Game.new(board)
-      it 'when the path does not include a piece returns a full path' do
-        path = [[4, 3], [5, 3], [6, 3]]
-        expect(game.path_until_first_piece(path)).to eq(path)
-      end
-      it 'when the path has a piece it returns the path up to the piece' do
-        path = [[4, 3], [5, 3], [6, 3]]
-        allow(board).to receive(:get_value_of_square).and_return(nil, 'piece')
-        expected_result = [[4, 3], [5, 3]]
-        expect(game.path_until_first_piece(path)).to eq(expected_result)
-      end
-    end
-  end
-  describe '#get_earliest_piece_with_location' do
-    context 'given a path, returns the earliest encounter with a piece in the path' do
-      board = Board.new
-      game = Game.new(board)
-      it 'when the path does not include any pieces returns an array of nils' do
-        path = [[3, 4], [4, 5], [5, 6]]
-        expected_result = nil
-        expect(game.get_earliest_piece_with_location(path)).to eq(expected_result)
-      end
-      it 'when the path includes a piece, it returns the piece and its location' do
-        path = [[3, 4], [4, 5], [5, 6]]
-        expected_result = ['piece', [4, 5]]
-        allow(board).to receive(:get_value_of_square).and_return(nil, 'piece', nil)
-        expect(game.get_earliest_piece_with_location(path)).to eq(expected_result)
       end
     end
   end

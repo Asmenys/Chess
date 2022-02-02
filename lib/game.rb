@@ -23,16 +23,6 @@ class Game
     @self_check = Self_check.new(self)
   end
 
-  def show_board
-    @board.display_board
-  end
-
-  def move_piece(current_location, result_location)
-    piece = board.get_value_of_square(current_location)
-    board.set_square_to(current_location, nil)
-    board.set_square_to(result_location, piece)
-  end
-
   def get_valid_end_points(current_location)
     possible_end_points = get_possible_end_points(current_location)
     valid_end_points = []
@@ -40,51 +30,6 @@ class Game
       valid_end_points << end_point unless would_leave_king_in_check?(current_location, end_point)
     end
     valid_end_points
-  end
-
-  def get_possible_end_points(current_location)
-    end_points = []
-    piece = @board.get_value_of_square(current_location)
-    possible_paths = piece.possible_paths(current_location)
-    valid_possible_paths = validate_array_of_paths(possible_paths)
-    valid_possible_paths.each do |path|
-      path.each do |node|
-        end_points << node unless end_points.include?(node) || is_square_friendly?(piece, node)
-      end
-    end
-    end_points
-  end
-
-  def find_king(kings_color)
-    team_hash = { 'black' => 'b', 'white' => 'w' }
-    kings_color = team_hash.key(kings_color)
-    location = nil
-    temp_row = 0
-    while temp_row <= 7
-      temp_column = 0
-      while temp_column <= 7
-        node_index = [temp_row, temp_column]
-        node_value = @board.get_value_of_square(node_index)
-        if node_value.instance_of?(King) && (node_value.team == kings_color)
-          location = node_index
-          break
-        end
-        temp_column += 1
-      end
-      temp_row += 1
-      temp_column = 0
-    end
-    location
-  end
-
-  def is_square_friendly?(current_piece, square_location)
-    friendly_color = current_piece.team
-    square_value = @board.get_value_of_square(square_location)
-    if square_value.nil?
-      false
-    else
-      square_value.team == friendly_color
-    end
   end
 
   def is_king_in_check?(kings_location)
@@ -119,42 +64,5 @@ class Game
       attacking_pieces << attacking_piece unless attacking_piece.nil? || attacking_piece[0].team == kings_color
     end
     attacking_pieces
-  end
-
-  def get_earliest_piece_with_location(path)
-    piece = nil
-    location = nil
-    piece_found = false
-    path.each do |node|
-      node_value = board.get_value_of_square(node)
-      next if node_value.nil?
-
-      piece = node_value
-      location = node
-      piece_found = true
-      break
-    end
-    [piece, location] if piece_found
-  end
-
-  def validate_array_of_paths(array)
-    valid_paths = []
-    array = clean_paths(array)
-    array.each do |path|
-      valid_paths << path_until_first_piece(path)
-    end
-  end
-
-  def path_until_first_piece(array)
-    path = []
-    array.each do |node|
-      node_value = board.get_value_of_square(node)
-      path << node
-      if node_value.nil?
-      else
-        break
-      end
-    end
-    path
   end
 end
