@@ -89,14 +89,4 @@ class Board
     location
   end
 
-<<<<<<< Updated upstream
-  def validate_array_of_paths(array)
-    valid_paths = []
-    array = clean_paths(array)
-    array.each do |path|
-      valid_paths << path_until_first_piece(path)
-    end
-  end
-=======
->>>>>>> Stashed changes
 end

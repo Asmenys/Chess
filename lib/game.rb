@@ -34,8 +34,6 @@ class Game
     valid_end_points
   end
 
-<<<<<<< Updated upstream
-=======
   def get_possible_end_points(current_location)
     end_points = []
     piece = @board.get_value_of_square(current_location)
@@ -59,7 +57,6 @@ class Game
     end
   end
 
->>>>>>> Stashed changes
   def is_king_in_check?(kings_location)
     king = @board.get_value_of_square(kings_location)
     attack_paths = king.attack_paths(kings_location)
@@ -89,15 +86,4 @@ class Game
     end
     attacking_pieces
   end
-<<<<<<< Updated upstream
-=======
-
-  def validate_array_of_paths(array)
-    valid_paths = []
-    array = clean_paths(array)
-    array.each do |path|
-      valid_paths << path_until_first_piece(path)
-    end
-  end
->>>>>>> Stashed changes
 end
