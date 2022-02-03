@@ -67,10 +67,13 @@ describe Game do
       end
     end
   end
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> path_node_gen
   describe '#would_leave_king_in_check?' do
     context 'returns a bool based on whether the move leaves own players king in check' do
       it 'when a pawn moves leaving the king in check for a bishop return true' do
@@ -111,7 +114,10 @@ describe Game do
       expect(game.is_square_friendly?(current_piece, current_loc)).to be false
     end
   end
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> path_node_gen
   describe '#is_king_in_check?' do
     context 'given kings location, checks if the king is compromised' do
       it 'when king is in check returns true' do

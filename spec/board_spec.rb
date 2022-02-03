@@ -74,6 +74,7 @@ describe Board do
       end
     end
   end
+<<<<<<< HEAD
 <<<<<<< Updated upstream
   describe '#is_square_friendly?' do
     it 'returns true when square holds a piece of same color as the given piece' do
@@ -97,4 +98,6 @@ describe Board do
   end
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> path_node_gen
 end

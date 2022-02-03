@@ -35,6 +35,7 @@ class Board
     result
   end
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
   def get_possible_end_points(current_location)
     end_points = []
@@ -66,6 +67,8 @@ class Board
   end
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> path_node_gen
 
   def find_king(kings_color)
     team_hash = { 'black' => 'b', 'white' => 'w' }
