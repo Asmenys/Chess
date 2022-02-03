@@ -74,30 +74,4 @@ describe Board do
       end
     end
   end
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-  describe '#is_square_friendly?' do
-    it 'returns true when square holds a piece of same color as the given piece' do
-      current_piece = Pawn.new('white', 'Pawn')
-      square_loc = [4, 3]
-      board = Load_game.new('8/8/8/8/3P4/8/8/8 w - - 0 1').board
-      expect(board.is_square_friendly?(current_piece, square_loc)).to be true
-    end
-    it 'false when square holds a piece of unequal color' do
-      current_loc = [4, 3]
-      current_piece = Pawn.new('white', 'Pawn')
-      board = Load_game.new('8/8/8/8/3p4/8/8/8 w - - 0 1').board
-      expect(board.is_square_friendly?(current_piece, current_loc)).to be false
-    end
-    it 'when square is empty returns false' do
-      current_loc = [4, 3]
-      current_piece = Pawn.new('white', 'Pawn')
-      board = Load_game.new('8/8/8/8/8/8/8/8 w - - 0 1').board
-      expect(board.is_square_friendly?(current_piece, current_loc)).to be false
-    end
-  end
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> path_node_gen
 end
