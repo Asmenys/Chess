@@ -34,4 +34,28 @@ class Board
     result = true if valid_dimensions?(location) && empty_location?(location)
     result
   end
+
+
+  def find_king(kings_color)
+    team_hash = { 'black' => 'b', 'white' => 'w' }
+    kings_color = team_hash.key(kings_color)
+    location = nil
+    temp_row = 0
+    while temp_row <= 7
+      temp_column = 0
+      while temp_column <= 7
+        node_index = [temp_row, temp_column]
+        node_value = get_value_of_square(node_index)
+        if node_value.instance_of?(King) && (node_value.team == kings_color)
+          location = node_index
+          break
+        end
+        temp_column += 1
+      end
+      temp_row += 1
+      temp_column = 0
+    end
+    location
+  end
+
 end

@@ -7,6 +7,8 @@ require_relative 'node_validation_module'
 require_relative 'path_validation_module'
 require_relative 'pieces/piece_class'
 require_relative 'self_check'
+require_relative 'path'
+require_relative 'node'
 
 class Game
   include Node_validation
@@ -55,28 +57,6 @@ class Game
     end_points
   end
 
-  def find_king(kings_color)
-    team_hash = { 'black' => 'b', 'white' => 'w' }
-    kings_color = team_hash.key(kings_color)
-    location = nil
-    temp_row = 0
-    while temp_row <= 7
-      temp_column = 0
-      while temp_column <= 7
-        node_index = [temp_row, temp_column]
-        node_value = @board.get_value_of_square(node_index)
-        if node_value.instance_of?(King) && (node_value.team == kings_color)
-          location = node_index
-          break
-        end
-        temp_column += 1
-      end
-      temp_row += 1
-      temp_column = 0
-    end
-    location
-  end
-
   def is_square_friendly?(current_piece, square_location)
     friendly_color = current_piece.team
     square_value = @board.get_value_of_square(square_location)
@@ -108,10 +88,6 @@ class Game
     is_in_check
   end
 
-  def does_path_include?(piece_info, object_location)
-    piece_info[0].possible_paths(piece_info[1]).any? { |path| path.include?(object_location) }
-  end
-
   def get_attacking_pieces_from_path_array(attack_paths, kings_color)
     attacking_pieces = []
     attack_paths.each do |path|
@@ -121,40 +97,11 @@ class Game
     attacking_pieces
   end
 
-  def get_earliest_piece_with_location(path)
-    piece = nil
-    location = nil
-    piece_found = false
-    path.each do |node|
-      node_value = board.get_value_of_square(node)
-      next if node_value.nil?
-
-      piece = node_value
-      location = node
-      piece_found = true
-      break
-    end
-    [piece, location] if piece_found
-  end
-
   def validate_array_of_paths(array)
     valid_paths = []
     array = clean_paths(array)
     array.each do |path|
       valid_paths << path_until_first_piece(path)
     end
-  end
-
-  def path_until_first_piece(array)
-    path = []
-    array.each do |node|
-      node_value = board.get_value_of_square(node)
-      path << node
-      if node_value.nil?
-      else
-        break
-      end
-    end
-    path
   end
 end

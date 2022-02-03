@@ -41,6 +41,16 @@ class Path
     path
   end
 
+  def occupied_nodes
+    nodes = []
+    @nodes.each do |node|
+      unless node.value.nil?
+        nodes << node
+      end
+    end
+    nodes
+  end
+
   def append_node(node)
     @nodes << node
   end
