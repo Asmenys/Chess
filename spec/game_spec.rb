@@ -67,7 +67,10 @@ describe Game do
       end
     end
   end
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
   describe '#would_leave_king_in_check?' do
     context 'returns a bool based on whether the move leaves own players king in check' do
       it 'when a pawn moves leaving the king in check for a bishop return true' do
@@ -86,6 +89,29 @@ describe Game do
       end
     end
   end
+<<<<<<< Updated upstream
+=======
+  describe '#is_square_friendly?' do
+    it 'returns true when square holds a piece of same color as the given piece' do
+      current_piece = Pawn.new('white', 'Pawn')
+      square_loc = [4, 3]
+      game = Load_game.new('8/8/8/8/3P4/8/8/8 w - - 0 1').game
+      expect(game.is_square_friendly?(current_piece, square_loc)).to be true
+    end
+    it 'false when square holds a piece of unequal color' do
+      current_loc = [4, 3]
+      current_piece = Pawn.new('white', 'Pawn')
+      game = Load_game.new('8/8/8/8/3p4/8/8/8 w - - 0 1').game
+      expect(game.is_square_friendly?(current_piece, current_loc)).to be false
+    end
+    it 'when square is empty returns false' do
+      current_loc = [4, 3]
+      current_piece = Pawn.new('white', 'Pawn')
+      game = Load_game.new('8/8/8/8/8/8/8/8 w - - 0 1').game
+      expect(game.is_square_friendly?(current_piece, current_loc)).to be false
+    end
+  end
+>>>>>>> Stashed changes
   describe '#is_king_in_check?' do
     context 'given kings location, checks if the king is compromised' do
       it 'when king is in check returns true' do

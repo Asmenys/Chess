@@ -35,6 +35,7 @@ class Board
     result
   end
 
+<<<<<<< Updated upstream
   def get_possible_end_points(current_location)
     end_points = []
     piece = get_value_of_square(current_location)
@@ -63,6 +64,8 @@ class Board
       square_value.team == friendly_color
     end
   end
+=======
+>>>>>>> Stashed changes
 
   def find_king(kings_color)
     team_hash = { 'black' => 'b', 'white' => 'w' }
@@ -86,6 +89,7 @@ class Board
     location
   end
 
+<<<<<<< Updated upstream
   def validate_array_of_paths(array)
     valid_paths = []
     array = clean_paths(array)
@@ -93,4 +97,6 @@ class Board
       valid_paths << path_until_first_piece(path)
     end
   end
+=======
+>>>>>>> Stashed changes
 end

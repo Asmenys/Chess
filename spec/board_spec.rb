@@ -74,6 +74,7 @@ describe Board do
       end
     end
   end
+<<<<<<< Updated upstream
   describe '#is_square_friendly?' do
     it 'returns true when square holds a piece of same color as the given piece' do
       current_piece = Pawn.new('white', 'Pawn')
@@ -94,4 +95,6 @@ describe Board do
       expect(board.is_square_friendly?(current_piece, current_loc)).to be false
     end
   end
+=======
+>>>>>>> Stashed changes
 end

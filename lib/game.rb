@@ -7,6 +7,8 @@ require_relative 'node_validation_module'
 require_relative 'path_validation_module'
 require_relative 'pieces/piece_class'
 require_relative 'self_check'
+require_relative 'path'
+require_relative 'node'
 
 class Game
   include Node_validation
@@ -32,6 +34,32 @@ class Game
     valid_end_points
   end
 
+<<<<<<< Updated upstream
+=======
+  def get_possible_end_points(current_location)
+    end_points = []
+    piece = @board.get_value_of_square(current_location)
+    possible_paths = piece.possible_paths(current_location)
+    valid_possible_paths = validate_array_of_paths(possible_paths)
+    valid_possible_paths.each do |path|
+      path.each do |node|
+        end_points << node unless end_points.include?(node) || is_square_friendly?(piece, node)
+      end
+    end
+    end_points
+  end
+
+  def is_square_friendly?(current_piece, square_location)
+    friendly_color = current_piece.team
+    square_value = @board.get_value_of_square(square_location)
+    if square_value.nil?
+      false
+    else
+      square_value.team == friendly_color
+    end
+  end
+
+>>>>>>> Stashed changes
   def is_king_in_check?(kings_location)
     king = @board.get_value_of_square(kings_location)
     attack_paths = king.attack_paths(kings_location)
@@ -53,10 +81,6 @@ class Game
     is_in_check
   end
 
-  def does_path_include?(piece_info, object_location)
-    piece_info[0].possible_paths(piece_info[1]).any? { |path| path.include?(object_location) }
-  end
-
   def get_attacking_pieces_from_path_array(attack_paths, kings_color)
     attacking_pieces = []
     attack_paths.each do |path|
@@ -65,4 +89,15 @@ class Game
     end
     attacking_pieces
   end
+<<<<<<< Updated upstream
+=======
+
+  def validate_array_of_paths(array)
+    valid_paths = []
+    array = clean_paths(array)
+    array.each do |path|
+      valid_paths << path_until_first_piece(path)
+    end
+  end
+>>>>>>> Stashed changes
 end
