@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'load_game'
+require 'load_game.rb'
 describe Path do
   describe '#get_earliest_piece' do
     it 'should return the earliest encountered piece in the path' do
@@ -52,6 +52,20 @@ describe Path do
     it 'when path is empty returns true' do
       path = described_class.new
       expect(path.empty?).to be true
+    end
+  end
+  describe '#valid?' do
+    context 'checks if any of the nodes in the path are invalid' do
+      it 'should return false when one node is invalid' do
+        node_one = Node.new([555,321])
+        path = described_class.new([node_one])
+        expect(path.valid?).to be false
+      end
+      it 'should return true when none of the nodes are invalid' do
+        node_one = Node.new([4, 3])
+        path = described_class.new([node_one])
+        expect(path.valid?).to be true
+      end
     end
   end
 end

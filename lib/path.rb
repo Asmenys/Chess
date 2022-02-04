@@ -44,9 +44,7 @@ class Path
   def occupied_nodes
     nodes = []
     @nodes.each do |node|
-      unless node.value.nil?
-        nodes << node
-      end
+      nodes << node unless node.value.nil?
     end
     nodes
   end
@@ -57,5 +55,16 @@ class Path
 
   def empty?
     @nodes.empty?
+  end
+
+  def valid?
+    valid = true
+    @nodes.each do |node|
+      unless node.valid?
+        valid = false
+        break
+      end
+    end
+    valid
   end
 end

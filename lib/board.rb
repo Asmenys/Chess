@@ -34,6 +34,7 @@ class Board
     result = true if valid_dimensions?(location) && empty_location?(location)
     result
   end
+
   def find_king(kings_color)
     team_hash = { 'black' => 'b', 'white' => 'w' }
     kings_color = team_hash.key(kings_color)
@@ -56,4 +57,16 @@ class Board
     location
   end
 
+  def get_possible_end_points(current_location)
+    end_points = []
+    piece = get_value_of_square(current_location)
+    possible_paths = piece.possible_paths(current_location)
+    valid_possible_paths = validate_array_of_paths(possible_paths)
+    valid_possible_paths.each do |path|
+      path.each do |node|
+        end_points << node unless end_points.include?(node) || is_square_friendly?(piece, node)
+      end
+    end
+    end_points
+  end
 end
