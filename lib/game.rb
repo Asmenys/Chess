@@ -2,17 +2,13 @@
 
 require_relative 'display/display'
 require_relative 'display/string'
-require_relative 'board'
-require_relative 'node_validation_module'
-require_relative 'path_validation_module'
 require_relative 'pieces/piece_class'
 require_relative 'self_check'
 require_relative 'path'
 require_relative 'node'
+require_relative 'board'
 
 class Game
-  include Node_validation
-  include Path_validation
   attr_reader :full_turns, :half_turn, :en_passant, :active_color
   attr_accessor :board
 

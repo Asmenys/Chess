@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require 'game'
+require 'load_game'
+
 describe Knight_moveset do
   subject(:test_subject) { Class.new { extend Knight_moveset } }
   describe '#get_knight_movements' do

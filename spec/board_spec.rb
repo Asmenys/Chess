@@ -74,4 +74,64 @@ describe Board do
       end
     end
   end
+
+  describe '#filter_paths' do
+    it 'filters out empty and invalid paths from a path array' do
+      path_one = Path.new([Node.new([4, 3]), Node.new([5, 3]), Node.new([5, 4])])
+      path_two = Path.new([Node.new([443, 324]), Node.new([4, 4]), Node.new([44, 3])])
+      path_three = Path.new([Node.new([4, 4]), Node.new([2, 2]), Node.new([1, 3])])
+      board = described_class.new
+      expected_path_result = [path_one, path_three]
+      expect(board.filter_paths([path_one, path_two, path_three])).to eq expected_path_result
+    end
+  end
+  describe '#indexes_to_nodes' do
+    it 'given an array of node indexes, converts them to Node objects' do
+      node_indexes = [[4, 3], [4, 4], [4, 5]]
+      board = described_class.new
+      nodes = board.indexes_to_nodes(node_indexes)
+      expect(nodes[0].index).to eq node_indexes[0]
+      expect(nodes.all? { |node| node.instance_of?(Node) }).to be true
+    end
+  end
+  describe '#path_nodes_to_path' do
+    it 'given an array of path nodes, creates a path out of given nodes' do
+      board = described_class.new
+      path_node_indexes = [[3, 4], [4, 4], [5, 5]]
+      path_nodes = [board.indexes_to_nodes(path_node_indexes)]
+      path = board.path_nodes_to_path(path_nodes).first
+      expect(path.nodes.length).to eq 3
+      expect(path.nodes.all? { |node| node.instance_of?(Node) })
+    end
+  end
+  describe '#get_attack_path_nodes' do
+    it 'given a location of a node, it returns all the possible attack nodes' do
+      board = described_class.new
+      expected_result_array = [[[5, 3], [6, 3], [7, 3]],
+                               [[3, 3], [2, 3], [1, 3], [0, 3]],
+                               [[4, 2], [4, 1], [4, 0]],
+                               [[4, 4], [4, 5], [4, 6], [4, 7]],
+                               [[5, 5]],
+                               [[5, 1]],
+                               [[6, 4]],
+                               [[6, 2]],
+                               [[2, 2]],
+                               [[2, 4]],
+                               [[3, 5]],
+                               [[3, 1]],
+                               [[5, 2], [6, 1], [7, 0]],
+                               [[5, 4], [6, 5], [7, 6]],
+                               [[3, 2], [2, 1], [1, 0]],
+                               [[3, 4], [2, 5], [1, 6], [0, 7]]]
+      expect(board.get_attack_path_nodes([4, 3])).to eq expected_result_array
+    end
+  end
+  describe '#node_attack_paths' do
+    it 'given a location of a node, returns all the possible attack paths' do
+      board = described_class.new
+      attack_paths = board.node_attack_paths([0, 0])
+      expect(attack_paths.empty?).to be false
+      expect(attack_paths.all?{|path| path.valid?}).to be true
+    end
+  end
 end

@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Board
+  include Knight_moveset
+  include Diagonal_moveset
+  include Horizontal_moveset
   attr_reader :board
 
   include Display
@@ -57,16 +60,44 @@ class Board
     location
   end
 
-  def get_possible_end_points(current_location)
-    end_points = []
-    piece = get_value_of_square(current_location)
-    possible_paths = piece.possible_paths(current_location)
-    valid_possible_paths = validate_array_of_paths(possible_paths)
-    valid_possible_paths.each do |path|
-      path.each do |node|
-        end_points << node unless end_points.include?(node) || is_square_friendly?(piece, node)
-      end
+  def node_attack_paths(node_location)
+    array_of_path_node_indexes = get_attack_path_nodes(node_location)
+    array_of_path_nodes = []
+    array_of_path_node_indexes.each do |path_of_indexes|
+      array_of_path_nodes << indexes_to_nodes(path_of_indexes)
     end
-    end_points
+    array_of_paths = path_nodes_to_path(array_of_path_nodes)
+    filter_paths(array_of_paths)
+    array_of_paths
+  end
+
+  def get_attack_path_nodes(node_location)
+    array_of_path_node_indexes = []
+    array_of_path_node_indexes += moves_on_axis(node_location)
+    array_of_path_node_indexes += get_knight_movements(node_location)
+    array_of_path_node_indexes += diagonal_movement_paths(node_location)
+    array_of_path_node_indexes
+  end
+
+  def indexes_to_nodes(array_of_path_node_indexes)
+    array_of_path_nodes = []
+    array_of_path_node_indexes.each do |index|
+      array_of_path_nodes << Node.new(index)
+    end
+    array_of_path_nodes
+  end
+
+  def path_nodes_to_path(array_of_path_nodes)
+    array_of_paths = []
+    array_of_path_nodes.each do |path_node_array|
+      array_of_paths << Path.new(path_node_array)
+    end
+    array_of_paths
+  end
+
+  def filter_paths(array_of_paths)
+    array_of_paths.keep_if(&:valid?)
+    array_of_paths.delete_if(&:empty?)
+    array_of_paths
   end
 end

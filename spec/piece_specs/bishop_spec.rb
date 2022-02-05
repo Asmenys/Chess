@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'game'
+require 'load_game'
 
 describe Bishop do
   subject(:bishop) { described_class.new('black', 'Bishop') }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../../lib/pieces/piece_class'
+require 'load_game'
 
 describe King do
   describe '#possible_paths' do

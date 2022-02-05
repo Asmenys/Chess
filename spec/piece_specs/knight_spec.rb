@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'load_game'
 describe Knight do
   subject(:knight) { described_class.new('black', 'knight') }
   describe '#possible_paths'
