@@ -39,8 +39,6 @@ class Board
   end
 
   def find_king(kings_color)
-    team_hash = { 'black' => 'b', 'white' => 'w' }
-    kings_color = team_hash.key(kings_color)
     location = nil
     temp_row = 0
     while temp_row <= 7
@@ -57,7 +55,7 @@ class Board
       temp_row += 1
       temp_column = 0
     end
-    location
+    kings_node = Node.new(location, get_value_of_square(location))
   end
 
   def node_attack_paths(node_location)
@@ -82,7 +80,8 @@ class Board
   def indexes_to_nodes(array_of_path_node_indexes)
     array_of_path_nodes = []
     array_of_path_node_indexes.each do |index|
-      array_of_path_nodes << Node.new(index)
+      node_value = get_value_of_square(index)
+      array_of_path_nodes << Node.new(index, node_value)
     end
     array_of_path_nodes
   end

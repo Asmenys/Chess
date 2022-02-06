@@ -7,11 +7,11 @@ class Path
     @nodes = nodes
   end
 
-  def get_earliest_piece
+  def get_earliest_piece_node
     earliest_piece = nil
     @nodes.each do |node|
       unless node.value.nil?
-        earliest_piece = node.value
+        earliest_piece = node
         break
       end
     end
@@ -66,5 +66,9 @@ class Path
       end
     end
     valid
+  end
+
+  def include?(value)
+    @nodes.include?(value)
   end
 end

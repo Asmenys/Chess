@@ -58,19 +58,14 @@ describe Board do
       it 'when w king is on [4, 3] returns [4, 3]' do
         board = Load_game.new('8/8/8/8/3K4/8/8/8 w - - 0 1').board
         expected_result = [4, 3]
-        kings_color = 'w'
-        expect(board.find_king(kings_color)).to eq expected_result
-      end
-      it 'when theres no king return nil' do
-        board = Load_game.new('8/8/8/8/8/8/8/8 w - - 0 1').board
-        kings_color = 'w'
-        expect(board.find_king(kings_color)).to be nil
+        kings_color = 'white'
+        expect(board.find_king(kings_color).index).to eq expected_result
       end
       it 'when b king is on [7, 2] returns [7, 2]' do
         board = Load_game.new('8/8/8/8/8/8/8/2k5 w - - 0 1').board
         expected_result = [7, 2]
-        kings_color = 'b'
-        expect(board.find_king(kings_color)).to eq expected_result
+        kings_color = 'black'
+        expect(board.find_king(kings_color).index).to eq expected_result
       end
     end
   end
@@ -131,7 +126,7 @@ describe Board do
       board = described_class.new
       attack_paths = board.node_attack_paths([0, 0])
       expect(attack_paths.empty?).to be false
-      expect(attack_paths.all?{|path| path.valid?}).to be true
+      expect(attack_paths.all?(&:valid?)).to be true
     end
   end
 end

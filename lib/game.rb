@@ -30,56 +30,60 @@ class Game
     valid_end_points
   end
 
-  def get_possible_end_points(current_location)
-    end_points = []
-    piece = @board.get_value_of_square(current_location)
-    possible_paths = piece.possible_paths(current_location)
-    valid_possible_paths = validate_array_of_paths(possible_paths)
-    valid_possible_paths.each do |path|
-      path.each do |node|
-        end_points << node unless end_points.include?(node) || is_square_friendly?(piece, node)
-      end
-    end
-    end_points
-  end
-
-  def is_square_friendly?(current_piece, square_location)
-    friendly_color = current_piece.team
+  def is_square_friendly?(square_location)
     square_value = @board.get_value_of_square(square_location)
     if square_value.nil?
       false
     else
-      square_value.team == friendly_color
+      square_value.team == fen_to_color
     end
   end
 
-  def is_king_in_check?(kings_location)
-    king = @board.get_value_of_square(kings_location)
-    attack_paths = king.attack_paths(kings_location)
-    check_paths_for_king_check(attack_paths, kings_location)
+  def fen_to_color
+    color_hash = { 'white' => 'w', 'black' => 'b' }
+    color_hash.key(@active_color)
+  end
+
+  def is_king_in_check?
+    kings_node = @board.find_king(fen_to_color)
+    is_square_under_attack?(kings_node.index)
+  end
+
+  def is_square_under_attack?(square_location)
+    attack_paths = @board.node_attack_paths(square_location)
+    earliest_piece_nodes = get_earliest_piece_nodes_from_paths(attack_paths)
+    earliest_piece_nodes = filter_out_friendly_nodes(earliest_piece_nodes)
+    is_under_attack = can_pieces_move_to?(earliest_piece_nodes, square_location)
+  end
+
+  def can_pieces_move_to?(piece_nodes, movement_destination)
+    can_move_to = false
+    piece_nodes.each do |piece_node|
+      piece = piece_node.value
+      piece_location = piece_node.index
+      if piece.possible_paths(piece_location).any? { |path| path.include?(movement_destination) }
+        can_move_to = true
+        break
+      end
+    end
+    can_move_to
+  end
+
+  def filter_out_friendly_nodes(node_array)
+    node_array.delete_if { |node| node.value.team == fen_to_color }
+    node_array
+  end
+
+  def get_earliest_piece_nodes_from_paths(paths)
+    earliest_piece_nodes = []
+    paths.each do |path|
+      earliest_piece_node = path.get_earliest_piece_node
+      earliest_piece_nodes << earliest_piece_node unless earliest_piece_node.nil? || earliest_piece_node.value.nil?
+    end
+    earliest_piece_nodes
   end
 
   def would_leave_king_in_check?(current_location, movement_destination)
     @self_check.self_check?(current_location, movement_destination)
-  end
-
-  def check_paths_for_king_check(attack_paths, kings_location)
-    is_in_check = false
-    attack_paths = clean_paths(attack_paths)
-    kings_color = @board.get_value_of_square(kings_location).team
-    attacking_pieces = get_attacking_pieces_from_path_array(attack_paths, kings_color)
-    attacking_pieces.each do |attacking_piece|
-      is_in_check = true if does_path_include?(attacking_piece, kings_location)
-    end
-    is_in_check
-  end
-
-  def get_attacking_pieces_from_path_array(attack_paths, kings_color)
-    attacking_pieces = []
-    attack_paths.each do |path|
-      attacking_piece = get_earliest_piece_with_location(path)
-      attacking_pieces << attacking_piece unless attacking_piece.nil? || attacking_piece[0].team == kings_color
-    end
-    attacking_pieces
   end
 end

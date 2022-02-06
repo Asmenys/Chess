@@ -2,7 +2,7 @@
 
 require 'load_game'
 describe Path do
-  describe '#get_earliest_piece' do
+  describe '#get_earliest_piece_node' do
     it 'should return the earliest encountered piece in the path' do
       string = "I'm here all alone"
       node_one = Node.new([3, 4], nil)
@@ -11,7 +11,7 @@ describe Path do
       node_four = Node.new([3, 7], nil)
       node_array = [node_one, node_two, node_three, node_four]
       path = described_class.new(node_array)
-      expect(path.get_earliest_piece).to eq string
+      expect(path.get_earliest_piece_node.value).to eq string
     end
     it 'when theres a multitude of pieces still returns the earliest' do
       earliest_piece = 'wee'
@@ -21,7 +21,7 @@ describe Path do
       node_three = Node.new([3, 6], random_piece)
       node_array = [node_one, node_two, node_three]
       path = described_class.new(node_array)
-      expect(path.get_earliest_piece).to eq earliest_piece
+      expect(path.get_earliest_piece_node.value).to eq earliest_piece
     end
   end
   describe '#get_location_of' do
