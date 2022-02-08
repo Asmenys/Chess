@@ -9,8 +9,6 @@ describe Load_game do
     it 'sets up a new Game class instance based on the given fen string' do
       fen_string = 'pppppppp/8/pppppppp/8 w - - 0 0'
       game_instance = subject.setup_game_instance(fen_string)
-      expect(game_instance.active_color).to eq('w')
-      expect(game_instance.en_passant).to eq('-')
       expect(game_instance.board.board[0][1].class).to be(Pawn)
     end
   end
@@ -40,6 +38,17 @@ describe Load_game do
       expect(fen_array[5]).to eq('0')
     end
   end
+  describe '#en_passant_to_coordinates' do
+    context 'converts en_passant value from fen string into a location on the board for movement class' do
+      it 'when given e3 returns [5, 4]' do
+        expect(subject.en_passant_to_coordinates('e3')).to eq [5, 4]
+      end
+      it 'when given h1 returns [7, 7]' do
+        expect(subject.en_passant_to_coordinates('h1')).to eq [7, 7]
+      end
+    end
+  end
+
   describe '#is_type_of_piece?' do
     it 'given a character corresponding to a piece returns true' do
       expect(subject.is_type_of_piece?('k')).to be true

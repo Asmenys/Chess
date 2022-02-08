@@ -22,14 +22,23 @@ class Load_game
     en_passant = fen_notation_array[3]
     full_turn = fen_notation_array[4]
     half_turn = fen_notation_array[5]
-    @game = Game.new(@board, active_color,
-                     en_passant,
+    en_passant_cords = en_passant_to_coordinates(@en_passant)
+    movement_manager = Movement.new(board, active_color, en_passant_cords)
+    @game = Game.new(@board, movement_manager,
                      full_turn,
                      half_turn)
   end
 
   def split_fen_into_array(fen_string)
     fen_string.split(' ')
+  end
+
+  def en_passant_to_coordinates(en_passant)
+    unless en_passant.nil?
+      row = 8 - en_passant[1].to_i
+      column = en_passant[0].ord - 97
+      [row, column]
+    end
   end
 
   def initialize_pieces(piece_string)
