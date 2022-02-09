@@ -22,7 +22,7 @@ class Load_game
     en_passant = fen_notation_array[3]
     full_turn = fen_notation_array[4]
     half_turn = fen_notation_array[5]
-    en_passant_cords = en_passant_to_coordinates(@en_passant)
+    en_passant_cords = en_passant_to_coordinates(en_passant)
     movement_manager = Movement.new(board, active_color, en_passant_cords)
     @game = Game.new(@board, movement_manager,
                      full_turn,
@@ -34,8 +34,8 @@ class Load_game
   end
 
   def en_passant_to_coordinates(en_passant)
-    unless en_passant.nil?
-      row = 8 - en_passant[1].to_i
+    unless en_passant == '-'
+      row = (en_passant[1].to_i - 8).abs
       column = en_passant[0].ord - 97
       [row, column]
     end

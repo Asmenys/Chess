@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'pry-byebug'
 class Movement
   attr_reader :board
 
@@ -37,6 +38,15 @@ class Movement
     piece = @board.get_value_of_square(from)
     @board.set_square_to(from, nil)
     @board.set_square_to(to, piece)
+  end
+
+  def get_pawn_location_from_en_passant
+    case @active_color
+    when 'w'
+      [@en_passant[0] + 1, @en_passant[1]]
+    when 'b'
+      [@en_passant[0] - 1, @en_passant[1]]
+    end
   end
 
   def is_king_in_check?

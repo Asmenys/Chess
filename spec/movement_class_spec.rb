@@ -60,6 +60,16 @@ describe Movement do
       expect(game.board.empty_location?(destination)).to be false
     end
   end
+  describe '#get_pawn_location_from_en_passant' do
+    it 'when @en_passant is e6 and active color is white returns [3, 4]' do
+      game = Load_game.new('8/8/8/4p3/8/8/8/8 w - e6 0 1').game
+      expect(game.movement.get_pawn_location_from_en_passant).to eq [3, 4]
+    end
+    it 'when @en_passant is e3 and active color is black returns [5, 4]' do
+      game = Load_game.new('8/8/8/8/4P3/8/8/8 b - e3 0 1').game
+      expect(game.movement.get_pawn_location_from_en_passant).to eq [4, 4]
+    end
+  end
   describe '#is_king_in_check?' do
     context 'given kings location, checks if the king is compromised' do
       it 'when king is in check returns true' do
