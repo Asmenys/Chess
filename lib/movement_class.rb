@@ -23,6 +23,22 @@ class Movement
     color_hash.key(@active_color)
   end
 
+  def would_leave_king_in_check?(from, to)
+    stored_board = @board
+    board_clone = @board.clone
+    @board = board_clone
+    move_piece(from, to)
+    result = is_king_in_check?
+    @board = stored_board
+    result
+  end
+
+  def move_piece(from, to)
+    piece = @board.get_value_of_square(from)
+    @board.set_square_to(from, nil)
+    @board.set_square_to(to, piece)
+  end
+
   def is_king_in_check?
     kings_node = @board.find_king(fen_to_color)
     is_square_under_attack?(kings_node.index)

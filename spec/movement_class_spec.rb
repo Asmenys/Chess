@@ -34,6 +34,32 @@ describe Movement do
       end
     end
   end
+  describe '#would_leave_king_in_check?' do
+    context 'returns a bool based on whether the move leaves own players king in check' do
+      it 'when a pawn moves leaving the king in check for a bishop return true' do
+        game = Load_game.new('8/8/8/4b3/3P4/2K5/8/8 w - - 0 1').game
+        current_loc = [4, 3]
+        destination_loc = [3, 3]
+        expect(game.movement.would_leave_king_in_check?(current_loc, destination_loc)).to be true
+      end
+      it 'when a pawn moves but the king is not left in check for a bishop' do
+        game = Load_game.new('8/8/8/4b3/8/2KP4/8/8 w - - 0 1').game
+        current_loc = [5, 3]
+        destination_loc = [4, 3]
+        expect(game.movement.would_leave_king_in_check?(current_loc, destination_loc)).to be false
+      end
+    end
+  end
+  describe '#move_piece' do
+    it 'moves a piece from a given location to another given location' do
+      current_loc = [4, 3]
+      destination = [4, 5]
+      game = Load_game.new('8/8/8/8/3P4/8/8/8 w - - 0 1').game
+      game.movement.move_piece(current_loc, destination)
+      expect(game.board.get_value_of_square(current_loc)).to be nil
+      expect(game.board.empty_location?(destination)).to be false
+    end
+  end
   describe '#is_king_in_check?' do
     context 'given kings location, checks if the king is compromised' do
       it 'when king is in check returns true' do
