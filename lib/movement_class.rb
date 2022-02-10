@@ -10,6 +10,19 @@ class Movement
     @en_passant = en_passant
   end
 
+  def get_possible_movements(current_location)
+    piece = @board.get_value_of_square(current_location)
+    possible_paths = piece.possible_paths(current_location)
+  end
+
+  def filter_movements_for_check(current_location, movement_array)
+    valid_movements = []
+    movement_array.each do |movement_destination|
+      valid_movements << movement_destination unless would_leave_king_in_check?(current_location, movement_destination)
+    end
+    valid_movements
+  end
+
   def is_square_friendly?(square_location)
     square_value = @board.get_value_of_square(square_location)
     if square_value.nil?
@@ -25,12 +38,11 @@ class Movement
   end
 
   def would_leave_king_in_check?(from, to)
-    stored_board = @board
-    board_clone = @board.clone
-    @board = board_clone
+    destination_value = @board.get_value_of_square(to)
     move_piece(from, to)
     result = is_king_in_check?
-    @board = stored_board
+    move_piece(to, from)
+    @board.set_square_to(to, destination_value)
     result
   end
 

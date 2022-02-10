@@ -34,7 +34,7 @@ class Board
 
   def valid_location?(location)
     result = false
-    result = true if valid_dimensions?(location) && empty_location?(location)
+    result = true if location[0] >= 0 && location[0] <= 7 && location[1] >= 0 && location[1] <= 7
     result
   end
 
@@ -60,6 +60,8 @@ class Board
 
   def node_attack_paths(node_location)
     array_of_path_node_indexes = get_attack_path_nodes(node_location)
+    delete_invalid_paths(array_of_path_node_indexes)
+    delete_empty_node_indexes(array_of_path_node_indexes)
     array_of_path_nodes = []
     array_of_path_node_indexes.each do |path_of_indexes|
       array_of_path_nodes << indexes_to_nodes(path_of_indexes)
@@ -98,5 +100,13 @@ class Board
     array_of_paths.keep_if(&:valid?)
     array_of_paths.delete_if(&:empty?)
     array_of_paths
+  end
+
+  def delete_empty_node_indexes(array_of_path_node_indexes)
+    array_of_path_node_indexes.delete_if(&:empty?)
+  end
+
+  def delete_invalid_paths(array_of_path_node_indexes)
+    array_of_path_node_indexes.delete_if { |path| path.any? { |index| valid_location?(index) == false } }
   end
 end

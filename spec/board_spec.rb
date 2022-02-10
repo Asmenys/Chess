@@ -129,4 +129,35 @@ describe Board do
       expect(attack_paths.all?(&:valid?)).to be true
     end
   end
+  describe '#delete_empty_node_indexes' do
+    it 'deletes paths that are empty' do
+      path_array = [[], ['whatever'], ['okay']]
+      expected_result = [path_array[1], path_array[2]]
+      expect(subject.delete_empty_node_indexes(path_array)).to eq expected_result
+    end
+  end
+  describe '#valid_location?' do
+    it 'given an invalid location returns false' do
+      invalid_location = [423_423, 43_434]
+      expect(subject.valid_location?(invalid_location)).to be false
+    end
+    it 'given a valid location returns true' do
+      valid_location = [0, 0]
+      expect(subject.valid_location?(valid_location)).to be true
+    end
+    it 'given a valid location returns true' do
+      valid_location = [7, 7]
+      expect(subject.valid_location?(valid_location)).to be true
+    end
+    it 'given an invalid location returns false' do
+      invalid_location = [-7, -1]
+      expect(subject.valid_location?(invalid_location)).to be false
+    end
+  end
+  describe '#delete_invalid_paths' do
+    it 'given a path deletes it if it contains invalid nodes' do
+      path_array = [[[-4, 3], [5, 2]], [[4, 3], [5, 4], [5, 6]]]
+      expect(subject.delete_invalid_paths(path_array)).to eq [path_array.last]
+    end
+  end
 end

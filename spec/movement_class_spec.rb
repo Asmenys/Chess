@@ -2,6 +2,14 @@
 
 require 'load_game'
 describe Movement do
+  describe '#filter_movements_for_check' do
+    it 'given an array of movements, filters out those that would leave the king in check.' do
+      game = Load_game.new('7k/8/8/5b2/8/8/8/1KP5 w - - 0 1').game
+      movement_array = [[6, 2], [5, 2]]
+      current_location = [7, 2]
+      expect(game.movement.filter_movements_for_check(current_location, movement_array)).to eq [[6, 2]]
+    end
+  end
   describe '#is_square_friendly?' do
     it 'returns true when square holds a piece of same color as the current active colour' do
       square_loc = [4, 3]
