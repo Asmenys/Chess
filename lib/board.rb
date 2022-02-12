@@ -39,23 +39,17 @@ class Board
   end
 
   def find_king(kings_color)
-    location = nil
-    temp_row = 0
-    while temp_row <= 7
-      temp_column = 0
-      while temp_column <= 7
-        node_index = [temp_row, temp_column]
-        node_value = get_value_of_square(node_index)
+    kings_node = nil
+    @board.each_with_index do |row, row_index|
+      row.each_with_index do |node_value, column_index|
+        node_index = [row_index, column_index]
         if node_value.instance_of?(King) && (node_value.team == kings_color)
-          location = node_index
+          kings_node = Node.new(node_index, node_value)
           break
         end
-        temp_column += 1
       end
-      temp_row += 1
-      temp_column = 0
     end
-    kings_node = Node.new(location, get_value_of_square(location))
+    kings_node
   end
 
   def node_attack_paths(node_location)
