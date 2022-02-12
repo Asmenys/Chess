@@ -9,6 +9,18 @@ describe Movement do
       current_location = [7, 2]
       expect(game.movement.filter_movements_for_check(current_location, movement_array)).to eq [[6, 2]]
     end
+    it 'when all of moves leave the king in check, no moves are returnd' do
+      game = Load_game.new('8/8/8/5b2/8/3P4/2K5/8 w - - 0 1').game
+      current_location = [5, 3]
+      movement_array = [[4, 3], [3, 3]]
+      expect(game.movement.filter_movements_for_check(current_location, movement_array)).to eq []
+    end
+    it 'when king is in check returns only a movement that places the king out of check' do
+      game = Load_game.new('2r5/8/8/8/8/7R/2K5/8 w - - 0 1').game
+      current_location = [5, 7]
+      movement_array = [[5, 6], [5, 5], [5, 4], [5, 3], [5, 2], [5, 1], [5, 0]]
+      expect(game.movement.filter_movements_for_check(current_location, movement_array)).to eq [[5, 2]]
+    end
   end
   describe '#is_square_friendly?' do
     it 'returns true when square holds a piece of same color as the current active colour' do
