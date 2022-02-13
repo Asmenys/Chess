@@ -94,8 +94,7 @@ describe Board do
       board = described_class.new
       path_node_indexes = [[3, 4], [4, 4], [5, 5]]
       path_nodes = [board.indexes_to_nodes(path_node_indexes)]
-      path = board.path_nodes_to_path(path_nodes).first
-      expect(path.nodes.length).to eq 3
+      path = board.path_nodes_to_path(path_nodes)
       expect(path.nodes.all? { |node| node.instance_of?(Node) })
     end
   end
@@ -158,6 +157,26 @@ describe Board do
     it 'given a path deletes it if it contains invalid nodes' do
       path_array = [[[-4, 3], [5, 2]], [[4, 3], [5, 4], [5, 6]]]
       expect(subject.delete_invalid_paths(path_array)).to eq [path_array.last]
+    end
+  end
+  describe '#array_of_path_node_indexes_to_paths' do
+    context 'converts an array of paths in a form of node indexes converts to an array of paths' do
+      board = described_class.new
+      array_of_path_node_indexes = [[[5, 3], [6, 3], [7, 3]],
+                                    [[3, 3], [2, 3], [1, 3], [0, 3]],
+                                    [[4, 2], [4, 1], [4, 0]],
+                                    [[4, 4], [4, 5], [4, 6], [4, 7]]]
+      array_of_paths = board.array_of_path_node_indexes_to_paths(array_of_path_node_indexes)
+      it 'generates an array consisting of 4 paths' do
+        expect(array_of_paths.length).to be 4
+      end
+      it 'each path consists of the given indexes' do
+        path_indexes = []
+        array_of_paths.each do |path|
+          path_indexes << path.nodes_as_indexes
+        end
+        expect(path_indexes).to eq array_of_path_node_indexes
+      end
     end
   end
 end

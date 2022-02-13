@@ -56,11 +56,7 @@ class Board
     array_of_path_node_indexes = get_attack_path_nodes(node_location)
     delete_invalid_paths(array_of_path_node_indexes)
     delete_empty_node_indexes(array_of_path_node_indexes)
-    array_of_path_nodes = []
-    array_of_path_node_indexes.each do |path_of_indexes|
-      array_of_path_nodes << indexes_to_nodes(path_of_indexes)
-    end
-    array_of_paths = path_nodes_to_path(array_of_path_nodes)
+    array_of_paths = array_of_path_node_indexes_to_paths(array_of_path_node_indexes)
     filter_paths(array_of_paths)
     array_of_paths
   end
@@ -73,6 +69,15 @@ class Board
     array_of_path_node_indexes
   end
 
+  def array_of_path_node_indexes_to_paths(array_of_path_node_indexes)
+    paths = []
+    array_of_path_node_indexes.each do |path_of_indexes|
+      path_of_indexes = indexes_to_nodes(path_of_indexes)
+      paths << path_nodes_to_path(path_of_indexes)
+    end
+    paths.flatten
+  end
+
   def indexes_to_nodes(array_of_path_node_indexes)
     array_of_path_nodes = []
     array_of_path_node_indexes.each do |index|
@@ -83,11 +88,7 @@ class Board
   end
 
   def path_nodes_to_path(array_of_path_nodes)
-    array_of_paths = []
-    array_of_path_nodes.each do |path_node_array|
-      array_of_paths << Path.new(path_node_array)
-    end
-    array_of_paths
+    Path.new(array_of_path_nodes)
   end
 
   def filter_paths(array_of_paths)

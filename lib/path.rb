@@ -71,4 +71,12 @@ class Path
   def include?(value)
     @nodes.include?(value)
   end
+
+  def nodes_as_indexes
+    indexes = []
+    @nodes.each do |node|
+      indexes << node.index
+    end
+    indexes
+  end
 end

@@ -11,8 +11,20 @@ class Movement
   end
 
   def get_possible_movements(current_location)
-    piece = @board.get_value_of_square(current_location)
+    piece_node = Node.new(@board.get_value_of_square(current_location), current_location)
     possible_paths = piece.possible_paths(current_location)
+  end
+
+  def path_indexes_to_paths(path_index_array)
+    paths = []
+    array_of_path_node_arrays = []
+    path_index_array.each do |path_of_indexes|
+      array_of_path_node_arrays << @board.indexes_to_nodes(path_of_indexes)
+    end
+    array_of_path_node_arrays.each do |array_of_path_nodes|
+      paths << @board.path_nodes_to_path(array_of_path_nodes)
+    end
+    paths
   end
 
   def filter_movements_for_check(current_location, movement_array)

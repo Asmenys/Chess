@@ -174,4 +174,28 @@ describe Movement do
       end
     end
   end
+  describe '#path_indexes_to_paths' do
+    context 'given an array of paths as node indexes returns an array of paths' do
+      game = Load_game.new.game
+      array_of_path_indexes = [[[5, 5]],
+                               [[5, 1]],
+                               [[6, 4]],
+                               [[6, 2]],
+                               [[2, 2]],
+                               [[2, 4]],
+                               [[3, 5]],
+                               [[3, 1]]]
+      array_of_paths = game.movement.path_indexes_to_paths(array_of_path_indexes)
+      it 'the array is of appropriate length' do
+        expect(array_of_paths.length).to eq array_of_path_indexes.length
+      end
+      it 'each of the paths contain appropriate nodes' do
+        path_nodes = []
+        array_of_paths.each do |path|
+          path_nodes << path.nodes_as_indexes
+        end
+        expect(path_nodes).to eq array_of_path_indexes
+      end
+    end
+  end
 end
