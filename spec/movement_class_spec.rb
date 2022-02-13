@@ -22,6 +22,44 @@ describe Movement do
       expect(game.movement.filter_movements_for_check(current_location, movement_array)).to eq [[5, 2]]
     end
   end
+  describe '#paths_until_first_piece_from_path_array' do
+    context 'given an array of paths, returns an array of paths until the first encountered object' do
+      game = Load_game.new('8/8/8/8/2PR2p1/8/3P4/8 w - - 0 1').game
+      rook = Rook.new('white', 'Rook')
+      array_of_paths = game.board.array_of_path_node_indexes_to_paths(rook.possible_paths([4, 3]))
+      array_of_paths_until_first_piece = game.movement.paths_until_first_piece_from_path_array(array_of_paths)
+      it 'returns 4 paths until first encountered objects' do
+        expect(array_of_paths_until_first_piece.length).to eq array_of_paths.length
+      end
+      it 'last nodes in paths are either empty, or contain enemy pieces' do
+        expect(array_of_paths_until_first_piece[0].last_node.value.team).to eq 'white'
+        expect(array_of_paths_until_first_piece[1].last_node.value).to be nil
+        expect(array_of_paths_until_first_piece[2].last_node.value.team).to eq 'white'
+        expect(array_of_paths_until_first_piece[3].last_node.value.team).to eq 'black'
+      end
+    end
+  end
+  describe '#filter_paths_for_friendly_pieces' do
+    context 'given an array of paths, returns an array of paths until first enemy object, or empty node' do
+      game = Load_game.new('8/8/8/8/2PR2p1/8/3P4/8 w - - 0 1').game
+      rook = Rook.new('white', 'Rook')
+      array_of_paths = game.board.array_of_path_node_indexes_to_paths(rook.possible_paths([4, 3]))
+      array_of_paths_until_first_piece = game.movement.paths_until_first_piece_from_path_array(array_of_paths)
+      array_of_paths_until_friendly_pieces = game.movement.filter_paths_for_friendly_pieces(array_of_paths_until_first_piece)
+      it 'returns 4 paths' do
+        expect(array_of_paths_until_friendly_pieces.length).to eq 4
+      end
+      it 'none of the paths include a friendly piece' do
+        last_node_values = []
+        array_of_paths_until_friendly_pieces.each do |path|
+          last_node_values << path.last_node.value unless path.empty?
+        end
+        last_node_values.compact!
+        expect(last_node_values.none? { |value| value.team == rook.team })
+      end
+    end
+  end
+
   describe '#is_square_friendly?' do
     it 'returns true when square holds a piece of same color as the current active colour' do
       square_loc = [4, 3]

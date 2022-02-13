@@ -79,4 +79,12 @@ class Path
     end
     indexes
   end
+
+  def last_node
+    @nodes.last
+  end
+
+  def pop
+    @nodes.pop
+  end
 end

@@ -12,7 +12,30 @@ class Movement
 
   def get_possible_movements(current_location)
     piece_node = Node.new(@board.get_value_of_square(current_location), current_location)
-    possible_paths = piece.possible_paths(current_location)
+    possible_paths = path_indexes_to_paths(piece_node.value.possible_paths(current_location))
+    paths_until_first_piece = paths_until_first_piece_from_path_array(possible_paths)
+    paths_without_friendly_pieces = []
+    paths_until_first_piece.each do |path|
+      path.pop if path.last_node.value.team == piece_node.value.team
+      paths_without_friendly_pieces << path
+    end
+  end
+
+  def filter_paths_for_friendly_pieces(array_of_paths)
+    paths_without_friendly_pieces = []
+    array_of_paths.each do |path|
+      path.pop if !path.last_node.value.nil? && (path.last_node.value.team == fen_to_color)
+      paths_without_friendly_pieces << path
+    end
+    paths_without_friendly_pieces
+  end
+
+  def paths_until_first_piece_from_path_array(array_of_paths)
+    paths_until_first_piece = []
+    array_of_paths.each do |path|
+      paths_until_first_piece << path.path_until_first_piece
+    end
+    paths_until_first_piece
   end
 
   def path_indexes_to_paths(path_index_array)
