@@ -5,6 +5,8 @@ require_relative 'display/string'
 require_relative 'pieces/piece_class'
 require_relative 'path'
 require_relative 'node'
+require_relative 'path_utilities_module'
+require_relative 'movement_directions'
 require_relative 'board'
 require_relative 'movement_class'
 

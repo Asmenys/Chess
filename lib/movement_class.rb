@@ -2,6 +2,7 @@
 
 require 'pry-byebug'
 class Movement
+  include Path_utilities
   attr_reader :board
 
   def initialize(board, active_color, en_passant)
@@ -10,32 +11,35 @@ class Movement
     @en_passant = en_passant
   end
 
-  def get_possible_movements(current_location)
-    piece_node = Node.new(@board.get_value_of_square(current_location), current_location)
-    possible_paths = path_indexes_to_paths(piece_node.value.possible_paths(current_location))
+  def get_generic_movements(piece_location)
+    piece = @board.get_value_of_square(piece_location)
+    possible_paths = path_indexes_to_paths(piece.possible_paths(piece_location))
     paths_until_first_piece = paths_until_first_piece_from_path_array(possible_paths)
-    paths_without_friendly_pieces = []
-    paths_until_first_piece.each do |path|
-      path.pop if path.last_node.value.team == piece_node.value.team
-      paths_without_friendly_pieces << path
-    end
+    paths_without_friendly_destinations = remove_friendly_destinations(paths_until_first_piece)
+    valid_paths = filter_paths(paths_without_friendly_destinations)
+    node_index_array = paths_to_location_indexes(valid_paths)
+    # movement_directions = movement_directions_from_location_index_array(node_index_array)
   end
 
-  def filter_paths_for_friendly_pieces(array_of_paths)
+  def movement_directions_from_location_index_array(current_location, node_index_array)
+    movement_directions = []
+    node_index_array.each do |destination|
+      movement_directions << movement_directions_from_location_index(current_location, destination)
+    end
+    movement_directions
+  end
+
+  def movement_directions_from_location_index(current_location, destination, current_location_two = nil, destination_two = nil, en_passant = nil)
+    Movement_directions.new(current_location, destination, en_passant, current_location_two, destination_two)
+  end
+
+  def remove_friendly_destinations(array_of_paths)
     paths_without_friendly_pieces = []
     array_of_paths.each do |path|
       path.pop if !path.last_node.value.nil? && (path.last_node.value.team == fen_to_color)
       paths_without_friendly_pieces << path
     end
     paths_without_friendly_pieces
-  end
-
-  def paths_until_first_piece_from_path_array(array_of_paths)
-    paths_until_first_piece = []
-    array_of_paths.each do |path|
-      paths_until_first_piece << path.path_until_first_piece
-    end
-    paths_until_first_piece
   end
 
   def path_indexes_to_paths(path_index_array)

@@ -2,6 +2,46 @@
 
 require 'load_game'
 describe Movement do
+  describe '#get_generic_movements' do
+    it 'given piece node returns all possible legal movements of the piece' do
+      game = Load_game.new('3p4/8/8/3r2P1/3P4/8/8/8 b - - 0 1').game
+      piece_location = [3, 3]
+      expected_index_array = [[4, 3], [2, 3], [1, 3], [3, 2], [3, 1], [3, 0], [3, 4], [3, 5], [3, 6]]
+      expect(game.movement.get_generic_movements(piece_location)).to eq expected_index_array
+    end
+  end
+
+  describe '#remove_friendly_destinations' do
+    it 'given a path that ends with a friendly node removes the node from the path' do
+      path = Path.new([Node.new([4, 3]), Node.new([4, 4]), Node.new([4, 5], Pawn.new('white', 'Pawn'))])
+      game = Load_game.new('8/8/8/8/8/8/8/8 w - - 0 1').game
+      result_path = game.movement.remove_friendly_destinations([path])
+      expect(result_path[0].last_node.empty?).to be true
+    end
+  end
+
+  describe '#movement_directions_from_location_index_array' do
+    subject(:game) { Load_game.new('8/8/8/8/8/8/8/8 w - - 0 1').game }
+    it 'given an array of node indexes returns an array of movement directions' do
+      node_index_array = [[5, 4], [5, 3], [5, 2], [5, 1]]
+      current_location = [3, 2]
+      mov_dir_array = game.movement.movement_directions_from_location_index_array(current_location,
+                                                                                  node_index_array)
+      expect(mov_dir_array.length).to eq node_index_array.length
+      expect(mov_dir_array.all? { |mov_dir| mov_dir.instance_of?(Movement_directions) }).to be true
+    end
+  end
+  describe '#movement_directions_from_location_index' do
+    subject(:game) { Load_game.new('8/8/8/8/8/8/8/8 w - - 0 1').game }
+    it 'returns a new Movement_directions object from given values' do
+      starting_loc = [4, 3]
+      destination = [5, 3]
+      movement_directions_object = game.movement.movement_directions_from_location_index(starting_loc, destination)
+      expect(movement_directions_object.class).to be Movement_directions
+      expect(movement_directions_object.moves_two_pieces?).to be false
+      expect(movement_directions_object.creates_en_passant?).to be false
+    end
+  end
   describe '#filter_movements_for_check' do
     it 'given an array of movements, filters out those that would leave the king in check.' do
       game = Load_game.new('7k/8/8/5b2/8/8/8/1KP5 w - - 0 1').game
@@ -39,13 +79,13 @@ describe Movement do
       end
     end
   end
-  describe '#filter_paths_for_friendly_pieces' do
+  describe '#remove_friendly_destinations' do
     context 'given an array of paths, returns an array of paths until first enemy object, or empty node' do
       game = Load_game.new('8/8/8/8/2PR2p1/8/3P4/8 w - - 0 1').game
       rook = Rook.new('white', 'Rook')
       array_of_paths = game.board.array_of_path_node_indexes_to_paths(rook.possible_paths([4, 3]))
       array_of_paths_until_first_piece = game.movement.paths_until_first_piece_from_path_array(array_of_paths)
-      array_of_paths_until_friendly_pieces = game.movement.filter_paths_for_friendly_pieces(array_of_paths_until_first_piece)
+      array_of_paths_until_friendly_pieces = game.movement.remove_friendly_destinations(array_of_paths_until_first_piece)
       it 'returns 4 paths' do
         expect(array_of_paths_until_friendly_pieces.length).to eq 4
       end

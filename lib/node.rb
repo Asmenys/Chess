@@ -19,4 +19,8 @@ class Node
     result = true if valid_index?(@index[0]) && valid_index?(@index[1])
     result
   end
+
+  def empty?
+    @value.nil?
+  end
 end

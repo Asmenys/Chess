@@ -5,6 +5,22 @@ module Path_utilities
     Path.new(array_of_path_nodes)
   end
 
+  def paths_to_location_indexes(array_of_paths)
+    node_index_array = []
+    array_of_paths.each do |path|
+      node_index_array += path.nodes_as_indexes
+    end
+    node_index_array
+  end
+
+  def paths_until_first_piece_from_path_array(array_of_paths)
+    paths_until_first_piece = []
+    array_of_paths.each do |path|
+      paths_until_first_piece << path.path_until_first_piece
+    end
+    paths_until_first_piece
+  end
+
   def filter_paths(array_of_paths)
     array_of_paths.keep_if(&:valid?)
     array_of_paths.delete_if(&:empty?)
