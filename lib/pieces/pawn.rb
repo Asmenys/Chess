@@ -2,11 +2,7 @@
 
 class Pawn < Piece
   def possible_paths(current_location)
-    if @has_moved
-      [one_step(current_location)]
-    else
-      [two_step(current_location)]
-    end
+    [one_step(current_location)]
   end
 
   def one_step(location)

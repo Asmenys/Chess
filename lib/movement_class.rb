@@ -11,14 +11,14 @@ class Movement
     @en_passant = en_passant
   end
 
-  def get_generic_movements(piece_location)
-    piece = @board.get_value_of_square(piece_location)
-    possible_paths = path_indexes_to_paths(piece.possible_paths(piece_location))
+  def get_generic_movements(current_location)
+    piece = @board.get_value_of_square(current_location)
+    possible_paths = path_indexes_to_paths(piece.possible_paths(current_location))
     paths_until_first_piece = paths_until_first_piece_from_path_array(possible_paths)
     paths_without_friendly_destinations = remove_friendly_destinations(paths_until_first_piece)
     valid_paths = filter_paths(paths_without_friendly_destinations)
     node_index_array = paths_to_location_indexes(valid_paths)
-    movement_directions = movement_directions_from_location_index_array(piece_location, node_index_array)
+    movement_directions = movement_directions_from_location_index_array(current_location, node_index_array)
   end
 
   def movement_directions_from_location_index_array(current_location, node_index_array)
