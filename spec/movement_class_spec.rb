@@ -7,7 +7,9 @@ describe Movement do
       game = Load_game.new('3p4/8/8/3r2P1/3P4/8/8/8 b - - 0 1').game
       piece_location = [3, 3]
       expected_index_array = [[4, 3], [2, 3], [1, 3], [3, 2], [3, 1], [3, 0], [3, 4], [3, 5], [3, 6]]
-      expect(game.movement.get_generic_movements(piece_location)).to eq expected_index_array
+      movement_direction_array = game.movement.get_generic_movements(piece_location)
+      expect(movement_direction_array.length).to eq expected_index_array.length
+      expect(movement_direction_array.all? { |mov_dir| mov_dir.instance_of?(Movement_directions) }).to be true
     end
   end
 

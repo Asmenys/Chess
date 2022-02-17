@@ -18,7 +18,7 @@ class Movement
     paths_without_friendly_destinations = remove_friendly_destinations(paths_until_first_piece)
     valid_paths = filter_paths(paths_without_friendly_destinations)
     node_index_array = paths_to_location_indexes(valid_paths)
-    # movement_directions = movement_directions_from_location_index_array(node_index_array)
+    movement_directions = movement_directions_from_location_index_array(piece_location, node_index_array)
   end
 
   def movement_directions_from_location_index_array(current_location, node_index_array)
