@@ -11,6 +11,17 @@ class Movement
     @en_passant = en_passant
   end
 
+  def get_two_step(current_location)
+    two_step_directions = nil
+    pawn = @board.get_value_of_square(current_location)
+    unless pawn.has_moved
+      destination = pawn.two_step(current_location).last
+      en_passant_location = pawn.en_passant_location(current_location)
+      two_step_directions = Movement_directions.new(current_location, destination, en_passant_location)
+    end
+    two_step_directions
+  end
+
   def get_generic_movements(current_location)
     piece = @board.get_value_of_square(current_location)
     possible_paths = path_indexes_to_paths(piece.possible_paths(current_location))
@@ -54,10 +65,10 @@ class Movement
     paths
   end
 
-  def filter_movements_for_check(current_location, movement_array)
+  def filter_movements_for_check(movement_directions_array)
     valid_movements = []
-    movement_array.each do |movement_destination|
-      valid_movements << movement_destination unless would_leave_king_in_check?(current_location, movement_destination)
+    movement_directions_array.each do |movement_direction|
+      valid_movements << movement_direction unless would_leave_king_in_check?(movement_direction)
     end
     valid_movements
   end
@@ -76,19 +87,45 @@ class Movement
     color_hash.key(@active_color)
   end
 
-  def would_leave_king_in_check?(from, to)
-    destination_value = @board.get_value_of_square(to)
-    move_piece(from, to)
-    result = is_king_in_check?
-    move_piece(to, from)
-    @board.set_square_to(to, destination_value)
+  def would_leave_king_in_check?(movement_directions)
+    result = false
+    if king_exists?
+      current_board = @board.clone
+      current_en_passant = @en_passant
+      execute_movement_directions(movement_directions)
+      result = is_king_in_check?
+      @board = current_board
+    end
     result
   end
 
-  def move_piece(from, to)
-    piece = @board.get_value_of_square(from)
-    @board.set_square_to(from, nil)
-    @board.set_square_to(to, piece)
+  def king_exists?
+    @board.find_king(fen_to_color).nil? == false
+  end
+
+  def execute_movement_directions(movement_directions)
+    move_piece(movement_directions)
+    capture_en_passant(movement_directions)
+    delete_moved_pieces(movement_directions)
+  end
+
+  def move_piece(movement_directions)
+    piece = @board.get_value_of_square(movement_directions.current_location)
+    if movement_directions.moves_two_pieces?
+      piece_two = @board.get_value_of_square(movement_directions.current_location_two)
+      @board.set_square_to(movement_directions.destination_two, piece_two)
+    end
+    @board.set_square_to(movement_directions.destination, piece)
+  end
+
+  def capture_en_passant(movement_directions)
+    if !@en_passant.nil? && (movement_directions.destination == @en_passant)
+      @board.set_square_to(get_pawn_location_from_en_passant, nil)
+    end
+  end
+
+  def delete_moved_pieces(movement_directions)
+    @board.set_square_to(movement_directions.current_location, nil) unless movement_directions.moves_two_pieces?
   end
 
   def get_pawn_location_from_en_passant

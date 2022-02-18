@@ -12,6 +12,17 @@ class Board
     @board = Array.new(8) { Array.new(8) }
   end
 
+  def clone
+    duplicate_board = Board.new
+    @board.each_with_index do |row, row_index|
+      row.each_with_index do |node, column_index|
+        current_location = [row_index, column_index]
+        duplicate_board.set_square_to(current_location, node)
+      end
+    end
+    duplicate_board
+  end
+
   def add_piece(team_colour, type, location)
     piece = create_piece(team_colour, type)
     set_square_to(location, piece)

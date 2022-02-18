@@ -18,6 +18,10 @@ class Pawn < Piece
     end
   end
 
+  def en_passant_location(location)
+    one_step(location).first
+  end
+
   def increment_y_axis(point)
     point + (1 * get_vertical_movement_index)
   end

@@ -2,6 +2,15 @@
 
 require 'load_game'
 describe Movement do
+  describe '#get_two_step' do
+    it 'given a location of a pawn, returns movement directions for en_passant or nil if the move cant be performed' do
+      game = Load_game.new('8/8/8/8/8/8/1P6/8 w - - 0 1').game
+      current_location = [6, 1]
+      two_step_directions = game.movement.get_two_step(current_location)
+      expect(two_step_directions.en_passant).to eq [5, 1]
+      expect(two_step_directions.destination).to eq [4, 1]
+    end
+  end
   describe '#get_generic_movements' do
     it 'given piece node returns all possible legal movements of the piece' do
       game = Load_game.new('3p4/8/8/3r2P1/3P4/8/8/8 b - - 0 1').game
@@ -49,19 +58,25 @@ describe Movement do
       game = Load_game.new('7k/8/8/5b2/8/8/8/1KP5 w - - 0 1').game
       movement_array = [[6, 2], [5, 2]]
       current_location = [7, 2]
-      expect(game.movement.filter_movements_for_check(current_location, movement_array)).to eq [[6, 2]]
+      movement_direction_array = game.movement.movement_directions_from_location_index_array(current_location,
+                                                                                             movement_array)
+      expect(game.movement.filter_movements_for_check(movement_direction_array).first.destination).to eq [6, 2]
     end
     it 'when all of moves leave the king in check, no moves are returnd' do
       game = Load_game.new('8/8/8/5b2/8/3P4/2K5/8 w - - 0 1').game
       current_location = [5, 3]
       movement_array = [[4, 3], [3, 3]]
-      expect(game.movement.filter_movements_for_check(current_location, movement_array)).to eq []
+      movement_direction_array = game.movement.movement_directions_from_location_index_array(current_location,
+                                                                                             movement_array)
+      expect(game.movement.filter_movements_for_check(movement_direction_array)).to eq []
     end
     it 'when king is in check returns only a movement that places the king out of check' do
       game = Load_game.new('2r5/8/8/8/8/7R/2K5/8 w - - 0 1').game
       current_location = [5, 7]
       movement_array = [[5, 6], [5, 5], [5, 4], [5, 3], [5, 2], [5, 1], [5, 0]]
-      expect(game.movement.filter_movements_for_check(current_location, movement_array)).to eq [[5, 2]]
+      movement_direction_array = game.movement.movement_directions_from_location_index_array(current_location,
+                                                                                             movement_array)
+      expect(game.movement.filter_movements_for_check(movement_direction_array).first.destination).to eq [5, 2]
     end
   end
   describe '#paths_until_first_piece_from_path_array' do
@@ -139,14 +154,16 @@ describe Movement do
       it 'when a pawn moves leaving the king in check for a bishop return true' do
         game = Load_game.new('8/8/8/4b3/3P4/2K5/8/8 w - - 0 1').game
         current_loc = [4, 3]
-        destination_loc = [3, 3]
-        expect(game.movement.would_leave_king_in_check?(current_loc, destination_loc)).to be true
+        destination = [3, 3]
+        movement_directions = Movement_directions.new(current_loc, destination)
+        expect(game.movement.would_leave_king_in_check?(movement_directions)).to be true
       end
       it 'when a pawn moves but the king is not left in check for a bishop' do
         game = Load_game.new('8/8/8/4b3/8/2KP4/8/8 w - - 0 1').game
         current_loc = [5, 3]
-        destination_loc = [4, 3]
-        expect(game.movement.would_leave_king_in_check?(current_loc, destination_loc)).to be false
+        destination = [4, 3]
+        movement_directions = Movement_directions.new(current_loc, destination)
+        expect(game.movement.would_leave_king_in_check?(movement_directions)).to be false
       end
     end
   end
@@ -154,10 +171,18 @@ describe Movement do
     it 'moves a piece from a given location to another given location' do
       current_loc = [4, 3]
       destination = [4, 5]
+      movement_directions = Movement_directions.new(current_loc, destination)
       game = Load_game.new('8/8/8/8/3P4/8/8/8 w - - 0 1').game
-      game.movement.move_piece(current_loc, destination)
-      expect(game.board.get_value_of_square(current_loc)).to be nil
+      game.movement.move_piece(movement_directions)
       expect(game.board.empty_location?(destination)).to be false
+    end
+  end
+  describe '#delete_moved_pieces' do
+    it 'deletes pieces on current_location index' do
+      movement_directions = Movement_directions.new([4, 3], [5, 5])
+      game = Load_game.new('8/8/8/8/3P4/5P2/8/8 w - - 0 1').game
+      game.movement.delete_moved_pieces(movement_directions)
+      expect(game.board.get_value_of_square(movement_directions.current_location)).to be nil
     end
   end
   describe '#get_pawn_location_from_en_passant' do
