@@ -21,6 +21,10 @@ module Path_utilities
     paths_until_first_piece
   end
 
+  def remove_paths_that_dont_end_with_a_piece(array_of_paths)
+    array_of_paths.delete_if { |path| path.last_node.value.nil? }
+  end
+
   def filter_paths(array_of_paths)
     array_of_paths.keep_if(&:valid?)
     array_of_paths.delete_if(&:empty?)

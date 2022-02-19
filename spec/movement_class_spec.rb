@@ -2,6 +2,21 @@
 
 require 'load_game'
 describe Movement do
+  describe '#get_castling' do
+    context 'given location of a piece, returns movement directions for castling' do
+      game = Load_game.new('8/8/8/8/8/8/8/R2K3R w - - 0 1').game
+      current_loc = [7, 3]
+      it 'returns 2 movement direction objects' do
+        expect(game.movement.get_castling(current_loc).length).to eq 2
+      end
+      it 'executing movement directions would move pieces correctly' do
+        movement_directions = game.movement.get_castling(current_loc)
+        game.movement.execute_movement_directions(movement_directions.first)
+        expect(game.board.get_value_of_square([7, 0]).instance_of?(King)).to be true
+        expect(game.board.get_value_of_square([7, 3]).instance_of?(Rook)).to be true
+      end
+    end
+  end
   describe '#get_two_step' do
     it 'given a location of a pawn, returns movement directions for en_passant or nil if the move cant be performed' do
       game = Load_game.new('8/8/8/8/8/8/1P6/8 w - - 0 1').game

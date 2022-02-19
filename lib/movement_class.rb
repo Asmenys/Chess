@@ -11,6 +11,37 @@ class Movement
     @en_passant = en_passant
   end
 
+  def get_castling(current_location)
+    castling_paths = []
+    piece = @board.get_value_of_square(current_location)
+    unless piece.has_moved
+      adjacent_paths = @board.get_adjacent_paths(current_location)
+      adjacent_paths = paths_until_first_piece_from_path_array(adjacent_paths)
+      remove_paths_that_dont_end_with_a_piece(adjacent_paths)
+      castling_paths += filter_paths_for_castling(adjacent_paths)
+    end
+    castling_paths_to_movement_directions(current_location, castling_paths)
+  end
+
+  def castling_paths_to_movement_directions(current_location, castling_paths)
+    movement_directions = []
+    castling_paths.each do |path|
+      movement_directions << Movement_directions.new(current_location, path.last_node.index, nil, path.last_node.index,
+                                                     current_location)
+    end
+    movement_directions
+  end
+
+  def filter_paths_for_castling(array_of_paths)
+    castling_paths = []
+    array_of_paths.each do |path|
+      next unless path.last_node.value.can_castle?
+
+      castling_paths << path if path.nodes.none? { |node| is_square_under_attack?(node.index) }
+    end
+    castling_paths
+  end
+
   def get_two_step(current_location)
     two_step_directions = nil
     pawn = @board.get_value_of_square(current_location)
