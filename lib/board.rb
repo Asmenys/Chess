@@ -4,7 +4,7 @@ class Board
   include Knight_moveset
   include Diagonal_moveset
   include Horizontal_moveset
-  attr_reader :board
+  attr_accessor :board
 
   include Display
   include Path_utilities
@@ -12,15 +12,14 @@ class Board
     @board = Array.new(8) { Array.new(8) }
   end
 
-  def clone
-    duplicate_board = Board.new
+  def clone_board
+    cloned_board = Array.new(8) { Array.new(8) }
     @board.each_with_index do |row, row_index|
       row.each_with_index do |node, column_index|
-        current_location = [row_index, column_index]
-        duplicate_board.set_square_to(current_location, node)
+        cloned_board[row_index][column_index] = node
       end
     end
-    duplicate_board
+    cloned_board
   end
 
   def add_piece(team_colour, type, location)
