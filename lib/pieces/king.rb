@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class King < Piece
-  @can_castle = true
   def possible_paths(location)
     basic_one_steps(location)
   end

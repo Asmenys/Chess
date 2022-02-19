@@ -8,7 +8,6 @@ class Piece
     @display_value = PIECE_DISPLAY_VALUES[@team.to_sym][piece_name.to_sym]
     @name = piece_name
     @has_moved = false
-    @can_castle = false
   end
 
   def moved
@@ -16,7 +15,7 @@ class Piece
   end
 
   def can_castle?
-    @can_castle
+    @name == 'Rook' || @name == 'King'
   end
 end
 
