@@ -87,4 +87,8 @@ class Path
   def pop
     @nodes.pop
   end
+
+  def length
+    @nodes.length
+  end
 end

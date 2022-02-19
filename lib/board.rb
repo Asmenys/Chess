@@ -58,6 +58,13 @@ class Board
     kings_node
   end
 
+  def get_adjacent_paths(current_location)
+    array_of_path_node_indexes = []
+    array_of_path_node_indexes << get_path_on_axis(current_location, 1, -1)
+    array_of_path_node_indexes << get_path_on_axis(current_location, 1, 1)
+    adjacent_paths = array_of_path_node_indexes_to_paths(array_of_path_node_indexes)
+  end
+
   def node_attack_paths(node_location)
     array_of_path_node_indexes = get_attack_path_nodes(node_location)
     delete_invalid_paths(array_of_path_node_indexes)

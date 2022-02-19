@@ -70,6 +70,25 @@ describe Board do
     end
   end
 
+  describe '#get_adjacent_paths' do
+    context 'returns paths adjacent to given location horizontally' do
+      game = Load_game.new('8/8/8/8/8/8/8/R2K2PN b - e3 0 1').game
+      current_location = [7, 3]
+      adjacent_paths = game.board.get_adjacent_paths(current_location)
+      adjacent_path_left = adjacent_paths.first
+      adjacent_path_right = adjacent_paths.last
+      it 'the paths contain pieces as their last nodes' do
+        last_nodes = []
+        last_nodes << adjacent_path_left.last_node
+        last_nodes << adjacent_path_right.last_node
+        expect(last_nodes.all? { |node| node.value.is_a?(Piece) }).to be true
+      end
+      it 'they go across the board' do
+        expect(adjacent_path_left.length + adjacent_path_right.length).to eq 7
+      end
+    end
+  end
+
   describe '#filter_paths' do
     it 'filters out empty and invalid paths from a path array' do
       path_one = Path.new([Node.new([4, 3]), Node.new([5, 3]), Node.new([5, 4])])
