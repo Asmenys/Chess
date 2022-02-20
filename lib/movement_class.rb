@@ -48,12 +48,23 @@ class Movement
     if piece.instance_of?(Pawn)
       capture_node_indexes = piece.capture_nodes(current_location)
       capture_nodes = @board.indexes_to_nodes(capture_node_indexes)
-      delete_empty_nodes_from_array(capture_nodes)
-      non_friendly_nodes = filter_out_friendly_nodes(capture_nodes)
-      location_index_array = array_of_nodes_to_indexes(non_friendly_nodes)
+      valid_capture_nodes = filter_captureable_nodes(capture_nodes)
+      location_index_array = array_of_nodes_to_indexes(valid_capture_nodes)
       movement_directions += movement_directions_from_location_index_array(current_location, location_index_array)
     end
     movement_directions
+  end
+
+  def filter_captureable_nodes(node_array)
+    captureable_nodes = []
+    node_array.each do |node|
+      if node.empty?
+        captureable_nodes << node unless @en_passant != node.index
+      else
+        captureable_nodes << node unless node.value.team == fen_to_color
+      end
+    end
+    captureable_nodes
   end
 
   def array_of_nodes_to_indexes(array_of_nodes)
@@ -62,10 +73,6 @@ class Movement
       location_index_array << node.index
     end
     location_index_array
-  end
-
-  def delete_empty_nodes_from_array(node_array)
-    node_array.delete_if(&:empty?)
   end
 
   def castling_paths_to_movement_directions(current_location, castling_paths)
