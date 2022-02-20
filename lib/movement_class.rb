@@ -11,16 +11,61 @@ class Movement
     @en_passant = en_passant
   end
 
+  def get_possible_movement_directions(current_location)
+    movement_direction_array = []
+    movement_direction_array += get_castling(current_location)
+    movement_direction_array += get_two_step(current_location)
+    movement_direction_array += get_generic_movements(current_location)
+    movement_direction_array += get_pawn_captures(current_location)
+    filter_movements_for_check(movement_direction_array)
+  end
+
+  def update_active_color
+    @active_color = if @active_color == 'w'
+                      'b'
+                    else
+                      'w'
+                    end
+  end
+
   def get_castling(current_location)
+    movement_directions = []
     castling_paths = []
     piece = @board.get_value_of_square(current_location)
-    unless piece.has_moved
+    unless piece.can_castle? == false
       adjacent_paths = @board.get_adjacent_paths(current_location)
       adjacent_paths = paths_until_first_piece_from_path_array(adjacent_paths)
       remove_paths_that_dont_end_with_a_piece(adjacent_paths)
       castling_paths += filter_paths_for_castling(adjacent_paths)
+      movement_directions = castling_paths_to_movement_directions(current_location, castling_paths)
     end
-    castling_paths_to_movement_directions(current_location, castling_paths)
+    movement_directions
+  end
+
+  def get_pawn_captures(current_location)
+    movement_directions = []
+    piece = @board.get_value_of_square(current_location)
+    if piece.instance_of?(Pawn)
+      capture_node_indexes = piece.capture_nodes(current_location)
+      capture_nodes = @board.indexes_to_nodes(capture_node_indexes)
+      delete_empty_nodes_from_array(capture_nodes)
+      non_friendly_nodes = filter_out_friendly_nodes(capture_nodes)
+      location_index_array = array_of_nodes_to_indexes(non_friendly_nodes)
+      movement_directions += movement_directions_from_location_index_array(current_location, location_index_array)
+    end
+    movement_directions
+  end
+
+  def array_of_nodes_to_indexes(array_of_nodes)
+    location_index_array = []
+    array_of_nodes.each do |node|
+      location_index_array << node.index
+    end
+    location_index_array
+  end
+
+  def delete_empty_nodes_from_array(node_array)
+    node_array.delete_if(&:empty?)
   end
 
   def castling_paths_to_movement_directions(current_location, castling_paths)
@@ -43,12 +88,12 @@ class Movement
   end
 
   def get_two_step(current_location)
-    two_step_directions = nil
-    pawn = @board.get_value_of_square(current_location)
-    unless pawn.has_moved
-      destination = pawn.two_step(current_location).last
-      en_passant_location = pawn.en_passant_location(current_location)
-      two_step_directions = Movement_directions.new(current_location, destination, en_passant_location)
+    two_step_directions = []
+    piece = @board.get_value_of_square(current_location)
+    unless piece.has_moved || piece.class != Pawn
+      destination = piece.two_step(current_location).last
+      en_passant_location = piece.en_passant_location(current_location)
+      two_step_directions << Movement_directions.new(current_location, destination, en_passant_location)
     end
     two_step_directions
   end
@@ -121,11 +166,11 @@ class Movement
   def would_leave_king_in_check?(movement_directions)
     result = false
     if king_exists?
-      current_board = @board.clone
+      cloned_board = @board.clone_board
       current_en_passant = @en_passant
       execute_movement_directions(movement_directions)
       result = is_king_in_check?
-      @board = current_board
+      @board.board = cloned_board
     end
     result
   end

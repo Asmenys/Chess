@@ -2,6 +2,46 @@
 
 require 'load_game'
 describe Movement do
+  describe '#get_possible_movement_directions' do
+    context 'returns directions for all the possible legal movements a piece may take' do
+      game = Load_game.new('7k/1n4pp/5B2/2Pp4/8/8/2P5/R2K3R w - d6 0 1').game
+      it ''
+    end
+  end
+
+  describe '#get_pawn_captures' do
+    context 'given a pawns location returns movement directions for possible captures diagonaly' do
+      game_with_one_move = Load_game.new('8/8/8/4b3/3P4/8/8/8 w - - 0 1').game
+      pawn_location = [4, 3]
+      game_without_captures = Load_game.new('8/8/8/3p4/3P4/8/8/8 w - - 0 1').game
+      pawn_without_captures = [4, 3]
+      black_pawn_with_captures = Load_game.new('8/8/8/3p4/4R3/8/8/8 b - - 0 1').game
+      black_pawn_location = [3, 3]
+      it 'generates one movement_direction' do
+        expect(game_with_one_move.movement.get_pawn_captures(pawn_location).length).to eq 1
+      end
+      it 'executing the movement direction removes the enemy pawn and moves current pawn' do
+        movement_direction = game_with_one_move.movement.get_pawn_captures(pawn_location)
+        game_with_one_move.movement.execute_movement_directions(movement_direction.first)
+        expect(game_with_one_move.board.get_value_of_square(pawn_location)).to be nil
+        expect(game_with_one_move.board.get_value_of_square([3, 4]).class).to be Pawn
+      end
+      it 'when there are no possible captures returns an empty array' do
+        expect(game_without_captures.movement.get_pawn_captures(pawn_without_captures).empty?).to be true
+      end
+      it 'generates one movement dir for a black pawn' do
+        expect(black_pawn_with_captures.movement.get_pawn_captures(black_pawn_location).length).to eq 1
+      end
+      it 'executing black_pawns movement dir yields expected results' do
+        expected_result_location = [4, 4]
+        movement_direction = black_pawn_with_captures.movement.get_pawn_captures(black_pawn_location).first
+        black_pawn_with_captures.movement.execute_movement_directions(movement_direction)
+        expect(black_pawn_with_captures.board.get_value_of_square(expected_result_location).class).to be Pawn
+        expect(black_pawn_with_captures.board.get_value_of_square(black_pawn_location)).to be nil
+      end
+    end
+  end
+
   describe '#get_castling' do
     context 'given location of a piece, returns movement directions for castling' do
       game = Load_game.new('8/8/8/8/8/8/8/R2K3R w - - 0 1').game
@@ -21,7 +61,7 @@ describe Movement do
     it 'given a location of a pawn, returns movement directions for en_passant or nil if the move cant be performed' do
       game = Load_game.new('8/8/8/8/8/8/1P6/8 w - - 0 1').game
       current_location = [6, 1]
-      two_step_directions = game.movement.get_two_step(current_location)
+      two_step_directions = game.movement.get_two_step(current_location).first
       expect(two_step_directions.en_passant).to eq [5, 1]
       expect(two_step_directions.destination).to eq [4, 1]
     end

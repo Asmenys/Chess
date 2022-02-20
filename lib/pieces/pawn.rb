@@ -5,6 +5,13 @@ class Pawn < Piece
     [one_step(current_location)]
   end
 
+  def capture_nodes(current_location)
+    [
+      [current_location[0] + get_vertical_movement_index, current_location[1] + 1],
+      [current_location[0] + get_vertical_movement_index, current_location[1] - 1]
+    ]
+  end
+
   def one_step(location)
     [[increment_y_axis(location[0]), location[1]]]
   end
