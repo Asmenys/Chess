@@ -71,7 +71,54 @@ class Load_game
   end
 
   def initialize_piece(name, location)
-    @board.add_piece(name_to_color(name), name_to_piece(name), location)
+    piece = create_piece(name_to_color(name), name_to_piece(name))
+    piece.moved if has_piece_moved?(piece, location)
+    @board.set_square_to(location, piece)
+  end
+
+  def create_piece(colour, type)
+    Object.const_get(type).new(colour, type)
+  end
+
+  def has_piece_moved?(piece, location)
+    case piece.class
+    when Pawn
+      has_pawn_moved?(piece, location)
+    when Rook
+      has_rook_moved?(piece, location)
+    when King
+      has_king_moved?(piece_location)
+    end
+  end
+
+  def has_pawn_moved?(piece, location)
+    row = location[0]
+    color = piece.team
+    row == if color == black
+             1
+           else
+             6
+           end
+    result
+  end
+
+  def has_rook_moved?(piece, location)
+    color = piece.team
+    starting_locations = if color == 'black'
+                           [[0, 0], [0, 7]]
+                         else
+                           [[7, 0], [7, 7]]
+                         end
+    starting_locations.include?(location)
+  end
+
+  def has_king_moved?(piece, location)
+    color = piece.team
+    location == if color == 'black'
+                  [0, 4]
+                else
+                  [7, 4]
+                end
   end
 
   def name_to_color(name)

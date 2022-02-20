@@ -3,31 +3,6 @@
 require 'load_game'
 
 describe Board do
-  describe '#add_piece' do
-    subject(:board) { described_class.new }
-    context 'instantiates a piece inside a square based on given parameneters' do
-      it 'creates black rook at [3,4]' do
-        location = [3, 4]
-        piece_type = 'Rook'
-        colour = 'black'
-        board.add_piece(colour, piece_type, location)
-        expect(board.board[3][4].name).to eq(piece_type)
-      end
-    end
-  end
-
-  describe '#create_piece' do
-    subject(:board) { described_class.new }
-    it 'creates a play piece to initialize on the board' do
-      piece_type = 'Rook'
-      piece_color = 'black'
-      piece = board.create_piece(piece_color, piece_type)
-      expect(piece.class).to be(Rook)
-      expect(piece.team).to eq(piece_color)
-      expect(piece.name).to eq(piece_type)
-    end
-  end
-
   describe '#empty_location?' do
     subject(:board) { described_class.new }
     context 'given a location returns whether the node is populated or not' do

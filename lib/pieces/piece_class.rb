@@ -15,7 +15,9 @@ class Piece
   end
 
   def can_castle?
-    @has_moved == false if @name == 'Rook' || @name == 'King'
+    result = false
+    result = @has_moved == false if @name == 'Rook' || @name == 'King'
+    result
   end
 end
 
