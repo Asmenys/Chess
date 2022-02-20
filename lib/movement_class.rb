@@ -197,6 +197,7 @@ class Movement
   def capture_en_passant(movement_directions)
     if !@en_passant.nil? && (movement_directions.destination == @en_passant)
       @board.set_square_to(get_pawn_location_from_en_passant, nil)
+      @en_passant = nil
     end
   end
 
