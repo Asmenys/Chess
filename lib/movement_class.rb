@@ -30,13 +30,12 @@ class Movement
 
   def get_castling(current_location)
     movement_directions = []
-    castling_paths = []
     piece = @board.get_value_of_square(current_location)
     unless piece.can_castle? == false
       adjacent_paths = @board.get_adjacent_paths(current_location)
       adjacent_paths = paths_until_first_piece_from_path_array(adjacent_paths)
       remove_paths_that_dont_end_with_a_piece(adjacent_paths)
-      castling_paths += filter_paths_for_castling(adjacent_paths)
+      castling_paths = filter_paths_for_castling(adjacent_paths)
       movement_directions = castling_paths_to_movement_directions(current_location, castling_paths)
     end
     movement_directions
@@ -177,6 +176,7 @@ class Movement
       current_en_passant = @en_passant
       execute_movement_directions(movement_directions)
       result = is_king_in_check?
+      @en_passant = current_en_passant
       @board.board = cloned_board
     end
     result
@@ -202,7 +202,7 @@ class Movement
   end
 
   def capture_en_passant(movement_directions)
-    if !@en_passant.nil? && (movement_directions.destination == @en_passant)
+    if movement_directions.destination == @en_passant
       @board.set_square_to(get_pawn_location_from_en_passant, nil)
       @en_passant = nil
     end

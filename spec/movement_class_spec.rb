@@ -4,8 +4,34 @@ require 'load_game'
 describe Movement do
   describe '#get_possible_movement_directions' do
     context 'returns directions for all the possible legal movements a piece may take' do
-      game = Load_game.new('7k/1n4pp/5B2/2Pp4/8/8/2P5/R2K3R w - d6 0 1').game
-      it ''
+      black_move_test_game = Load_game.new('5Rpk/1n3B1p/8/2Pp4/8/8/2P5/R2K3R b - - 0 1').game
+      white_move_test_game = Load_game.new('5Rpk/1n3B1p/8/2Pp4/8/8/2P5/R2K3R w - d6 0 1').game
+      it 'black pawn without any legal moves returns an empty array' do
+        black_pawn_location = [0, 6]
+        expect(black_move_test_game.movement.get_possible_movement_directions(black_pawn_location).empty?).to be true
+      end
+      it 'black knight has 4 legal moves' do
+        black_knight_location = [1, 1]
+        expect(black_move_test_game.movement.get_possible_movement_directions(black_knight_location).length).to eq 4
+      end
+      it 'black pawn has 2 legal moves' do
+        black_pawn_with_moves_location = [1, 7]
+        expect(black_move_test_game.movement.get_possible_movement_directions(black_pawn_with_moves_location).length).to eq 2
+      end
+      it 'white pawn has 3 possible moves' do
+        white_pawn_location = [3, 2]
+        expect(white_move_test_game.movement.get_possible_movement_directions(white_pawn_location).length).to eq 3
+      end
+      it 'white pawn may capture a black en_passant' do
+        white_pawn_location = [3, 2]
+        white_pawn_movement_directions = white_move_test_game.movement.get_possible_movement_directions(white_pawn_location)
+        en_passant_capture_direction = white_pawn_movement_directions.last
+        commit_capture = white_move_test_game.movement.execute_movement_directions(en_passant_capture_direction)
+        expected_pawn_result_location = [2, 3]
+        expect(white_move_test_game.board.get_value_of_square(expected_pawn_result_location).class).to be Pawn
+        black_pawn_location = [3, 3]
+        expect(white_move_test_game.board.get_value_of_square(black_pawn_location)).to be nil
+      end
     end
   end
 
