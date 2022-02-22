@@ -31,6 +31,10 @@ module Path_utilities
     array_of_paths
   end
 
+  def delete_empty_paths_from_array(array_of_paths)
+    array_of_paths.delete_if(&:empty?)
+  end
+
   def delete_empty_node_indexes(array_of_path_node_indexes)
     array_of_path_node_indexes.delete_if(&:empty?)
   end

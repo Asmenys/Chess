@@ -18,8 +18,18 @@ class Game
     @board = board
     @full_turns = full_turn
     @half_turn = half_turn
-    @en_passant = en_passant
-    @active_color = active_color
     @movement = movement_manager
+  end
+
+  def no_legal_movements_left?
+    piece_location_array = @board.get_piece_locations_of_color(@movement.fen_to_color)
+    result = true
+    piece_location_array.each do |piece_location|
+      unless @movement.get_possible_movement_directions(piece_location).empty?
+        result = false
+        break
+      end
+    end
+    result
   end
 end

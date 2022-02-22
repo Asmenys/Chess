@@ -33,6 +33,7 @@ class Movement
     piece = @board.get_value_of_square(current_location)
     unless piece.can_castle? == false
       adjacent_paths = @board.get_adjacent_paths(current_location)
+      delete_empty_paths_from_array(adjacent_paths)
       adjacent_paths = paths_until_first_piece_from_path_array(adjacent_paths)
       remove_paths_that_dont_end_with_a_piece(adjacent_paths)
       castling_paths = filter_paths_for_castling(adjacent_paths)
@@ -107,6 +108,7 @@ class Movement
   def get_generic_movements(current_location)
     piece = @board.get_value_of_square(current_location)
     possible_paths = path_indexes_to_paths(piece.possible_paths(current_location))
+    delete_empty_paths_from_array(possible_paths)
     paths_until_first_piece = paths_until_first_piece_from_path_array(possible_paths)
     paths_without_friendly_destinations = remove_friendly_destinations(paths_until_first_piece)
     valid_paths = filter_paths(paths_without_friendly_destinations)

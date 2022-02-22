@@ -34,6 +34,16 @@ class Board
     get_value_of_square(location).nil?
   end
 
+  def get_piece_locations_of_color(color)
+    location_index_array = []
+    @board.each_with_index do |row, row_index|
+      row.each_with_index do |piece, column_index|
+        location_index_array << [row_index, column_index] if !piece.nil? && piece.team == color
+      end
+    end
+    location_index_array
+  end
+
   def find_king(kings_color)
     kings_node = nil
     @board.each_with_index do |row, row_index|
