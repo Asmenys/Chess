@@ -21,6 +21,29 @@ class Game
     @movement = movement_manager
   end
 
+  def has_player_lost?
+    no_legal_movements_left?
+  end
+
+  def increment_full_turns
+    @full_turns += 1
+  end
+
+  def valid_selection?(selection)
+    result = false
+    location = selection_to_location(selection)
+    if valid_location?(location) && !@board.empty_location?(location) && (@board.get_value_of_square(location).team == @movement.fen_to_color)
+      result = true
+    end
+    result
+  end
+
+  def selection_to_location(selection)
+    row_index = selection.first.to_i - 1
+    column_index = selection.last.ord - 97
+    [row_index, column_index]
+  end
+
   def no_legal_movements_left?
     piece_location_array = @board.get_piece_locations_of_color(@movement.fen_to_color)
     result = true
