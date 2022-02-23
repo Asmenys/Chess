@@ -32,6 +32,13 @@ describe Movement do
         black_pawn_location = [3, 3]
         expect(white_move_test_game.board.get_value_of_square(black_pawn_location)).to be nil
       end
+      context 'returns all possible destinations for white rook' do
+        white_rook_location = [7, 0]
+        possible_movement_directions = white_move_test_game.movement.get_possible_movement_directions(white_rook_location)
+        it 'returns 10 possible movements' do
+          expect(possible_movement_directions.length).to eq 10
+        end
+      end
     end
   end
 
