@@ -1,6 +1,23 @@
 # frozen_string_literal: true
 
 module Display
+
+  def announce_turn(team_color)
+    puts "#{team_color}'s move"
+  end
+
+  def promt_to_choose
+    puts 'Choose a piece on the board using its coordinates' 
+  end
+
+  def prompt_to_choose_invalid
+    puts 'Please choose a valid location on the board' 
+  end
+
+  def choose_another
+    puts "Would you like to choose another piece?"
+  end
+
   def display_board
     puts color_board
   end
