@@ -14,6 +14,12 @@ class Piece
     @has_moved = true
   end
 
+  def can_two_step?
+    result = false
+    result = true if !@has_moved && (@name == 'Pawn')
+    result
+  end
+
   def can_castle?
     result = false
     result = @has_moved == false if @name == 'Rook' || @name == 'King'

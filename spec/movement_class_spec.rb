@@ -5,7 +5,7 @@ describe Movement do
   describe '#get_possible_movement_directions' do
     context 'returns directions for all the possible legal movements a piece may take' do
       black_move_test_game = Load_game.new('5Rpk/1n3B1p/8/2Pp4/8/8/2P5/R2K3R b - - 0 1').game
-      white_move_test_game = Load_game.new('5Rpk/1n3B1p/8/2Pp4/8/8/2P5/R2K3R w - d6 0 1').game
+      white_move_test_game = Load_game.new('5Rpk/1n3B1p/8/2Pp4/8/2p5/2P5/R2K3R w - d6 0 1').game
       it 'black pawn without any legal moves returns an empty array' do
         black_pawn_location = [0, 6]
         expect(black_move_test_game.movement.get_possible_movement_directions(black_pawn_location).empty?).to be true
@@ -25,7 +25,7 @@ describe Movement do
       it 'white pawn may capture a black en_passant' do
         white_pawn_location = [3, 2]
         white_pawn_movement_directions = white_move_test_game.movement.get_possible_movement_directions(white_pawn_location)
-        en_passant_capture_direction = white_pawn_movement_directions.last
+        en_passant_capture_direction = white_pawn_movement_directions.first
         commit_capture = white_move_test_game.movement.execute_movement_directions(en_passant_capture_direction)
         expected_pawn_result_location = [2, 3]
         expect(white_move_test_game.board.get_value_of_square(expected_pawn_result_location).class).to be Pawn
@@ -38,6 +38,10 @@ describe Movement do
         it 'returns 10 possible movements' do
           expect(possible_movement_directions.length).to eq 10
         end
+      end
+      it 'pawn may not capture pieces ahead of it' do
+        white_pawn_location = [6, 2]
+        expect(white_move_test_game.movement.get_possible_movement_directions(white_pawn_location).empty?).to be true
       end
     end
   end

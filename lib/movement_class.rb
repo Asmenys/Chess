@@ -11,12 +11,20 @@ class Movement
     @en_passant = en_passant
   end
 
+  def will_result_in_capture?(movement_direction)
+    destination_value = @board.get_value_of_square(movement_direction.destination)
+    if destination_value.nil?
+      movement_direction.destination == @en_passant
+    else
+      destination_value.team != fen_to_color
+    end
+  end
+
   def get_possible_movement_directions(current_location)
     movement_direction_array = []
-    movement_direction_array += get_castling(current_location)
     movement_direction_array += get_two_step(current_location)
+    movement_direction_array += get_castling(current_location)
     movement_direction_array += get_generic_movements(current_location)
-    movement_direction_array += get_pawn_captures(current_location)
     filter_movements_for_check(movement_direction_array)
   end
 
@@ -97,10 +105,11 @@ class Movement
   def get_two_step(current_location)
     two_step_directions = []
     piece = @board.get_value_of_square(current_location)
-    unless piece.has_moved || piece.class != Pawn
+    if piece.can_two_step?
       destination = piece.two_step(current_location).last
       en_passant_location = piece.en_passant_location(current_location)
-      two_step_directions << Movement_directions.new(current_location, destination, en_passant_location)
+      movement_direction = Movement_directions.new(current_location, destination, en_passant_location)
+      two_step_directions << movement_direction unless will_result_in_capture?(movement_direction)
     end
     two_step_directions
   end
@@ -109,11 +118,15 @@ class Movement
     piece = @board.get_value_of_square(current_location)
     possible_paths = path_indexes_to_paths(piece.possible_paths(current_location))
     delete_empty_paths_from_array(possible_paths)
-    paths_until_first_piece = paths_until_first_piece_from_path_array(possible_paths)
-    paths_without_friendly_destinations = remove_friendly_destinations(paths_until_first_piece)
-    valid_paths = filter_paths(paths_without_friendly_destinations)
+    valid_paths = setup_paths(piece.name, possible_paths)
     node_index_array = paths_to_location_indexes(valid_paths)
     movement_directions = movement_directions_from_location_index_array(current_location, node_index_array)
+  end
+
+  def setup_paths(_piece_name, path_array)
+    paths_until_first_piece = paths_until_first_piece_from_path_array(path_array)
+    paths_without_friendly_destinations = remove_friendly_destinations(paths_until_first_piece)
+    valid_paths = filter_paths(paths_without_friendly_destinations)
   end
 
   def movement_directions_from_location_index_array(current_location, node_index_array)

@@ -13,6 +13,14 @@ module Path_utilities
     node_index_array
   end
 
+  def remove_paths_that_end_with_a_piece(array_of_paths)
+    valid_paths = []
+    array_of_paths.each do |path|
+      valid_paths << path unless path.last_node.empty?
+    end
+    valid_paths
+  end
+
   def paths_until_first_piece_from_path_array(array_of_paths)
     paths_until_first_piece = []
     array_of_paths.each do |path|

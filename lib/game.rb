@@ -29,6 +29,14 @@ class Game
     @full_turns += 1
   end
 
+  def increment_half_turns
+    @half_turn += 1
+  end
+
+  def reset_half_turns
+    @half_turn = 0
+  end
+
   def valid_selection?(selection)
     result = false
     location = selection_to_location(selection)

@@ -17,6 +17,10 @@ module Display
     puts 'Would you like to choose another piece?'
   end
 
+  def announce_win(team_color)
+    puts "#{team_color} Wins the game!"
+  end
+
   def display_board
     puts color_board
   end
