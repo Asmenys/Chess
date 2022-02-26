@@ -68,4 +68,19 @@ describe Path do
       end
     end
   end
+  describe '#uninterrupted?' do
+    context 'checks if all the nodes until the destination are empty' do
+      node_empty_one = Node.new([4, 3])
+      node_occupied = Node.new([5, 3], 'wee')
+      node_empty_two = Node.new([6, 3])
+      uninterrupted_path = Path.new([node_empty_one, node_empty_two, node_empty_one, node_occupied])
+      interrupted_path = Path.new([node_empty_one, node_occupied, node_empty_two])
+      it 'when path is interrupted returns false' do
+        expect(interrupted_path.uninterrupted?).to be false
+      end
+      it 'when path is not interrupted returns true' do
+        expect(uninterrupted_path.uninterrupted?).to be true
+      end
+    end
+  end
 end
