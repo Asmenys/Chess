@@ -99,4 +99,18 @@ describe Load_game do
       end
     end
   end
+
+  describe '#has_piece_moved?' do
+    context 'given a piece object and its location returns a bool' do
+      piece = Pawn.new('black', 'Pawn')
+      unmoved_location = [1, 0]
+      moved_location = [3, 4]
+      it 'when the location indicates that the piece has moved, returns true' do
+        expect(subject.has_piece_moved?(piece, moved_location)).to be true
+      end
+      it 'when the location doesnt indicate a movement returns false' do
+        expect(subject.has_piece_moved?(piece, unmoved_location)).to be false
+      end
+    end
+  end
 end

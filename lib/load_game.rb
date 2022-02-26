@@ -81,25 +81,26 @@ class Load_game
   end
 
   def has_piece_moved?(piece, location)
-    case piece.class
-    when Pawn
-      has_pawn_moved?(piece, location)
-    when Rook
-      has_rook_moved?(piece, location)
-    when King
-      has_king_moved?(piece_location)
+    result = false
+    case piece.name
+    when 'Pawn'
+      result = has_pawn_moved?(piece, location)
+    when 'Rook'
+      result = has_rook_moved?(piece, location)
+    when 'King'
+      result = has_king_moved?(piece, location)
     end
+    result
   end
 
   def has_pawn_moved?(piece, location)
     row = location[0]
     color = piece.team
-    row == if color == black
+    row != if color == 'black'
              1
            else
              6
            end
-    result
   end
 
   def has_rook_moved?(piece, location)
@@ -109,12 +110,12 @@ class Load_game
                          else
                            [[7, 0], [7, 7]]
                          end
-    starting_locations.include?(location)
+    starting_locations.none? { |location_index| location_index == location }
   end
 
   def has_king_moved?(piece, location)
     color = piece.team
-    location == if color == 'black'
+    location != if color == 'black'
                   [0, 4]
                 else
                   [7, 4]
