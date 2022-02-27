@@ -5,7 +5,7 @@ describe Movement do
   describe '#get_possible_movement_directions' do
     context 'returns directions for all the possible legal movements a piece may take' do
       black_move_test_game = Load_game.new('5Rpk/1n3B1p/8/2Pp4/8/8/2P5/R2K3R b - - 0 1').game
-      white_move_test_game = Load_game.new('5Rpk/1n3B1p/8/2Pp4/8/2p5/2P5/R2K3R w - d6 0 1').game
+      white_move_test_game = Load_game.new('5Rpk/1n3B1p/8/2Pp4/8/2p5/2P5/R3K2R w - d6 0 1').game
       it 'black pawn without any legal moves returns an empty array' do
         black_pawn_location = [0, 6]
         expect(black_move_test_game.movement.get_possible_movement_directions(black_pawn_location).empty?).to be true
@@ -18,14 +18,14 @@ describe Movement do
         black_pawn_with_moves_location = [1, 7]
         expect(black_move_test_game.movement.get_possible_movement_directions(black_pawn_with_moves_location).length).to eq 2
       end
-      it 'white pawn has 3 possible moves' do
+      it 'white pawn has 2 possible moves' do
         white_pawn_location = [3, 2]
-        expect(white_move_test_game.movement.get_possible_movement_directions(white_pawn_location).length).to eq 3
+        expect(white_move_test_game.movement.get_possible_movement_directions(white_pawn_location).length).to eq 2
       end
       it 'white pawn may capture a black en_passant' do
         white_pawn_location = [3, 2]
         white_pawn_movement_directions = white_move_test_game.movement.get_possible_movement_directions(white_pawn_location)
-        en_passant_capture_direction = white_pawn_movement_directions.first
+        en_passant_capture_direction = white_pawn_movement_directions.last
         commit_capture = white_move_test_game.movement.execute_movement_directions(en_passant_capture_direction)
         expected_pawn_result_location = [2, 3]
         expect(white_move_test_game.board.get_value_of_square(expected_pawn_result_location).class).to be Pawn
@@ -36,7 +36,7 @@ describe Movement do
         white_rook_location = [7, 0]
         possible_movement_directions = white_move_test_game.movement.get_possible_movement_directions(white_rook_location)
         it 'returns 10 possible movements' do
-          expect(possible_movement_directions.length).to eq 10
+          expect(possible_movement_directions.length).to eq 11
         end
       end
       it 'pawn may not capture pieces ahead of it' do
@@ -81,8 +81,8 @@ describe Movement do
 
   describe '#get_castling' do
     context 'given location of a piece, returns movement directions for castling' do
-      game = Load_game.new('8/8/8/8/8/8/8/R2K3R w - - 0 1').game
-      current_loc = [7, 3]
+      game = Load_game.new('8/8/8/8/8/8/8/R3K2R w - - 0 1').game
+      current_loc = [7, 4]
       it 'returns 2 movement direction objects' do
         expect(game.movement.get_castling(current_loc).length).to eq 2
       end
@@ -90,7 +90,7 @@ describe Movement do
         movement_directions = game.movement.get_castling(current_loc)
         game.movement.execute_movement_directions(movement_directions.first)
         expect(game.board.get_value_of_square([7, 0]).instance_of?(King)).to be true
-        expect(game.board.get_value_of_square([7, 3]).instance_of?(Rook)).to be true
+        expect(game.board.get_value_of_square([7, 4]).instance_of?(Rook)).to be true
       end
     end
   end
@@ -229,15 +229,22 @@ describe Movement do
   end
   describe '#is_square_under_attack?' do
     context 'given a squares location, returns a bool based on whether its under attack or not' do
-      it 'when not under attack returns false' do
-        game = Load_game.new('8/8/8/8/8/8/8/8 w - - 0 1').game
-        square_loc = [4, 3]
-        expect(game.movement.is_square_under_attack?(square_loc)).to be false
+      game = Load_game.new('4kb2/8/8/8/8/8/8/R3K1N1 b - - 0 1').game
+      white_rook_location = [7, 0]
+      white_knight_location = [7, 6]
+      black_bishop_location = [0, 5]
+      it '[5, 7] is under attack by white knight' do
+        expect(game.movement.is_square_under_attack?([5, 7])).to be true
       end
-      it 'when it is under attack returns true' do
-        game = Load_game.new('8/8/8/8/8/3P4/8/8 b - - 0 1').game
-        square_loc = [4, 3]
-        expect(game.movement.is_square_under_attack?(square_loc)).to be true
+      it '[0, 0] is under attack by white rook' do
+        expect(game.movement.is_square_under_attack?([0, 0])).to be true
+      end
+      it '[5, 0] is under attack by black bishop' do
+        game.movement.update_active_color
+        expect(game.movement.is_square_under_attack?([5, 0])).to be true
+      end
+      it '[4, 3] is not under attack by any pieces' do
+        expect(game.movement.is_square_under_attack?([4, 3])).to be false
       end
     end
   end
@@ -356,18 +363,18 @@ describe Movement do
       end
     end
   end
-  describe '#can_pieces_move_to?' do
+  describe '#can_pieces_attack?' do
     context 'given a populated node array and a final mov. destination checks if any pieces can move to such destination' do
       let(:game) { Load_game.new.game }
       it 'when doesnt include returns false' do
         movement_destination = [7, 7]
-        node_array = [Node.new([4, 3], Pawn.new('white', 'Pawn'))]
-        expect(game.movement.can_pieces_move_to?(node_array, movement_destination)).to be false
+        node_array = [Node.new([4, 3], Rook.new('white', 'Rook'))]
+        expect(game.movement.can_pieces_attack?(node_array, movement_destination)).to be false
       end
       it 'when includes returns true' do
         movement_destination = [7, 7]
-        node_array = [Node.new([6, 7], Pawn.new('black', 'Pawn'))]
-        expect(game.movement.can_pieces_move_to?(node_array, movement_destination)).to be true
+        node_array = [Node.new([6, 7], Rook.new('black', 'Rook'))]
+        expect(game.movement.can_pieces_attack?(node_array, movement_destination)).to be true
       end
     end
   end

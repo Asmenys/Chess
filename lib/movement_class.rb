@@ -21,10 +21,19 @@ class Movement
   end
 
   def get_possible_movement_directions(current_location)
+    piece = @board.get_value_of_square(current_location)
     movement_direction_array = []
-    movement_direction_array += get_two_step(current_location)
-    movement_direction_array += get_castling(current_location)
     movement_direction_array += get_generic_movements(current_location)
+    case piece.name
+    when 'Pawn'
+      movement_direction_array += get_one_step(current_location)
+      movement_direction_array += get_two_step(current_location)
+      movement_direction_array += get_pawn_captures(current_location)
+    when 'King'
+      movement_direction_array += get_castling(current_location)
+    when 'Rook'
+      movement_direction_array += get_castling(current_location)
+    end
     filter_movements_for_check(movement_direction_array)
   end
 
@@ -104,23 +113,43 @@ class Movement
 
   def get_two_step(current_location)
     two_step_directions = []
-    piece = @board.get_value_of_square(current_location)
-    if piece.can_two_step?
-      destination = piece.two_step(current_location).last
-      en_passant_location = piece.en_passant_location(current_location)
-      movement_direction = Movement_directions.new(current_location, destination, en_passant_location)
-      two_step_directions << movement_direction unless will_result_in_capture?(movement_direction)
+    pawn = @board.get_value_of_square(current_location)
+    if pawn.can_two_step?
+      indexed_two_step_path = [pawn.two_step(current_location)]
+      two_step_path = path_indexes_to_paths(indexed_two_step_path).first
+      if two_step_path.uninterrupted? && two_step_path.last_node.empty?
+        destination = two_step_path.last_node.index
+        en_passant_location = pawn.en_passant_location(current_location)
+        two_step_directions << Movement_directions.new(current_location, destination, en_passant_location)
+      end
     end
     two_step_directions
   end
 
+  def get_one_step(current_location)
+    one_step_directions = []
+    pawn = @board.get_value_of_square(current_location)
+    indexed_one_step_path = [pawn.one_step(current_location)]
+    two_step_path = path_indexes_to_paths(indexed_one_step_path).first
+    if two_step_path.last_node.empty?
+      destination = two_step_path.last_node.index
+      one_step_directions << Movement_directions.new(current_location, destination)
+    end
+    one_step_directions
+  end
+
   def get_generic_movements(current_location)
     piece = @board.get_value_of_square(current_location)
-    possible_paths = path_indexes_to_paths(piece.possible_paths(current_location))
-    delete_empty_paths_from_array(possible_paths)
-    valid_paths = setup_paths(piece.name, possible_paths)
-    node_index_array = paths_to_location_indexes(valid_paths)
-    movement_directions = movement_directions_from_location_index_array(current_location, node_index_array)
+    movement_direction_array = []
+    possible_path_indexes = piece.possible_paths(current_location)
+    unless possible_path_indexes.empty?
+      possible_paths = path_indexes_to_paths(possible_path_indexes)
+      delete_empty_paths_from_array(possible_paths)
+      valid_paths = setup_paths(piece.name, possible_paths)
+      node_index_array = paths_to_location_indexes(valid_paths)
+      movement_direction_array = movement_directions_from_location_index_array(current_location, node_index_array)
+    end
+    movement_direction_array
   end
 
   def setup_paths(_piece_name, path_array)
@@ -245,15 +274,15 @@ class Movement
     attack_paths = @board.node_attack_paths(square_location)
     earliest_piece_nodes = get_earliest_piece_nodes_from_paths(attack_paths)
     earliest_piece_nodes = filter_out_friendly_nodes(earliest_piece_nodes)
-    is_under_attack = can_pieces_move_to?(earliest_piece_nodes, square_location)
+    is_under_attack = can_pieces_attack?(earliest_piece_nodes, square_location)
   end
 
-  def can_pieces_move_to?(piece_nodes, movement_destination)
+  def can_pieces_attack?(piece_nodes, movement_destination)
     can_move_to = false
     piece_nodes.each do |piece_node|
       piece = piece_node.value
       piece_location = piece_node.index
-      if piece.possible_paths(piece_location).any? { |path| path.include?(movement_destination) }
+      if piece.possible_attack_paths(piece_location).any? { |path| path.include?(movement_destination) }
         can_move_to = true
         break
       end

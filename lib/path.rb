@@ -93,6 +93,6 @@ class Path
   end
 
   def uninterrupted?
-    @nodes[0...@nodes.length-1].all?{|node| node.empty?}
+    @nodes[0...@nodes.length - 1].all?(&:empty?)
   end
 end
