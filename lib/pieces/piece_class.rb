@@ -25,6 +25,10 @@ class Piece
     result = @has_moved == false if @name == 'Rook' || @name == 'King'
     result
   end
+
+  def possible_attack_paths(current_location)
+    possible_paths(current_location)
+  end
 end
 
 require_relative 'piece_values'

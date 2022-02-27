@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
 class Pawn < Piece
-  def possible_paths(current_location)
-    [one_step(current_location)]
+  def possible_paths(_current_location)
+    []
+  end
+
+  def possible_attack_paths(current_location)
+    capture_nodes(current_location)
   end
 
   def capture_nodes(current_location)
