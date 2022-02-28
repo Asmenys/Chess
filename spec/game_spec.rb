@@ -16,4 +16,17 @@ describe Game do
       end
     end
   end
+  describe 'valid_piece_selection?' do
+    context 'given a string returns whether its a valid selection or not' do
+      invalid_selection = 'b9'
+      valid_selection = 'e4'
+      game = Load_game.new('8/8/8/4P3/8/8/8/8 w - - 0 1').game
+      it 'when given an invalid selection returns false' do
+        expect(game.valid_piece_selection?(invalid_selection)).to be false
+      end
+      it 'when given a valid selection returns true' do
+        expect(game.valid_piece_selection?(valid_selection)).to be true
+      end
+    end
+  end
 end

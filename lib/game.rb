@@ -11,6 +11,8 @@ require_relative 'board'
 require_relative 'movement_class'
 
 class Game
+  include Display
+  include Path_utilities
   attr_reader :full_turns, :half_turn, :en_passant, :active_color, :movement
   attr_accessor :board
 
@@ -19,6 +21,21 @@ class Game
     @full_turns = full_turn
     @half_turn = half_turn
     @movement = movement_manager
+  end
+
+  def get_valid_piece_selection
+    piece_selection = get_player_piece_selection
+    if valid_piece_selection?(piece_selection)
+      piece_selection
+    else
+      prompt_to_choose_invalid
+      piece_selection = get_valid_piece_selection
+    end
+    piece_selection
+  end
+
+  def get_player_piece_selection
+    selection = gets.chomp
   end
 
   def has_player_lost?
@@ -37,19 +54,39 @@ class Game
     @half_turn = 0
   end
 
-  def valid_selection?(selection)
+  def valid_piece_selection?(selection)
     result = false
-    location = selection_to_location(selection)
-    if valid_location?(location) && !@board.empty_location?(location) && (@board.get_value_of_square(location).team == @movement.fen_to_color)
-      result = true
+    if is_notation?(selection)
+      location = selection_to_location(selection)
+      if valid_location?(location) && (!@board.empty_location?(location) && (@board.get_value_of_square(location).team == @movement.fen_to_color))
+        result = true
+      end
     end
     result
   end
 
   def selection_to_location(selection)
-    row_index = selection.first.to_i - 1
-    column_index = selection.last.ord - 97
+    selection = selection.chars
+    row_index = selection.last.to_i - 1
+    column_index = selection.first.ord - 97
     [row_index, column_index]
+  end
+
+  def is_notation?(selection)
+    result = false
+    if selection.length == 2
+      selection = selection.chars
+      result = true if is_a_letter?(selection.first) && is_a_number?(selection.last)
+    end
+    result
+  end
+
+  def is_a_letter?(character)
+    character.match?(/[[:alpha:]]/)
+  end
+
+  def is_a_number?(character)
+    character.match?(/[[:digit:]]/)
   end
 
   def no_legal_movements_left?
