@@ -65,4 +65,19 @@ describe Game do
       expect(default_game.selection_to_location('g2')).to eq [1, 6]
     end
   end
+  describe '#location_to_selection' do
+    it 'converts [3, 4] to e4' do
+      expect(default_game.location_to_selection([3, 4])).to eq 'e4'
+    end
+    it 'converts [1, 6] to g2' do
+      expect(default_game.location_to_selection([1, 6])).to eq 'g2'
+    end
+  end
+  describe '#destinations_to_notation' do
+    it 'converts an array of destination indexes to notation' do
+      destination_array = [[1, 2], [1, 3], [1, 4], [1, 5], [1, 6]]
+      expected_notation_array = %w[c2 d2 e2 f2 g2]
+      expect(default_game.destinations_to_notation(destination_array)).to eq expected_notation_array
+    end
+  end
 end

@@ -5,6 +5,16 @@ module Display
     puts "#{team_color}'s move"
   end
 
+  def display_destinations(destination_array)
+    result_string = ''
+    destination_array.each_with_index do |destination, index|
+      result_string += "\n" if (index % 5).zero?
+      notation_display_unit = "#{index}: #{destination} "
+      result_string += notation_display_unit
+    end
+    puts result_string
+  end
+
   def promt_to_choose
     puts 'Choose a piece on the board using its coordinates'
   end

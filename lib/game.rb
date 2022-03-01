@@ -31,6 +31,22 @@ class Game
     selection
   end
 
+  def movement_directions_to_destinations(movement_direction_array)
+    destination_array = []
+    movement_direction_array.each do |movement_direction|
+      destination_array << movement_direction.destination
+    end
+    destination_array
+  end
+
+  def destinations_to_notation(destination_array)
+    notation_array = []
+    destination_array.each do |destination|
+      notation_array << location_to_selection(destination)
+    end
+    notation_array
+  end
+
   def get_piece_selection
     selection = gets.chomp
   end
@@ -67,6 +83,13 @@ class Game
     row_index = selection.last.to_i - 1
     column_index = selection.first.ord - 97
     [row_index, column_index]
+  end
+
+  def location_to_selection(location)
+    selection = ''
+    selection += (location[1] + 97).chr
+    selection += (location[0] + 1).to_s
+    selection
   end
 
   def is_notation?(selection)
