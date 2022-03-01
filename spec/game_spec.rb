@@ -5,6 +5,21 @@ require 'load_game'
 
 describe Game do
   subject(:default_game) { Load_game.new.game }
+  describe '#get_valid_piece_selection' do
+    context 'upon call prompts for an input and returns it if the input is valid' do
+      invalid_input = '43'
+      invalid_input_two = 'hahaha'
+      valid_input = 'a7'
+      it 'upon giving a single invalid input and a single valid input returns the valid input' do
+        allow(default_game).to receive(:get_piece_selection).and_return(invalid_input, valid_input)
+        expect(default_game.get_valid_piece_selection).to eq valid_input
+      end
+      it 'upon giving two invalid inputs and one valid returns the valid input' do
+        allow(default_game).to receive(:get_piece_selection).and_return(invalid_input, invalid_input, valid_input)
+        expect(default_game.get_valid_piece_selection).to eq valid_input
+      end
+    end
+  end
   describe '#no_legal_movements_left?' do
     context 'when called, gets all pieces of color equivalent to the current fen state and returns a bool whether or not any of them can make a movement' do
       game_without_movements = Load_game.new('r1bqkb1r/pppp1Q1p/2n5/4N1p1/4n3/2N5/PPPP1PPP/R1B1KB1R b KQkq - 0 6').game

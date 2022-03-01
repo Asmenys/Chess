@@ -24,17 +24,14 @@ class Game
   end
 
   def get_valid_piece_selection
-    piece_selection = get_player_piece_selection
-    if valid_piece_selection?(piece_selection)
-      piece_selection
-    else
+    promt_to_choose
+    until valid_piece_selection?(selection = get_piece_selection)
       prompt_to_choose_invalid
-      piece_selection = get_valid_piece_selection
     end
-    piece_selection
+    selection
   end
 
-  def get_player_piece_selection
+  def get_piece_selection
     selection = gets.chomp
   end
 
