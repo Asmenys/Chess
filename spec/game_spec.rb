@@ -4,6 +4,7 @@ require 'game'
 require 'load_game'
 
 describe Game do
+  subject(:default_game) { Load_game.new.game }
   describe '#no_legal_movements_left?' do
     context 'when called, gets all pieces of color equivalent to the current fen state and returns a bool whether or not any of them can make a movement' do
       game_without_movements = Load_game.new('r1bqkb1r/pppp1Q1p/2n5/4N1p1/4n3/2N5/PPPP1PPP/R1B1KB1R b KQkq - 0 6').game
@@ -27,6 +28,26 @@ describe Game do
       it 'when given a valid selection returns true' do
         expect(game.valid_piece_selection?(valid_selection)).to be true
       end
+    end
+  end
+  describe '#is_notation?' do
+    context 'returns true or false based on given string input' do
+      is_not_notation = '43'
+      is_notation = 'e4'
+      it 'when given an input that is not board notation returns false' do
+        expect(default_game.is_notation?(is_not_notation)).to be false
+      end
+      it 'given an input that is board notation returns true' do
+        expect(default_game.is_notation?(is_notation)).to be true
+      end
+    end
+  end
+  describe '#selection_to_location' do
+    it 'converts e4 to [3, 4]' do
+      expect(default_game.selection_to_location('e4')).to eq [3, 4]
+    end
+    it 'converts g2 to [1, 6]' do
+      expect(default_game.selection_to_location('g2')).to eq [1, 6]
     end
   end
 end

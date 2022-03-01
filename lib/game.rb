@@ -82,11 +82,11 @@ class Game
   end
 
   def is_a_letter?(character)
-    character.match?(/[[:alpha:]]/)
+    character.match?(/[a-h]/)
   end
 
   def is_a_number?(character)
-    character.match?(/[[:digit:]]/)
+    character.match?(/[1-9]/)
   end
 
   def no_legal_movements_left?
