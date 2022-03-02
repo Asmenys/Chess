@@ -25,9 +25,10 @@ class Game
 
   def game_loop
     until has_player_lost?
+      reset_display
       announce_turn(@movement.fen_to_color)
-      @board.display_board
-      movement_direction = get_movement_direction_from_player
+      piece_selection = get_player_piece_selection
+      movement_direction = get_movement_direction_from_player(piece_selection)
       will_capture = @movement.will_result_in_capture?(movement_direction)
       @movement.execute_movement_directions(movement_direction)
 
@@ -44,6 +45,26 @@ class Game
     announce_win(reverse_fen_color)
   end
 
+  def get_player_piece_selection
+    piece_selection = nil
+    wants_to_move_piece = false
+    until(wants_to_move_piece)
+      piece_selection = get_valid_piece_selection
+      available_moves = get_movement_notation_from_piece_selection(piece_selection)
+      prompt_possible_movements
+      display_destinations(available_moves)
+      wants_to_move_piece = player_wants_to_move_this_piece?
+      reset_display
+    end
+    piece_selection
+  end
+
+  def player_wants_to_move_this_piece?
+    prompt_whether_wants_to_move_with_this_piece
+    player_answer = gets.chomp
+    player_answer == 'Y' || player_answer == 'y'
+  end
+
   def reverse_fen_color
     if @movement.fen_to_color == 'black'
       'white'
@@ -52,14 +73,22 @@ class Game
     end
   end
 
-  def get_movement_direction_from_player
-    piece_selection = get_valid_piece_selection
-    piece_location = selection_to_location(piece_selection)
-    movement_direction_array = @movement.get_possible_movement_directions(piece_location)
-    movement_directions_as_notations = movement_directions_to_notation(movement_direction_array)
-    display_destinations(movement_directions_as_notations)
-    destination_selection = get_valid_destination_selection(movement_directions_as_notations.length)
+  def get_movement_direction_from_player(piece_selection)
+    movement_direction_array = movement_directions_from_piece_selection(piece_selection)
+    movement_notations = get_movement_notation_from_piece_selection(piece_selection)
+    display_destinations(movement_notations)
+    destination_selection = get_valid_destination_selection(movement_notations.length)
     movement_direction_array[destination_selection]
+  end
+
+  def get_movement_notation_from_piece_selection(piece_selection)
+    movement_direction_array = movement_directions_from_piece_selection(piece_selection)
+     movement_directions_to_notation(movement_direction_array)
+  end
+
+  def movement_directions_from_piece_selection(piece_selection)
+    piece_location = selection_to_location(piece_selection)
+    @movement.get_possible_movement_directions(piece_location)
   end
 
   def get_valid_piece_selection

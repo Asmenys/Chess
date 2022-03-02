@@ -8,11 +8,24 @@ module Display
   def display_destinations(destination_array)
     result_string = ''
     destination_array.each_with_index do |destination, index|
-      result_string += "\n" if (index % 5).zero?
+      result_string += "\n" if (index % 5).zero? unless index.zero?
       notation_display_unit = "#{index}: #{destination} "
       result_string += notation_display_unit
     end
     puts result_string
+  end
+
+  def reset_display
+    system 'clear'
+    @board.display_board
+  end
+
+  def prompt_possible_movements
+    puts 'This piece has the following movements available to it'
+  end
+
+  def prompt_whether_wants_to_move_with_this_piece
+    puts 'Do you wish to move with this piece? Y/n'
   end
 
   def prompt_to_choose_destination
