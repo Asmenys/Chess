@@ -15,12 +15,20 @@ module Display
     puts result_string
   end
 
-  def promt_to_choose
+  def prompt_to_choose_destination
+    puts 'Choose a destination from the following list'
+  end
+
+  def promt_to_choose_destination_after_invalid_choice
+    'Please choose a valid destination from the following list'
+  end
+
+  def promt_to_choose_piece
     puts 'Choose a piece on the board using its coordinates'
   end
 
-  def prompt_to_choose_invalid
-    puts 'Please choose a valid location on the board'
+  def prompt_to_choose_piece_after_invalid_choice
+    puts "Please choose a valid location on the board. A valid location is considered a location that holds a piece belonging to you written in board coordinates as such 'e4', 'a8'."
   end
 
   def choose_another

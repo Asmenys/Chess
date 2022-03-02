@@ -24,11 +24,28 @@ class Game
   end
 
   def get_valid_piece_selection
-    promt_to_choose
+    promt_to_choose_piece
     until valid_piece_selection?(selection = get_piece_selection)
-      prompt_to_choose_invalid
+      prompt_to_choose_piece_after_invalid_choice
     end
     selection
+  end
+
+  def get_valid_destination_selection(destination_count)
+    prompt_to_choose_destination
+    until valid_destination_selection?(choice = gets.to_i, destination_count)
+      promt_to_choose_destination_after_invalid_choice
+    end
+    choice
+  end
+
+  def valid_destination_selection?(destination_choice, destination_count)
+    destination_choice.positive? && (destination_choice <= destination_count)
+  end
+
+  def movement_directions_to_notation(movement_direction_array)
+    destination_array = movement_directions_to_destinations(movement_direction_array)
+    notation_array = destinations_to_notation(destination_array)
   end
 
   def movement_directions_to_destinations(movement_direction_array)

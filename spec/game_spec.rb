@@ -20,6 +20,30 @@ describe Game do
       end
     end
   end
+  describe '#get_valid_destination_selection' do
+    context 'upon invoking promps for an input and returns it if the input is valid' do
+      invalid_input_example = 'im not a valid input :)'
+      valid_input_example = 4
+      destination_count = 5
+      promt_for_input_after_invalid = 'Please choose a valid destination from the following list'
+      it 'upon calling once with invalid input and once with valid returns the input and prompts user to select twice' do
+        allow(default_game).to receive(:gets).and_return(invalid_input_example, valid_input_example)
+        expect(default_game.get_valid_destination_selection(destination_count)).to eq(valid_input_example)
+      end
+    end
+  end
+
+  describe 'valid_destination_selection?' do
+    it 'when destination count is 25 and choice is 27 returns false' do
+      expect(default_game.valid_destination_selection?(27, 25)).to be false
+    end
+    it 'when destination count is 25 and choice is 0 returns false' do
+      expect(default_game.valid_destination_selection?(0, 25)).to be false
+    end
+    it 'when destination count is 25 and choice is 12 returns true' do
+      expect(default_game.valid_destination_selection?(12, 25)).to be true
+    end
+  end
   describe '#no_legal_movements_left?' do
     context 'when called, gets all pieces of color equivalent to the current fen state and returns a bool whether or not any of them can make a movement' do
       game_without_movements = Load_game.new('r1bqkb1r/pppp1Q1p/2n5/4N1p1/4n3/2N5/PPPP1PPP/R1B1KB1R b KQkq - 0 6').game
