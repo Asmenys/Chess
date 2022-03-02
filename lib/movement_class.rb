@@ -142,6 +142,7 @@ class Movement
     piece = @board.get_value_of_square(current_location)
     movement_direction_array = []
     possible_path_indexes = piece.possible_paths(current_location)
+    delete_invalid_paths(possible_path_indexes)
     unless possible_path_indexes.empty?
       possible_paths = path_indexes_to_paths(possible_path_indexes)
       delete_empty_paths_from_array(possible_paths)
@@ -213,17 +214,37 @@ class Movement
     color_hash.key(@active_color)
   end
 
-  def would_leave_king_in_check?(movement_directions)
+  def would_leave_king_in_check?(movement_direction)
     result = false
     if king_exists?
       cloned_board = @board.clone_board
+      piece_status_array = store_piece_status(movement_direction)
       current_en_passant = @en_passant
-      execute_movement_directions(movement_directions)
+      execute_movement_directions(movement_direction)
       result = is_king_in_check?
       @en_passant = current_en_passant
       @board.board = cloned_board
+      restore_piece_status(movement_direction, piece_status_array)
     end
     result
+  end
+
+  def store_piece_status(movement_direction)
+    piece_status_array = []
+    piece_status_array << @board.get_value_of_square(movement_direction.current_location).has_moved
+    if movement_direction.moves_two_pieces?
+      piece_status_array << @board.get_value_of_square(movement_direction.current_location_two)
+    end
+    piece_status_array
+  end
+
+  def restore_piece_status(movement_direction, piece_status_array)
+    piece_one = @board.get_value_of_square(movement_direction.current_location)
+    piece_one.has_moved = piece_status_array.first
+    if movement_direction.moves_two_pieces?
+      piece_two = @board.get_value_of_square(movement_direction.current_location_two)
+      piece_two.has_moved = piece_status_array.last
+    end
   end
 
   def king_exists?
@@ -232,6 +253,7 @@ class Movement
 
   def execute_movement_directions(movement_directions)
     move_piece(movement_directions)
+    update_piece_status(movement_directions)
     capture_en_passant(movement_directions)
     delete_moved_pieces(movement_directions)
   end
@@ -243,6 +265,15 @@ class Movement
       @board.set_square_to(movement_directions.destination_two, piece_two)
     end
     @board.set_square_to(movement_directions.destination, piece)
+  end
+
+  def update_piece_status(movement_direction)
+    piece_one = @board.get_value_of_square(movement_direction.destination)
+    piece_one.moved
+    if movement_direction.moves_two_pieces?
+      piece_two = @board.get_value_of_square(movement_direction.destination_two)
+      piece_two.moved
+    end
   end
 
   def capture_en_passant(movement_directions)
