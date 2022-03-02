@@ -20,8 +20,8 @@ class Load_game
     active_color = fen_notation_array[1]
     castling = fen_notation_array[2]
     en_passant = fen_notation_array[3]
-    full_turn = fen_notation_array[4]
-    half_turn = fen_notation_array[5]
+    full_turn = fen_notation_array[4].to_i
+    half_turn = fen_notation_array[5].to_i
     en_passant_cords = en_passant_to_coordinates(en_passant)
     movement_manager = Movement.new(board, active_color, en_passant_cords)
     @game = Game.new(@board, movement_manager,

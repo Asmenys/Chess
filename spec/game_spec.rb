@@ -28,7 +28,7 @@ describe Game do
       promt_for_input_after_invalid = 'Please choose a valid destination from the following list'
       it 'upon calling once with invalid input and once with valid returns the input and prompts user to select twice' do
         allow(default_game).to receive(:gets).and_return(invalid_input_example, valid_input_example)
-        expect(default_game.get_valid_destination_selection(destination_count)).to eq(valid_input_example)
+        expect(default_game.get_valid_destination_selection(destination_count)).to eq(valid_input_example.to_i)
       end
     end
   end
@@ -84,6 +84,9 @@ describe Game do
     end
     it 'converts g2 to [1, 6]' do
       expect(default_game.selection_to_location('g2')).to eq [1, 6]
+    end
+    it 'converts b8 to [7, 2]' do
+      expect(default_game.selection_to_location('b8')).to eq [7, 1]
     end
   end
   describe '#location_to_selection' do

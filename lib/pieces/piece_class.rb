@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Piece
-  attr_reader :team, :display_value, :has_moved, :name
+  attr_reader :team, :display_value, :name
+  attr_accessor :has_moved
 
   def initialize(team_colour, piece_name)
     @team = team_colour
@@ -12,6 +13,10 @@ class Piece
 
   def moved
     @has_moved = true
+  end
+
+  def reset_move
+    @has_moved = false
   end
 
   def can_two_step?

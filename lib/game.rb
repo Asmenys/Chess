@@ -23,6 +23,35 @@ class Game
     @movement = movement_manager
   end
 
+  def game_loop
+    until has_player_lost?
+      announce_turn(@movement.fen_to_color)
+      @board.display_board
+      movement_direction = get_movement_direction_from_player
+      will_capture = @movement.will_result_in_capture?(movement_direction)
+      @movement.execute_movement_directions(movement_direction)
+
+      increment_full_turns if @movement.fen_to_color == 'black'
+
+      if will_capture
+        reset_half_turns
+      else
+        increment_half_turns
+      end
+      @movement.update_active_color
+      system 'clear'
+    end
+    announce_win(reverse_fen_color)
+  end
+
+  def reverse_fen_color
+    if @movement.fen_to_color == 'black'
+      'white'
+    else
+      'black'
+    end
+  end
+
   def get_movement_direction_from_player
     piece_selection = get_valid_piece_selection
     piece_location = selection_to_location(piece_selection)
