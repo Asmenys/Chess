@@ -23,7 +23,7 @@ describe Game do
   describe '#get_valid_destination_selection' do
     context 'upon invoking promps for an input and returns it if the input is valid' do
       invalid_input_example = 'im not a valid input :)'
-      valid_input_example = 4
+      valid_input_example = '4'
       destination_count = 5
       promt_for_input_after_invalid = 'Please choose a valid destination from the following list'
       it 'upon calling once with invalid input and once with valid returns the input and prompts user to select twice' do
@@ -35,13 +35,10 @@ describe Game do
 
   describe 'valid_destination_selection?' do
     it 'when destination count is 25 and choice is 27 returns false' do
-      expect(default_game.valid_destination_selection?(27, 25)).to be false
-    end
-    it 'when destination count is 25 and choice is 0 returns false' do
-      expect(default_game.valid_destination_selection?(0, 25)).to be false
+      expect(default_game.valid_destination_selection?('27', 25)).to be false
     end
     it 'when destination count is 25 and choice is 12 returns true' do
-      expect(default_game.valid_destination_selection?(12, 25)).to be true
+      expect(default_game.valid_destination_selection?('12', 25)).to be true
     end
   end
   describe '#no_legal_movements_left?' do

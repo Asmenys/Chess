@@ -23,6 +23,16 @@ class Game
     @movement = movement_manager
   end
 
+  def get_movement_direction_from_player
+    piece_selection = get_valid_piece_selection
+    piece_location = selection_to_location(piece_selection)
+    movement_direction_array = @movement.get_possible_movement_directions(piece_location)
+    movement_directions_as_notations = movement_directions_to_notation(movement_direction_array)
+    display_destinations(movement_directions_as_notations)
+    destination_selection = get_valid_destination_selection(movement_directions_as_notations.length)
+    movement_direction_array[destination_selection]
+  end
+
   def get_valid_piece_selection
     promt_to_choose_piece
     until valid_piece_selection?(selection = get_piece_selection)
@@ -33,14 +43,16 @@ class Game
 
   def get_valid_destination_selection(destination_count)
     prompt_to_choose_destination
-    until valid_destination_selection?(choice = gets.to_i, destination_count)
+    until valid_destination_selection?(choice = gets.chomp, destination_count)
       promt_to_choose_destination_after_invalid_choice
     end
-    choice
+    choice.to_i
   end
 
   def valid_destination_selection?(destination_choice, destination_count)
-    destination_choice.positive? && (destination_choice <= destination_count)
+    result = false
+    result = destination_choice.to_i.between?(0, destination_count) if destination_choice.match?(/[[:digit:]]/)
+    result
   end
 
   def movement_directions_to_notation(movement_direction_array)

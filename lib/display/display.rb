@@ -20,7 +20,7 @@ module Display
   end
 
   def promt_to_choose_destination_after_invalid_choice
-    'Please choose a valid destination from the following list'
+    puts 'Please choose a valid destination from the following list'
   end
 
   def promt_to_choose_piece
