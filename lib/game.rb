@@ -47,13 +47,13 @@ class Game
 
   def get_player_piece_selection
     piece_selection = nil
-    wants_to_move_piece = false
-    until(wants_to_move_piece)
+    can_piece_move = false
+    until can_piece_move
       piece_selection = get_valid_piece_selection
       available_moves = get_movement_notation_from_piece_selection(piece_selection)
       prompt_possible_movements
       display_destinations(available_moves)
-      wants_to_move_piece = player_wants_to_move_this_piece?
+      can_piece_move = !available_moves.empty?
       reset_display
     end
     piece_selection
@@ -62,7 +62,7 @@ class Game
   def player_wants_to_move_this_piece?
     prompt_whether_wants_to_move_with_this_piece
     player_answer = gets.chomp
-    player_answer == 'Y' || player_answer == 'y'
+    %w[Y y].include?(player_answer)
   end
 
   def reverse_fen_color
@@ -77,13 +77,22 @@ class Game
     movement_direction_array = movement_directions_from_piece_selection(piece_selection)
     movement_notations = get_movement_notation_from_piece_selection(piece_selection)
     display_destinations(movement_notations)
-    destination_selection = get_valid_destination_selection(movement_notations.length)
-    movement_direction_array[destination_selection]
+    destination_selection = get_valid_destination_selection(movement_notations)
+    movement_direction_index = get_direction_index_from_destination_selection(notation_array, destination_selection)
+    movement_direction_array[movement_direction_index]
+  end
+
+  def get_direction_index_from_destination_selection(notation_array, destination_selection)
+    if destination_selection.numeric?
+      destination_selection.to_i
+    else
+      notation_array.index(destination_selection)
+    end
   end
 
   def get_movement_notation_from_piece_selection(piece_selection)
     movement_direction_array = movement_directions_from_piece_selection(piece_selection)
-     movement_directions_to_notation(movement_direction_array)
+    movement_directions_to_notation(movement_direction_array)
   end
 
   def movement_directions_from_piece_selection(piece_selection)
@@ -99,18 +108,24 @@ class Game
     selection
   end
 
-  def get_valid_destination_selection(destination_count)
+  def get_valid_destination_selection(notation_array)
+    destination_count = notation_array.length - 1
     prompt_to_choose_destination
-    until valid_destination_selection?(choice = gets.chomp, destination_count)
+    until valid_destination_selection?(choice = gets.chomp, notation_array)
       promt_to_choose_destination_after_invalid_choice
     end
-    choice.to_i
+    choice
   end
 
-  def valid_destination_selection?(destination_choice, destination_count)
-    result = false
-    result = destination_choice.to_i.between?(0, destination_count) if destination_choice.match?(/[[:digit:]]/)
-    result
+  def valid_destination_selection?(destination_choice, notation_array)
+    destination_count = notation_array.length - 1
+    if is_notation?(destination_choice)
+      notation_array.include?(destination_choice)
+    elsif destination_choice.numeric?
+      result = destination_choice.to_i.between?(0, destination_count) if destination_choice.match?(/[[:digit:]]/)
+    else
+      false
+    end
   end
 
   def movement_directions_to_notation(movement_direction_array)
@@ -183,17 +198,13 @@ class Game
     result = false
     if selection.length == 2
       selection = selection.chars
-      result = true if is_a_letter?(selection.first) && is_a_number?(selection.last)
+      result = true if is_a_letter?(selection.first) && selection.last.numeric?
     end
     result
   end
 
   def is_a_letter?(character)
     character.match?(/[a-h]/)
-  end
-
-  def is_a_number?(character)
-    character.match?(/[1-9]/)
   end
 
   def no_legal_movements_left?

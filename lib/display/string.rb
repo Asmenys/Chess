@@ -16,4 +16,10 @@ class String
   def is_upper?
     self == upcase
   end
+
+  def numeric?
+    !Float(self).nil?
+  rescue StandardError
+    false
+  end
 end

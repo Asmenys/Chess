@@ -24,21 +24,28 @@ describe Game do
     context 'upon invoking promps for an input and returns it if the input is valid' do
       invalid_input_example = 'im not a valid input :)'
       valid_input_example = '4'
-      destination_count = 5
+      valid_index_input_example = 'e4'
+      dummy_integer_array = Array.new(25) { |index| index += 1 }
+      dummy_notation_array = Array.new(8) { |index| "e#{index += 1}" }
       promt_for_input_after_invalid = 'Please choose a valid destination from the following list'
       it 'upon calling once with invalid input and once with valid returns the input and prompts user to select twice' do
         allow(default_game).to receive(:gets).and_return(invalid_input_example, valid_input_example)
-        expect(default_game.get_valid_destination_selection(destination_count)).to eq(valid_input_example.to_i)
+        expect(default_game.get_valid_destination_selection(dummy_integer_array)).to eq(valid_input_example)
+      end
+      it 'upon calling with an index that is included in the notation array returns the index' do
+        allow(default_game).to receive(:gets).and_return(valid_index_input_example)
+        expect(default_game.get_valid_destination_selection(dummy_notation_array)).to eq(valid_index_input_example)
       end
     end
   end
 
   describe 'valid_destination_selection?' do
+    let(:dummy_array) { Array.new(25) { |index| index += 1 } }
     it 'when destination count is 25 and choice is 27 returns false' do
-      expect(default_game.valid_destination_selection?('27', 25)).to be false
+      expect(default_game.valid_destination_selection?('27', dummy_array)).to be false
     end
     it 'when destination count is 25 and choice is 12 returns true' do
-      expect(default_game.valid_destination_selection?('12', 25)).to be true
+      expect(default_game.valid_destination_selection?('12', dummy_array)).to be true
     end
   end
   describe '#no_legal_movements_left?' do

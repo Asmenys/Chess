@@ -8,7 +8,7 @@ module Display
   def display_destinations(destination_array)
     result_string = ''
     destination_array.each_with_index do |destination, index|
-      result_string += "\n" if (index % 5).zero? unless index.zero?
+      result_string += "\n" if !index.zero? && (index % 5).zero?
       notation_display_unit = "#{index}: #{destination} "
       result_string += notation_display_unit
     end
