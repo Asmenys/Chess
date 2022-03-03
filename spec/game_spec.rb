@@ -5,6 +5,24 @@ require 'load_game'
 
 describe Game do
   subject(:default_game) { Load_game.new.game }
+
+  describe '#game_loop' do
+    context 'plays the game' do
+      it 'fools gambit leads into a black win' do
+        allow(default_game).to receive(:get_piece_selection).and_return('f7', 'e2', 'g7', 'd1')
+        allow(default_game).to receive(:get_valid_destination_selection).and_return('f6', 'e4', 'g5', 'h5')
+        expect(default_game.game_loop).to eq('black Wins the game!')
+      end
+      it 'dutch defense results in white win' do
+        allow(default_game).to receive(:get_piece_selection).and_return('d7', 'f2', 'c8', 'h2', 'g4', 'g2', 'e7', 'g4',
+                                                                        'd8')
+        allow(default_game).to receive(:get_valid_destination_selection).and_return('d5', 'f4', 'g4', 'h3', 'h5', 'g4',
+                                                                                    'e5', 'h5', 'h4')
+        expect(default_game.game_loop).to eq('white Wins the game!')
+      end
+    end
+  end
+
   describe '#get_valid_piece_selection' do
     context 'upon call prompts for an input and returns it if the input is valid' do
       invalid_input = '43'

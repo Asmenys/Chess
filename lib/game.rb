@@ -78,7 +78,7 @@ class Game
     movement_notations = get_movement_notation_from_piece_selection(piece_selection)
     display_destinations(movement_notations)
     destination_selection = get_valid_destination_selection(movement_notations)
-    movement_direction_index = get_direction_index_from_destination_selection(notation_array, destination_selection)
+    movement_direction_index = get_direction_index_from_destination_selection(movement_notations, destination_selection)
     movement_direction_array[movement_direction_index]
   end
 

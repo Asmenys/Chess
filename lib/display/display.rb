@@ -49,7 +49,7 @@ module Display
   end
 
   def announce_win(team_color)
-    puts "#{team_color} Wins the game!"
+    "#{team_color} Wins the game!"
   end
 
   def display_board
