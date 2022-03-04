@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require_relative 'game'
-
 class Load_game
+  include Piece_creation
   attr_reader :game, :board
 
   def initialize(fen_string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 0')

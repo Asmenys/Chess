@@ -9,8 +9,10 @@ require_relative 'path_utilities_module'
 require_relative 'movement_directions'
 require_relative 'board'
 require_relative 'movement_class'
+require_relative 'piece_creation_module'
 
 class Game
+  include Piece_creation
   include Display
   include Path_utilities
   attr_reader :full_turns, :half_turn, :en_passant, :active_color, :movement
@@ -31,6 +33,7 @@ class Game
       movement_direction = get_movement_direction_from_player(piece_selection)
       will_capture = @movement.will_result_in_capture?(movement_direction)
       @movement.execute_movement_directions(movement_direction)
+      convert_pawn(movement_direction) if movement_direction.will_convert
 
       increment_full_turns if @movement.fen_to_color == 'black'
 
@@ -43,6 +46,27 @@ class Game
       system 'clear'
     end
     announce_win(reverse_fen_color)
+  end
+
+  def convert_pawn(movement_direction)
+    promotion_choice = get_player_promotion_selection
+    piece_color = @movement.fen_to_color
+    new_piece = create_piece(piece_color, promotion_choice)
+    new_piece.moved
+    @board.set_square_to(movement_direction.destination, new_piece)
+  end
+
+  def get_player_promotion_selection
+    promt_to_choose_promotion
+    until valid_promotion_selection?(choice = gets.chomp)
+      promt_to_choose_promotion_after_invalid
+    end
+    choice
+  end
+
+  def valid_promotion_selection?(choice)
+    valid_conversions = %w[Rook Queen Knight Bishop]
+    valid_conversions.include?(choice)
   end
 
   def get_player_piece_selection

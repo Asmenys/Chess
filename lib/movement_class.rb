@@ -29,6 +29,7 @@ class Movement
       movement_direction_array += get_one_step(current_location)
       movement_direction_array += get_two_step(current_location)
       movement_direction_array += get_pawn_captures(current_location)
+      check_movement_directions_for_conversion(movement_direction_array)
     when 'King'
       movement_direction_array += get_castling(current_location)
     when 'Rook'
@@ -43,6 +44,24 @@ class Movement
                     else
                       'w'
                     end
+  end
+
+  def check_movement_directions_for_conversion(movement_direction_array)
+    movement_direction_array.each do |movement_direction|
+      movement_direction.converts if will_convert_pawn?(movement_direction)
+    end
+  end
+
+  def will_convert_pawn?(movement_direction)
+    pawn = @board.get_value_of_square(movement_direction.current_location)
+    result = false
+    case pawn.team
+    when 'black'
+      result = true if movement_direction.destination[0] == 7
+    when 'white'
+      result = true if movement_direction.destination[0].zero?
+    end
+    result
   end
 
   def get_castling(current_location)

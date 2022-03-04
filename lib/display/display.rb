@@ -15,6 +15,14 @@ module Display
     puts result_string
   end
 
+  def promt_to_choose_promotion
+    puts 'Your pawn is eligible for promotion, choose a desirable promotion of your pawn, valid inputs are -> Queen, Rook, Knight, Bishop'
+  end
+
+  def promt_to_choose_promotion_after_invalid
+    puts 'Please choose a valid promotion option, valid choices are -> Queen, Rook, Knight, Bishop'
+  end
+
   def reset_display
     system 'clear'
     @board.display_board
