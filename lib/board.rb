@@ -12,6 +12,26 @@ class Board
     @board = Array.new(8) { Array.new(8) }
   end
 
+  def board_to_fen
+    fen_string = ''
+    free_space_index = 0
+    @board.each_with_index do |row, row_index|
+      row.each do |node|
+        if node.nil?
+          free_space_index += 1
+        else
+          fen_string += free_space_index.to_s unless free_space_index.zero?
+          free_space_index = 0
+          fen_string += node.self_to_fen
+        end
+      end
+      fen_string += free_space_index.to_s unless free_space_index.zero?
+      free_space_index = 0
+      fen_string += '/' unless row_index == 7
+    end
+    fen_string
+  end
+
   def clone_board
     cloned_board = Array.new(8) { Array.new(8) }
     @board.each_with_index do |row, row_index|

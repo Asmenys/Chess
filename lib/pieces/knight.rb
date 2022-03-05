@@ -9,4 +9,13 @@ class Knight < Piece
   def basic_jumps(location)
     get_knight_movements(location)
   end
+
+  def self_to_fen
+    case @team
+    when 'black'
+      'n'
+    else
+      'N'
+    end
+  end
 end

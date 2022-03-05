@@ -3,6 +3,25 @@
 require 'load_game'
 
 describe Board do
+  describe '#board_to_fen' do
+    context 'converts the board to a fen string for saving purposes' do
+      empty_board = Load_game.new('8/8/8/8/8/8/8/8 w - - 0 1').game.board
+      starting_position_board = Load_game.new('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1').game.board
+      expected_empty_board_fen_string = '8/8/8/8/8/8/8/8'
+      expected_starting_position_board_fen_string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'
+      partially_empty_board = Load_game.new('rnbqkbnr/ppp4p/8/8/8/8/PPPPPPPP/R2QKBNR w KQkq - 0 1').game.board
+      expected_partially_empty_board_fen_string = 'rnbqkbnr/ppp4p/8/8/8/8/PPPPPPPP/R2QKBNR'
+      it 'empty board is converted to the expected empty fen string' do
+        expect(empty_board.board_to_fen).to eq expected_empty_board_fen_string
+      end
+      it 'starting position board is converted to the expected starting pos fen string' do
+        expect(starting_position_board.board_to_fen).to eq expected_starting_position_board_fen_string
+      end
+      it 'partially empty board string matches the expected fen string' do
+        expect(partially_empty_board.board_to_fen).to eq expected_partially_empty_board_fen_string
+      end
+    end
+  end
   describe '#empty_location?' do
     subject(:board) { described_class.new }
     context 'given a location returns whether the node is populated or not' do

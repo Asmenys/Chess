@@ -34,6 +34,15 @@ class Piece
   def possible_attack_paths(current_location)
     possible_paths(current_location)
   end
+
+  def self_to_fen
+    case @team
+    when 'black'
+      @name.chars[0].downcase
+    else
+      @name.chars[0]
+    end
+  end
 end
 
 require_relative 'piece_values'
