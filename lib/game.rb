@@ -26,26 +26,44 @@ class Game
   end
 
   def game_loop
-    until has_player_lost?
-      reset_display
-      announce_turn(@movement.fen_to_color)
-      piece_selection = get_player_piece_selection
-      movement_direction = get_movement_direction_from_player(piece_selection)
-      will_capture = @movement.will_result_in_capture?(movement_direction)
-      @movement.execute_movement_directions(movement_direction)
-      convert_pawn(movement_direction) if movement_direction.will_convert
-
-      increment_full_turns if @movement.fen_to_color == 'black'
-
-      if will_capture
-        reset_half_turns
-      else
-        increment_half_turns
-      end
-      @movement.update_active_color
-      system 'clear'
+    game_turn until is_game_over?
+    if is_stalemate?
+      puts 'stalemate'
+    elsif has_player_lost?
+      announce_win(reverse_fen_color)
     end
-    announce_win(reverse_fen_color)
+  end
+
+  def is_game_over?
+    is_stalemate? || has_player_lost? || @half_turn >= 50
+  end
+
+  def is_stalemate?
+    current_color = @movement.fen_to_color
+    kings_location = @board.find_king(current_color)
+    result = false
+    result = no_legal_movements_left? if @movement.is_square_under_attack?(kings_location.index) == false
+    result
+  end
+
+  def game_turn
+    reset_display
+    announce_turn(@movement.fen_to_color)
+    piece_selection = get_player_piece_selection
+    movement_direction = get_movement_direction_from_player(piece_selection)
+    will_capture = @movement.will_result_in_capture?(movement_direction)
+    @movement.execute_movement_directions(movement_direction)
+    convert_pawn(movement_direction) if movement_direction.will_convert
+
+    increment_full_turns if @movement.fen_to_color == 'black'
+
+    if will_capture
+      reset_half_turns
+    else
+      increment_half_turns
+    end
+    @movement.update_active_color
+    system 'clear'
   end
 
   def convert_pawn(movement_direction)
