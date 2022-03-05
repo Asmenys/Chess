@@ -23,14 +23,19 @@ class Game
     @full_turns = full_turn
     @half_turn = half_turn
     @movement = movement_manager
+    @move_repetitions = 0
+    @last_move_white = nil
+    @last_move_black = nil
   end
 
   def game_loop
     game_turn until is_game_over?
     if is_stalemate?
-      puts 'stalemate'
+      'announce a stalemate'
     elsif has_player_lost?
       announce_win(reverse_fen_color)
+    elsif @move_repetitions == 3
+      'announce a forceful draw by repetitions'
     end
   end
 
@@ -64,6 +69,42 @@ class Game
     end
     @movement.update_active_color
     system 'clear'
+  end
+
+  def update_repetitions(movement_direction)
+    movement_destination = movement_direction.destination
+    if repetetive_movement?(movement_direction)
+      @move_repetitions += 1
+    else
+      @move_repetitions = 0
+    end
+  end
+
+  def repetetive_movement?(_movement_destination)
+    case @movement.fen_to_color
+    when 'black'
+      begin
+        destination == @last_move_black
+      rescue StandardError
+        false
+      end
+    when 'white'
+      begin
+        destination == @last_move_white
+      rescue StandardError
+        false
+      end
+    end
+  end
+
+  def log_movement(movement_direction)
+    unless will_result_in_capture?(movement_direction)
+      if @movement.fen_to_color == 'black'
+        @last_move_black = movement_direction.current_location
+      else
+        @last_move_white = movement_direction.current_location
+      end
+    end
   end
 
   def convert_pawn(movement_direction)
