@@ -29,18 +29,22 @@ class Game
   end
 
   def game_loop
+    game_result_message = ''
     game_turn until is_game_over?
     if is_stalemate?
-      'announce a stalemate'
+      game_result_message 'the game has come to a stalemate'
     elsif has_player_lost?
-      announce_win(reverse_fen_color)
+      game_result_message = announce_win(reverse_fen_color)
     elsif @move_repetitions == 3
-      'announce a forceful draw by repetitions'
+      game_result_message = 'the game has come to a draw as a result of repetetive movements'
+    else
+      game_result_message = 'Players have agreed to a draw'
     end
+    game_result_message
   end
 
   def is_game_over?
-    is_stalemate? || has_player_lost? || @half_turn >= 50
+    is_stalemate? || has_player_lost? || @half_turn >= 50 || would_players_like_to_draw?
   end
 
   def is_stalemate?
@@ -68,7 +72,28 @@ class Game
       increment_half_turns
     end
     @movement.update_active_color
-    system 'clear'
+  end
+
+  def would_players_like_to_draw?
+    reset_display
+    if player_would_like_to_propose_draw?
+      reset_display
+      result = player_agrees_to_a_draw?
+    end
+    reset_display
+    result
+  end
+
+  def player_would_like_to_propose_draw?
+    puts 'would you like to propose a draw Y/n'
+    respone = gets.chomp
+    %w[Y y].include?(respone)
+  end
+
+  def player_agrees_to_a_draw?
+    puts 'Would you like to agree to draw?'
+    response = gets.chomp
+    %w[Y y].include?(respone)
   end
 
   def update_repetitions(movement_direction)
@@ -133,19 +158,16 @@ class Game
     can_piece_move = false
     until can_piece_move
       piece_selection = get_valid_piece_selection
-      available_moves = get_movement_notation_from_piece_selection(piece_selection)
-      prompt_possible_movements
-      display_destinations(available_moves)
-      can_piece_move = !available_moves.empty?
+      can_piece_move = can_piece_move?(piece_selection)
       reset_display
+      prompt_immovable_piece unless can_piece_move
     end
     piece_selection
   end
 
-  def player_wants_to_move_this_piece?
-    prompt_whether_wants_to_move_with_this_piece
-    player_answer = gets.chomp
-    %w[Y y].include?(player_answer)
+  def can_piece_move?(piece_selection)
+    available_moves = get_movement_notation_from_piece_selection(piece_selection)
+    !available_moves.empty?
   end
 
   def reverse_fen_color
@@ -186,6 +208,7 @@ class Game
   def get_valid_piece_selection
     promt_to_choose_piece
     until valid_piece_selection?(selection = get_piece_selection)
+      reset_display
       prompt_to_choose_piece_after_invalid_choice
     end
     selection

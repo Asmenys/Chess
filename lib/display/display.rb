@@ -15,6 +15,10 @@ module Display
     puts result_string
   end
 
+  def prompt_immovable_piece
+    puts 'This piece does not have any legal moves, please choose another piece'
+  end
+
   def promt_to_choose_promotion
     puts 'Your pawn is eligible for promotion, choose a desirable promotion of your pawn, valid inputs are -> Queen, Rook, Knight, Bishop'
   end

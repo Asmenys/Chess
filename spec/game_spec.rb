@@ -11,6 +11,7 @@ describe Game do
       it 'fools gambit leads into a black win' do
         allow(default_game).to receive(:get_piece_selection).and_return('f7', 'e2', 'g7', 'd1')
         allow(default_game).to receive(:get_valid_destination_selection).and_return('f6', 'e4', 'g5', 'h5')
+        allow(default_game).to receive(:player_would_like_to_propose_draw?).and_return(false)
         expect(default_game.game_loop).to eq('black Wins the game!')
       end
       it 'dutch defense results in white win' do
@@ -18,6 +19,7 @@ describe Game do
                                                                         'd8')
         allow(default_game).to receive(:get_valid_destination_selection).and_return('d5', 'f4', 'g4', 'h3', 'h5', 'g4',
                                                                                     'e5', 'h5', 'h4')
+        allow(default_game).to receive(:player_would_like_to_propose_draw?).and_return(false)
         expect(default_game.game_loop).to eq('white Wins the game!')
       end
     end
