@@ -3,12 +3,79 @@
 require 'pry-byebug'
 class Movement
   include Path_utilities
+  include Location_conversion
   attr_reader :board
 
   def initialize(board, active_color, en_passant)
     @board = board
     @active_color = active_color
     @en_passant = en_passant
+  end
+
+  def self_to_fen
+    fen_string = ''
+    fen_string += "#{@active_color} "
+    fen_string += "#{castling_to_fen} "
+    fen_string += "#{en_passant_to_fen} "
+    fen_string
+  end
+
+  def castling_to_fen
+    fen_string = ''
+    fen_string += castling_to_fen_of_color('white')
+    fen_string += castling_to_fen_of_color('black')
+    if fen_string.empty?
+      '-'
+    else
+      fen_string
+    end
+  end
+
+  def castling_to_fen_of_color(color)
+    fen_string = ''
+    kings_node = @board.find_king(color)
+    king = kings_node.value
+    unless king.has_moved
+      king_side_rook = @board.get_value_of_square([get_base_row(color), 0])
+      queen_side_rook = @board.get_value_of_square([get_base_row(color), 7])
+      begin
+        fen_string += 'k' unless king_side_rook.has_moved
+      rescue StandardError
+        true
+      end
+      begin
+        fen_string += 'q' unless queen_side_rook.has_moved
+      rescue StandardError
+        true
+      end
+    end
+    fen_case_size(color, fen_string)
+  end
+
+  def en_passant_to_fen
+    if @en_passant.nil?
+      '-'
+    else
+      en_passant_notation = location_to_selection(@en_passant)
+    end
+  end
+
+  def fen_case_size(color, fen_string)
+    case color
+    when 'black'
+      fen_string.downcase
+    else
+      fen_string.upcase
+    end
+  end
+
+  def get_base_row(color)
+    case color
+    when 'black'
+      0
+    else
+      7
+    end
   end
 
   def will_result_in_capture?(movement_direction)

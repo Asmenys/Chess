@@ -2,6 +2,31 @@
 
 require 'load_game'
 describe Movement do
+  describe '#self_to_fen' do
+    context 'converts the current state of the game within the class scope to a fen string' do
+      starting_position_game = Load_game.new.game
+      game_without_white_castling = Load_game.new('rnbqkbnr/pppppppp/8/8/8/8/RPPPPPPR/1NBQKBN1 w kq - 0 1').game
+      game_without_black_castling = Load_game.new('1nbqkbn1/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQ - 0 1').game
+      game_without_castling = Load_game.new('1nbqkbn1/pppppppp/8/8/8/8/PPPPPPPP/1NBQKBN1 w - - 0 1').game
+      game_with_white_kingside_castling = Load_game.new('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/N1BQKBNR w Kkq - 0 1').game
+      it 'starting_position game movements self to fen returns expected fen string' do
+        expected_fen_string = 'w KQkq - '
+        expect(starting_position_game.movement.self_to_fen).to eq(expected_fen_string)
+      end
+      it 'works with game without white castling' do
+        expected_fen_string = 'w kq - '
+        expect(game_without_white_castling.movement.self_to_fen).to eq(expected_fen_string)
+      end
+      it 'works with game without black castling' do
+        expected_fen_string = 'w KQ - '
+        expect(game_without_black_castling.movement.self_to_fen).to eq(expected_fen_string)
+      end
+      it 'works in a game without castling possibilities' do
+        expected_fen_string = 'w - - '
+        expect(game_without_castling.movement.self_to_fen).to eq(expected_fen_string)
+      end
+    end
+  end
   describe '#get_possible_movement_directions' do
     context 'returns directions for all the possible legal movements a piece may take' do
       black_move_test_game = Load_game.new('5Rpk/1n3B1p/8/2Pp4/8/8/2P5/R2K3R b - - 0 1').game
