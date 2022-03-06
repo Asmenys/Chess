@@ -5,16 +5,17 @@ require_relative 'display/string'
 require_relative 'pieces/piece_class'
 require_relative 'path'
 require_relative 'node'
+require_relative 'location_conversion_module'
 require_relative 'path_utilities_module'
 require_relative 'movement_directions'
 require_relative 'board'
 require_relative 'movement_class'
 require_relative 'piece_creation_module'
-
 class Game
   include Piece_creation
   include Display
   include Path_utilities
+  include Location_conversion
   attr_reader :full_turns, :half_turn, :en_passant, :active_color, :movement
   attr_accessor :board
 
@@ -284,20 +285,6 @@ class Game
       end
     end
     result
-  end
-
-  def selection_to_location(selection)
-    selection = selection.chars
-    row_index = selection.last.to_i - 1
-    column_index = selection.first.ord - 97
-    [row_index, column_index]
-  end
-
-  def location_to_selection(location)
-    selection = ''
-    selection += (location[1] + 97).chr
-    selection += (location[0] + 1).to_s
-    selection
   end
 
   def is_notation?(selection)
