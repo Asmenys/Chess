@@ -25,6 +25,10 @@ describe Movement do
         expected_fen_string = 'w - - '
         expect(game_without_castling.movement.self_to_fen).to eq(expected_fen_string)
       end
+      it 'works in a game with only white kingside castling and full black castling' do
+        expected_fen_string = 'w Kkq - '
+        expect(game_with_white_kingside_castling.movement.self_to_fen).to eq(expected_fen_string)
+      end
     end
   end
   describe '#get_possible_movement_directions' do

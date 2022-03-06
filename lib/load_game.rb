@@ -92,9 +92,9 @@ class Load_game
     when 'Bishop'
       result = has_bishop_moved?(piece, location)
     when 'Knight'
-      has_knight_moved?(piece, location)
+      result = has_knight_moved?(piece, location)
     when 'Queen'
-      has_queen_moved?(piece, location)
+      result = has_queen_moved?(piece, location)
     end
     result
   end

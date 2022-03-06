@@ -36,8 +36,8 @@ class Movement
     kings_node = @board.find_king(color)
     king = kings_node.value
     unless king.has_moved
-      king_side_rook = @board.get_value_of_square([get_base_row(color), 0])
-      queen_side_rook = @board.get_value_of_square([get_base_row(color), 7])
+      king_side_rook = @board.get_value_of_square([get_base_row(color), 7])
+      queen_side_rook = @board.get_value_of_square([get_base_row(color), 0])
       begin
         fen_string += 'k' unless king_side_rook.has_moved
       rescue StandardError

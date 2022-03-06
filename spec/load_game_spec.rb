@@ -13,6 +13,14 @@ describe Load_game do
     end
   end
 
+  describe '#has_knight_moved?' do
+    it 'when a knight is not in starting position returns true' do
+      knights_location = [7, 0]
+      piece = Knight.new('black', 'Knight')
+      expect(subject.has_knight_moved?(piece, knights_location)).to be true
+    end
+  end
+
   describe '#name_to_color' do
     it 'given a black rook returns Black' do
       name = 'r'
