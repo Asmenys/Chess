@@ -5,7 +5,7 @@ class Load_game
   include Piece_creation
   attr_reader :game, :board
 
-  def initialize(fen_string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 0')
+  def initialize(fen_string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
     setup_game_instance(fen_string)
   end
 
@@ -20,8 +20,8 @@ class Load_game
     active_color = fen_notation_array[1]
     castling = fen_notation_array[2]
     en_passant = fen_notation_array[3]
-    full_turn = fen_notation_array[4].to_i
-    half_turn = fen_notation_array[5].to_i
+    half_turn = fen_notation_array[4].to_i
+    full_turn = fen_notation_array[5].to_i
     en_passant_cords = en_passant_to_coordinates(en_passant)
     movement_manager = Movement.new(board, active_color, en_passant_cords)
     @game = Game.new(@board, movement_manager,

@@ -29,6 +29,14 @@ class Game
     @last_move_black = nil
   end
 
+  def self_to_fen
+    fen_string = ''
+    fen_string += "#{@board.board_to_fen} "
+    fen_string += @movement.self_to_fen
+    fen_string += "#{@half_turn} "
+    fen_string += @full_turns.to_s
+  end
+
   def game_loop
     game_result_message = ''
     game_turn until is_game_over?

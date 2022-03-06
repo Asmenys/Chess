@@ -6,6 +6,12 @@ require 'load_game'
 describe Game do
   subject(:default_game) { Load_game.new.game }
 
+  describe '#self_to_fen' do
+    it 'converts the state of the game to a fen string' do
+      expect(default_game.self_to_fen).to eq('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
+    end
+  end
+
   describe '#game_loop' do
     context 'plays the game' do
       it 'fools gambit leads into a black win' do
