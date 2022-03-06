@@ -89,8 +89,44 @@ class Load_game
       result = has_rook_moved?(piece, location)
     when 'King'
       result = has_king_moved?(piece, location)
+    when 'Bishop'
+      result = has_bishop_moved?(piece, location)
+    when 'Knight'
+      has_knight_moved?(piece, location)
+    when 'Queen'
+      has_queen_moved?(piece, location)
     end
     result
+  end
+
+  def has_queen_moved?(piece, location)
+    color = piece.team
+    case color
+    when 'black'
+      ![[0, 3]].include?(location)
+    else
+      ![[7, 3]].include?(location)
+    end
+  end
+
+  def has_knight_moved?(piece, location)
+    color = piece.team
+    case color
+    when 'black'
+      ![[0, 1], [0, 6]].include?(location)
+    else
+      ![[7, 1], [7, 6]].include?(location)
+    end
+  end
+
+  def has_bishop_moved?(piece, location)
+    color = piece.team
+    case color
+    when 'black'
+      ![[0, 2], [0, 5]].include?(location)
+    else
+      ![[7, 2], [7, 5]].include?(location)
+    end
   end
 
   def has_pawn_moved?(piece, location)
