@@ -29,27 +29,49 @@ class Game
     @last_move_black = nil
   end
 
+  def save_game
+    create_save_dir unless does_save_dir_exist?
+    File.new("saves/#{get_file_name}", 'w')
+  end
+
+  def does_save_dir_exist?
+    Dir.exist?('saves/')
+  end
+
+  def get_file_name
+    "saved_game_#{get_file_name_index}"
+  end
+
+  def create_save_dir
+    Dir.mkdir('saves/')
+  end
+
+  def get_file_name_index
+    Dir.glob('saves/**').length.to_s
+  end
+
   def self_to_fen
-    fen_string = ''
-    fen_string += "#{@board.board_to_fen} "
+    fen_string = "#{@board.board_to_fen} "
     fen_string += @movement.self_to_fen
     fen_string += "#{@half_turn} "
     fen_string += @full_turns.to_s
   end
 
   def game_loop
-    game_result_message = ''
     game_turn until is_game_over?
+    announce_game_result
+  end
+
+  def announce_game_result
     if is_stalemate?
-      game_result_message 'the game has come to a stalemate'
+      'the game has come to a stalemate'
     elsif has_player_lost?
-      game_result_message = announce_win(reverse_fen_color)
+      announce_win(reverse_fen_color)
     elsif @move_repetitions == 3
-      game_result_message = 'the game has come to a draw as a result of repetetive movements'
+      'the game has come to a draw as a result of repetetive movements'
     else
-      game_result_message = 'Players have agreed to a draw'
+      'Players have agreed to a draw'
     end
-    game_result_message
   end
 
   def is_game_over?
@@ -67,7 +89,7 @@ class Game
   def game_turn
     reset_display
     announce_turn(@movement.fen_to_color)
-    piece_selection = get_player_piece_selection
+    piece_selection = get_valid_piece_selection
     movement_direction = get_movement_direction_from_player(piece_selection)
     will_capture = @movement.will_result_in_capture?(movement_direction)
     @movement.execute_movement_directions(movement_direction)
@@ -107,24 +129,24 @@ class Game
 
   def update_repetitions(movement_direction)
     movement_destination = movement_direction.destination
-    if repetetive_movement?(movement_direction)
+    if repetetive_movement?(movement_destination)
       @move_repetitions += 1
     else
       @move_repetitions = 0
     end
   end
 
-  def repetetive_movement?(_movement_destination)
+  def repetetive_movement?(movement_destination)
     case @movement.fen_to_color
     when 'black'
       begin
-        destination == @last_move_black
+        movement_destination == @last_move_black
       rescue StandardError
         false
       end
     when 'white'
       begin
-        destination == @last_move_white
+        movement_destination == @last_move_white
       rescue StandardError
         false
       end
