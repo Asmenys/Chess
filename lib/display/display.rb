@@ -1,6 +1,27 @@
 # frozen_string_literal: true
 
 module Display
+  def announce_game_result
+    if is_stalemate?
+      'the game has come to a stalemate'
+    elsif has_player_lost?
+      announce_win(reverse_fen_color)
+    elsif @move_repetitions == 3
+      'the game has come to a draw as a result of repetetive movements'
+    else
+      'Players have agreed to a draw'
+    end
+  end
+
+  def choose_piece_or_command_menu
+    puts 'Enter the location of a piece you would like to move or enter cmd for the command menu'
+  end
+
+  def display_state_of_the_game
+    reset_display
+    announce_turn(@movement.fen_to_color)
+  end
+
   def announce_turn(team_color)
     puts "#{team_color}'s move"
   end

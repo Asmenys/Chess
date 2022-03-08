@@ -58,38 +58,36 @@ class Game
   end
 
   def game_loop
-    game_turn until is_game_over?
+    until is_game_over?
+      reset_display
+      player_game_input = get_player_game_input
+      if player_wishes_to_enter_command_menu?(player_game_input)
+        'nothing yet'
+      else
+        game_turn(player_game_input)
+      end
+    end
     announce_game_result
   end
 
-  def announce_game_result
-    if is_stalemate?
-      'the game has come to a stalemate'
-    elsif has_player_lost?
-      announce_win(reverse_fen_color)
-    elsif @move_repetitions == 3
-      'the game has come to a draw as a result of repetetive movements'
-    else
-      'Players have agreed to a draw'
+  def get_player_game_input
+    choose_piece_or_command_menu
+    until valid_player_game_input?(player_game_input = gets.chomp)
+      reset_display
+      prompt_to_choose_piece_after_invalid_choice
     end
+    player_game_input
   end
 
-  def is_game_over?
-    is_stalemate? || has_player_lost? || @half_turn >= 50 || would_players_like_to_draw?
+  def valid_player_game_input?(player_game_input)
+    player_game_input == 'cmd' || valid_piece_selection?(player_game_input)
   end
 
-  def is_stalemate?
-    current_color = @movement.fen_to_color
-    kings_location = @board.find_king(current_color)
-    result = false
-    result = no_legal_movements_left? if @movement.is_square_under_attack?(kings_location.index) == false
-    result
+  def player_wishes_to_enter_command_menu?(player_game_input)
+    player_game_input == 'cmd'
   end
 
-  def game_turn
-    reset_display
-    announce_turn(@movement.fen_to_color)
-    piece_selection = get_valid_piece_selection
+  def game_turn(piece_selection)
     movement_direction = get_movement_direction_from_player(piece_selection)
     will_capture = @movement.will_result_in_capture?(movement_direction)
     @movement.execute_movement_directions(movement_direction)
@@ -103,6 +101,18 @@ class Game
       increment_half_turns
     end
     @movement.update_active_color
+  end
+
+  def is_game_over?
+    is_stalemate? || has_player_lost? || @half_turn >= 50 || would_players_like_to_draw?
+  end
+
+  def is_stalemate?
+    current_color = @movement.fen_to_color
+    kings_location = @board.find_king(current_color)
+    result = false
+    result = no_legal_movements_left? if @movement.is_square_under_attack?(kings_location.index) == false
+    result
   end
 
   def would_players_like_to_draw?
@@ -310,7 +320,7 @@ class Game
     result = false
     if is_notation?(selection)
       location = selection_to_location(selection)
-      if valid_location?(location) && (!@board.empty_location?(location) && (@board.get_value_of_square(location).team == @movement.fen_to_color))
+      if valid_location?(location) && (!@board.empty_location?(location) && (@board.get_value_of_square(location).team == @movement.fen_to_color)) && can_piece_move?(selection)
         result = true
       end
     end
