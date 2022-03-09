@@ -11,6 +11,7 @@ require_relative 'movement_directions'
 require_relative 'board'
 require_relative 'movement_class'
 require_relative 'piece_creation_module'
+require_relative 'command_directions'
 class Game
   include Piece_creation
   include Display
@@ -58,14 +59,13 @@ class Game
   end
 
   def game_loop
-    until is_game_over?
+    player_chose_to_end_the_game = false
+    until is_game_over? || player_chose_to_end_the_game
       reset_display
-      player_game_input = get_player_game_input
-      if player_wishes_to_enter_command_menu?(player_game_input)
-        'nothing yet'
-      else
-        game_turn(player_game_input)
+      until valid_piece_selection?(player_game_input = get_player_game_input)
+        'not implemented' if is_a_command?(player_game_input)
       end
+      game_turn(player_game_input)
     end
     announce_game_result
   end
@@ -80,11 +80,30 @@ class Game
   end
 
   def valid_player_game_input?(player_game_input)
-    player_game_input == 'cmd' || valid_piece_selection?(player_game_input)
+    is_a_command?(player_game_input) || valid_piece_selection?(player_game_input)
   end
 
-  def player_wishes_to_enter_command_menu?(player_game_input)
-    player_game_input == 'cmd'
+  def is_a_command?(player_game_input)
+    %w[save draw resign].include?(player_game_input.downcase)
+  end
+
+  def execute_command(command)
+    command_result_message = ''
+    command_direction = Command_directions.new
+    case command
+    when 'save'
+      save_game
+      command_direction.command_message = announce_saved_game
+    when 'draw'
+      if player_agrees_to_a_draw?
+        command_direction.ends_the_game = true
+        command_direction.command_message = 'Players have agreed to a draw'
+      end
+    when 'resign'
+      command_direction.command_message = 'Player has resigned from the game'
+      command_direction.ends_the_game = true
+    end
+    command_direction
   end
 
   def game_turn(piece_selection)

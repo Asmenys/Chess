@@ -8,9 +8,15 @@ module Display
       announce_win(reverse_fen_color)
     elsif @move_repetitions == 3
       'the game has come to a draw as a result of repetetive movements'
-    else
-      'Players have agreed to a draw'
     end
+  end
+
+  def announce_saved_game
+    puts 'game has been saved'
+  end
+
+  def display_possible_commands
+    puts 'save, resign, draw'
   end
 
   def choose_piece_or_command_menu
