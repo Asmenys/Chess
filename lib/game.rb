@@ -32,7 +32,7 @@ class Game
 
   def save_game
     create_save_dir unless does_save_dir_exist?
-    File.new("saves/#{get_file_name}", 'w')
+    File.open("saves/#{get_file_name}", 'w') {|save_file| save_file.write("#{self_to_fen}")}
   end
 
   def does_save_dir_exist?
