@@ -20,7 +20,7 @@ module Display
   end
 
   def choose_piece_or_command_menu
-    puts 'Enter the location of a piece you would like to move or enter cmd for the command menu'
+    puts 'Enter the location of a piece you would like to move or ls for possible commands'
   end
 
   def display_state_of_the_game

@@ -32,7 +32,7 @@ class Game
 
   def save_game
     create_save_dir unless does_save_dir_exist?
-    File.open("saves/#{get_file_name}", 'w') {|save_file| save_file.write("#{self_to_fen}")}
+    File.open("saves/#{get_file_name}", 'w') { |save_file| save_file.write(self_to_fen.to_s) }
   end
 
   def does_save_dir_exist?
@@ -59,15 +59,36 @@ class Game
   end
 
   def game_loop
-    player_chose_to_end_the_game = false
-    until is_game_over? || player_chose_to_end_the_game
+    game_result_message = ''
+    until is_game_over?
       reset_display
+      announce_turn(@movement.fen_to_color)
       until valid_piece_selection?(player_game_input = get_player_game_input)
-        'not implemented' if is_a_command?(player_game_input)
+        next unless is_a_command?(player_game_input)
+
+        command_execution_results = execute_command(player_game_input)
+        if command_execution_results.ends_the_game
+          break
+        else
+          puts command_execution_results.command_message
+        end
+        break if command_execution_results.ends_the_game
+      end
+      if !command_execution_results.nil? && command_execution_results.ends_the_game
+        game_result_message = command_execution_results.command_message
+        break
       end
       game_turn(player_game_input)
     end
-    announce_game_result
+    game_result_announcement(game_result_message)
+  end
+
+  def game_result_announcement(game_result_message)
+    if game_result_message.empty?
+      announce_game_result
+    else
+      game_result_message
+    end
   end
 
   def get_player_game_input
@@ -84,7 +105,7 @@ class Game
   end
 
   def is_a_command?(player_game_input)
-    %w[save draw resign].include?(player_game_input.downcase)
+    %w[save draw resign ls].include?(player_game_input.downcase)
   end
 
   def execute_command(command)
@@ -92,17 +113,22 @@ class Game
     command_direction = Command_directions.new
     case command
     when 'save'
+      reset_display
       save_game
-      command_direction.command_message = announce_saved_game
+      announce_saved_game
     when 'draw'
       if player_agrees_to_a_draw?
         command_direction.ends_the_game = true
-        command_direction.command_message = 'Players have agreed to a draw'
+        command_result_message = 'Players have agreed to a draw'
       end
     when 'resign'
-      command_direction.command_message = 'Player has resigned from the game'
+      command_result_message = 'Player has resigned from the game'
       command_direction.ends_the_game = true
+    when 'ls'
+      reset_display
+      display_possible_commands
     end
+    command_direction.command_message = command_result_message
     command_direction
   end
 
@@ -120,10 +146,11 @@ class Game
       increment_half_turns
     end
     @movement.update_active_color
+    reset_display
   end
 
   def is_game_over?
-    is_stalemate? || has_player_lost? || @half_turn >= 50 || would_players_like_to_draw?
+    is_stalemate? || has_player_lost? || @half_turn >= 50
   end
 
   def is_stalemate?
@@ -146,14 +173,14 @@ class Game
 
   def player_would_like_to_propose_draw?
     puts 'would you like to propose a draw Y/n'
-    respone = gets.chomp
-    %w[Y y].include?(respone)
+    response = gets.chomp
+    %w[Y y].include?(response)
   end
 
   def player_agrees_to_a_draw?
     puts 'Would you like to agree to draw?'
     response = gets.chomp
-    %w[Y y].include?(respone)
+    %w[Y y].include?(response)
   end
 
   def update_repetitions(movement_direction)

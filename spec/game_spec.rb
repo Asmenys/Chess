@@ -6,6 +6,20 @@ require 'load_game'
 describe Game do
   subject(:default_game) { Load_game.new.game }
 
+  describe '#is_a_command?' do
+    context 'given a string returns a bool' do
+      it 'when the string represents a command returns true' do
+        expect(default_game.is_a_command?('resign')).to be true
+      end
+      it 'when the string does not represent a command returns false' do
+        expect(default_game.is_a_command?('whatever')).to be false
+      end
+      it 'when the string is empty returns false' do
+        expect(default_game.is_a_command?('')).to be false
+      end
+    end
+  end
+
   describe '#self_to_fen' do
     it 'converts the state of the game to a fen string' do
       expect(default_game.self_to_fen).to eq('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
