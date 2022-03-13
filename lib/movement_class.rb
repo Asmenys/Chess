@@ -35,12 +35,16 @@ class Movement
     piece_location_array = @board.get_piece_locations_of_color(fen_to_color)
     result = true
     piece_location_array.each do |piece_location|
-      unless get_possible_movement_directions(piece_location).empty?
+      if can_piece_move?(piece_location)
         result = false
         break
       end
     end
     result
+  end
+
+  def can_piece_move?(piece_location)
+    !get_possible_movement_directions(piece_location).empty?
   end
 
   def castling_to_fen_of_color(color)

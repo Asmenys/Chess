@@ -238,23 +238,6 @@ class Game
     valid_conversions.include?(choice)
   end
 
-  def get_player_piece_selection
-    piece_selection = nil
-    can_piece_move = false
-    until can_piece_move
-      piece_selection = get_valid_piece_selection
-      can_piece_move = can_piece_move?(piece_selection)
-      reset_display
-      prompt_immovable_piece unless can_piece_move
-    end
-    piece_selection
-  end
-
-  def can_piece_move?(piece_selection)
-    available_moves = get_movement_notation_from_piece_selection(piece_selection)
-    !available_moves.empty?
-  end
-
   def reverse_fen_color
     if @movement.fen_to_color == 'black'
       'white'
@@ -288,15 +271,6 @@ class Game
   def movement_directions_from_piece_selection(piece_selection)
     piece_location = selection_to_location(piece_selection)
     @movement.get_possible_movement_directions(piece_location)
-  end
-
-  def get_valid_piece_selection
-    promt_to_choose_piece
-    until valid_piece_selection?(selection = get_piece_selection)
-      reset_display
-      prompt_to_choose_piece_after_invalid_choice
-    end
-    selection
   end
 
   def get_valid_destination_selection(notation_array)
@@ -352,7 +326,7 @@ class Game
     result = false
     if is_notation?(selection)
       location = selection_to_location(selection)
-      if valid_location?(location) && (!@board.empty_location?(location) && (@board.get_value_of_square(location).team == @movement.fen_to_color)) && can_piece_move?(selection)
+      if valid_location?(location) && (!@board.empty_location?(location) && (@board.get_value_of_square(location).team == @movement.fen_to_color)) && @movement.can_piece_move?(location)
         result = true
       end
     end

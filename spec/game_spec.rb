@@ -45,21 +45,6 @@ describe Game do
     end
   end
 
-  describe '#get_valid_piece_selection' do
-    context 'upon call prompts for an input and returns it if the input is valid' do
-      invalid_input = '43'
-      invalid_input_two = 'hahaha'
-      valid_input = 'a7'
-      it 'upon giving a single invalid input and a single valid input returns the valid input' do
-        allow(default_game).to receive(:get_piece_selection).and_return(invalid_input, valid_input)
-        expect(default_game.get_valid_piece_selection).to eq valid_input
-      end
-      it 'upon giving two invalid inputs and one valid returns the valid input' do
-        allow(default_game).to receive(:get_piece_selection).and_return(invalid_input, invalid_input, valid_input)
-        expect(default_game.get_valid_piece_selection).to eq valid_input
-      end
-    end
-  end
   describe '#get_valid_destination_selection' do
     context 'upon invoking promps for an input and returns it if the input is valid' do
       invalid_input_example = 'im not a valid input :)'
