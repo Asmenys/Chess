@@ -314,10 +314,6 @@ class Game
     notation_array
   end
 
-  def get_piece_selection
-    selection = gets.chomp
-  end
-
   def checkmate?
     @movement.no_legal_movements_left?
   end
