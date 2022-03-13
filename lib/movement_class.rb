@@ -31,6 +31,18 @@ class Movement
     end
   end
 
+  def no_legal_movements_left?
+    piece_location_array = @board.get_piece_locations_of_color(fen_to_color)
+    result = true
+    piece_location_array.each do |piece_location|
+      unless get_possible_movement_directions(piece_location).empty?
+        result = false
+        break
+      end
+    end
+    result
+  end
+
   def castling_to_fen_of_color(color)
     fen_string = ''
     kings_node = @board.find_king(color)

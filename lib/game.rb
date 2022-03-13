@@ -157,7 +157,7 @@ class Game
     current_color = @movement.fen_to_color
     kings_location = @board.find_king(current_color)
     result = false
-    result = no_legal_movements_left? if @movement.is_square_under_attack?(kings_location.index) == false
+    result = @movement.no_legal_movements_left? if @movement.is_square_under_attack?(kings_location.index) == false
     result
   end
 
@@ -347,7 +347,7 @@ class Game
   end
 
   def has_player_lost?
-    no_legal_movements_left?
+    @movement.no_legal_movements_left?
   end
 
   def increment_full_turns
@@ -384,17 +384,5 @@ class Game
 
   def is_a_letter?(character)
     character.match?(/[a-h]/)
-  end
-
-  def no_legal_movements_left?
-    piece_location_array = @board.get_piece_locations_of_color(@movement.fen_to_color)
-    result = true
-    piece_location_array.each do |piece_location|
-      unless @movement.get_possible_movement_directions(piece_location).empty?
-        result = false
-        break
-      end
-    end
-    result
   end
 end
