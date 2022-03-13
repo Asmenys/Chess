@@ -6,7 +6,6 @@ class Board
   include Horizontal_moveset
   attr_accessor :board
 
-  include Display
   include Path_utilities
   def initialize
     @board = Array.new(8) { Array.new(8) }

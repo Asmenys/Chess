@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'display/display'
+require_relative 'display/board_display'
+require_relative 'display/game_display'
 require_relative 'display/string'
 require_relative 'pieces/piece_class'
 require_relative 'path'
@@ -15,19 +16,20 @@ require_relative 'command_directions'
 require_relative 'movement_clock'
 class Game
   include Piece_creation
-  include Display
   include Path_utilities
   include Location_conversion
-  attr_reader :full_turns, :half_turn, :en_passant, :active_color, :movement
+  attr_reader :full_turns, :half_turn, :en_passant, :active_color, :movement, :board_display
   attr_accessor :board
 
   def initialize(board, movement_manager, movement_clock)
     @board = board
+    @board_display = Board_display.new(board)
     @movement_clock = movement_clock
     @movement = movement_manager
     @move_repetitions = 0
     @last_move_white = nil
     @last_move_black = nil
+    @game_display = Game_display.new(self)
   end
 
   def save_game
@@ -60,7 +62,7 @@ class Game
   def game_loop
     game_result_message = ''
     until is_game_over?
-      display_state_of_the_game
+      @game_display.display_state_of_the_game
       until valid_piece_selection?(player_game_input = get_player_game_input)
         next unless is_a_command?(player_game_input)
 
@@ -78,22 +80,14 @@ class Game
       end
       game_turn(player_game_input)
     end
-    game_result_announcement(game_result_message)
-  end
-
-  def game_result_announcement(game_result_message)
-    if game_result_message.empty?
-      announce_game_result
-    else
-      game_result_message
-    end
+    @game_display.game_result_announcement(game_result_message)
   end
 
   def get_player_game_input
-    choose_piece_or_command_menu
+    @game_display.choose_piece_or_command_menu
     until valid_player_game_input?(player_game_input = gets.chomp)
-      reset_display
-      prompt_to_choose_piece_after_invalid_choice
+      @game_display.reset_display
+      @game_display.prompt_to_choose_piece_after_invalid_choice
     end
     player_game_input
   end
@@ -111,9 +105,9 @@ class Game
     command_direction = Command_directions.new
     case command
     when 'save'
-      reset_display
+      @game_display.reset_display
       save_game
-      announce_saved_game
+      @game_display.announce_saved_game
     when 'draw'
       if player_agrees_to_a_draw?
         command_direction.ends_the_game = true
@@ -123,11 +117,15 @@ class Game
       command_result_message = 'Player has resigned from the game'
       command_direction.ends_the_game = true
     when 'ls'
-      reset_display
+      @game_display.reset_display
       display_possible_commands
     end
     command_direction.command_message = command_result_message
     command_direction
+  end
+
+  def display_possible_commands
+    puts 'save, resign, draw'
   end
 
   def game_turn(piece_selection)
@@ -144,7 +142,7 @@ class Game
       @movement_clock.increment_half_turns
     end
     @movement.update_active_color
-    reset_display
+    @game_display.reset_display
   end
 
   def is_game_over?
@@ -160,9 +158,9 @@ class Game
   end
 
   def would_players_like_to_draw?
-    reset_display
+    @game_display.reset_display
     if player_would_like_to_propose_draw?
-      reset_display
+      @game_display.reset_display
       result = player_agrees_to_a_draw?
     end
     reset_display
@@ -226,9 +224,9 @@ class Game
   end
 
   def get_player_promotion_selection
-    promt_to_choose_promotion
+    @game_display.promt_to_choose_promotion
     until valid_promotion_selection?(choice = gets.chomp)
-      promt_to_choose_promotion_after_invalid
+      @game_display.promt_to_choose_promotion_after_invalid
     end
     choice
   end
@@ -249,7 +247,7 @@ class Game
   def get_movement_direction_from_player(piece_selection)
     movement_direction_array = movement_directions_from_piece_selection(piece_selection)
     movement_notations = get_movement_notation_from_piece_selection(piece_selection)
-    display_destinations(movement_notations)
+    @game_display.display_destinations(movement_notations)
     destination_selection = get_valid_destination_selection(movement_notations)
     movement_direction_index = get_direction_index_from_destination_selection(movement_notations, destination_selection)
     movement_direction_array[movement_direction_index]
@@ -275,9 +273,9 @@ class Game
 
   def get_valid_destination_selection(notation_array)
     destination_count = notation_array.length - 1
-    prompt_to_choose_destination
+    @game_display.prompt_to_choose_destination
     until valid_destination_selection?(choice = gets.chomp, notation_array)
-      promt_to_choose_destination_after_invalid_choice
+      @game_display.promt_to_choose_destination_after_invalid_choice
     end
     choice
   end
