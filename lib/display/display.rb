@@ -4,7 +4,7 @@ module Display
   def announce_game_result
     if is_stalemate?
       'the game has come to a stalemate'
-    elsif has_player_lost?
+    elsif checkmate?
       announce_win(reverse_fen_color)
     elsif @move_repetitions == 3
       'the game has come to a draw as a result of repetetive movements'

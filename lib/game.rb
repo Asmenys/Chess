@@ -150,7 +150,7 @@ class Game
   end
 
   def is_game_over?
-    is_stalemate? || has_player_lost? || @half_turn >= 50
+    is_stalemate? || checkmate? || @half_turn >= 50
   end
 
   def is_stalemate?
@@ -346,7 +346,7 @@ class Game
     selection = gets.chomp
   end
 
-  def has_player_lost?
+  def checkmate?
     @movement.no_legal_movements_left?
   end
 
