@@ -20,13 +20,12 @@ class Load_game
     active_color = fen_notation_array[1]
     castling = fen_notation_array[2]
     en_passant = fen_notation_array[3]
-    half_turn = fen_notation_array[4].to_i
-    full_turn = fen_notation_array[5].to_i
+    half_turns = fen_notation_array[4].to_i
+    full_turns = fen_notation_array[5].to_i
+    movement_clock = Movement_clock.new(full_turns, half_turns)
     en_passant_cords = en_passant_to_coordinates(en_passant)
     movement_manager = Movement.new(board, active_color, en_passant_cords)
-    @game = Game.new(@board, movement_manager,
-                     full_turn,
-                     half_turn)
+    @game = Game.new(@board, movement_manager, movement_clock)
   end
 
   def split_fen_into_array(fen_string)

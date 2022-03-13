@@ -12,6 +12,7 @@ require_relative 'board'
 require_relative 'movement_class'
 require_relative 'pieces/piece_creation_module'
 require_relative 'command_directions'
+require_relative 'movement_clock'
 class Game
   include Piece_creation
   include Display
@@ -20,10 +21,9 @@ class Game
   attr_reader :full_turns, :half_turn, :en_passant, :active_color, :movement
   attr_accessor :board
 
-  def initialize(board, movement_manager, full_turn = nil, half_turn = nil)
+  def initialize(board, movement_manager, movement_clock)
     @board = board
-    @full_turns = full_turn
-    @half_turn = half_turn
+    @movement_clock = movement_clock
     @movement = movement_manager
     @move_repetitions = 0
     @last_move_white = nil
@@ -54,15 +54,13 @@ class Game
   def self_to_fen
     fen_string = "#{@board.self_to_fen} "
     fen_string += @movement.self_to_fen
-    fen_string += "#{@half_turn} "
-    fen_string += @full_turns.to_s
+    fen_string += @movement_clock.self_to_fen
   end
 
   def game_loop
     game_result_message = ''
     until is_game_over?
-      reset_display
-      announce_turn(@movement.fen_to_color)
+      display_state_of_the_game
       until valid_piece_selection?(player_game_input = get_player_game_input)
         next unless is_a_command?(player_game_input)
 
@@ -138,19 +136,19 @@ class Game
     @movement.execute_movement_directions(movement_direction)
     convert_pawn(movement_direction) if movement_direction.will_convert
 
-    increment_full_turns if @movement.fen_to_color == 'black'
+    @movement_clock.increment_full_turns if @movement.fen_to_color == 'black'
 
     if will_capture
-      reset_half_turns
+      @movement_clock.reset_half_turns
     else
-      increment_half_turns
+      @movement_clock.increment_half_turns
     end
     @movement.update_active_color
     reset_display
   end
 
   def is_game_over?
-    is_stalemate? || checkmate? || @half_turn >= 50
+    is_stalemate? || checkmate? || @movement_clock.fifty_move_rule?
   end
 
   def is_stalemate?
@@ -348,18 +346,6 @@ class Game
 
   def checkmate?
     @movement.no_legal_movements_left?
-  end
-
-  def increment_full_turns
-    @full_turns += 1
-  end
-
-  def increment_half_turns
-    @half_turn += 1
-  end
-
-  def reset_half_turns
-    @half_turn = 0
   end
 
   def valid_piece_selection?(selection)
