@@ -12,7 +12,7 @@ class Board
     @board = Array.new(8) { Array.new(8) }
   end
 
-  def board_to_fen
+  def self_to_fen
     fen_string = ''
     free_space_index = 0
     @board.each_with_index do |row, row_index|

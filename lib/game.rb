@@ -10,7 +10,7 @@ require_relative 'path_utilities_module'
 require_relative 'movement_directions'
 require_relative 'board'
 require_relative 'movement_class'
-require_relative 'piece_creation_module'
+require_relative 'pieces/piece_creation_module'
 require_relative 'command_directions'
 class Game
   include Piece_creation
@@ -52,7 +52,7 @@ class Game
   end
 
   def self_to_fen
-    fen_string = "#{@board.board_to_fen} "
+    fen_string = "#{@board.self_to_fen} "
     fen_string += @movement.self_to_fen
     fen_string += "#{@half_turn} "
     fen_string += @full_turns.to_s
