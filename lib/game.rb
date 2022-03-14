@@ -14,21 +14,22 @@ require_relative 'movement_class'
 require_relative 'pieces/piece_creation_module'
 require_relative 'command_directions'
 require_relative 'movement_clock'
+require_relative 'move_logger'
+require_relative 'active_color_clock'
 class Game
   include Piece_creation
   include Path_utilities
   include Location_conversion
-  attr_reader :full_turns, :half_turn, :en_passant, :active_color, :movement, :board_display
+  attr_reader :en_passant, :movement, :active_color_clock, :board_display
   attr_accessor :board
 
-  def initialize(board, movement_manager, movement_clock)
+  def initialize(board, movement_manager, active_color_clock, movement_clock)
     @board = board
     @board_display = Board_display.new(board)
     @movement_clock = movement_clock
     @movement = movement_manager
-    @move_repetitions = 0
-    @last_move_white = nil
-    @last_move_black = nil
+    @active_color_clock = active_color_clock
+    @movement_logger = Move_logger.new(active_color_clock)
     @game_display = Game_display.new(self)
   end
 
@@ -134,14 +135,15 @@ class Game
     @movement.execute_movement_directions(movement_direction)
     convert_pawn(movement_direction) if movement_direction.will_convert
 
-    @movement_clock.increment_full_turns if @movement.fen_to_color == 'black'
+    @movement_clock.increment_full_turns if @active_color_clock.fen_to_color == 'black'
 
     if will_capture
       @movement_clock.reset_half_turns
     else
       @movement_clock.increment_half_turns
+      @movement_logger.log_movement(movement_direction)
     end
-    @movement.update_active_color
+    @active_color_clock.update_active_color
     @game_display.reset_display
   end
 
@@ -150,7 +152,7 @@ class Game
   end
 
   def is_stalemate?
-    current_color = @movement.fen_to_color
+    current_color = @active_color_clock.fen_to_color
     kings_location = @board.find_king(current_color)
     result = false
     result = @movement.no_legal_movements_left? if @movement.is_square_under_attack?(kings_location.index) == false
@@ -179,45 +181,9 @@ class Game
     %w[Y y].include?(response)
   end
 
-  def update_repetitions(movement_direction)
-    movement_destination = movement_direction.destination
-    if repetetive_movement?(movement_destination)
-      @move_repetitions += 1
-    else
-      @move_repetitions = 0
-    end
-  end
-
-  def repetetive_movement?(movement_destination)
-    case @movement.fen_to_color
-    when 'black'
-      begin
-        movement_destination == @last_move_black
-      rescue StandardError
-        false
-      end
-    when 'white'
-      begin
-        movement_destination == @last_move_white
-      rescue StandardError
-        false
-      end
-    end
-  end
-
-  def log_movement(movement_direction)
-    unless will_result_in_capture?(movement_direction)
-      if @movement.fen_to_color == 'black'
-        @last_move_black = movement_direction.current_location
-      else
-        @last_move_white = movement_direction.current_location
-      end
-    end
-  end
-
   def convert_pawn(movement_direction)
     promotion_choice = get_player_promotion_selection
-    piece_color = @movement.fen_to_color
+    piece_color = @active_color_clock.fen_to_color
     new_piece = create_piece(piece_color, promotion_choice)
     new_piece.moved
     @board.set_square_to(movement_direction.destination, new_piece)
@@ -234,14 +200,6 @@ class Game
   def valid_promotion_selection?(choice)
     valid_conversions = %w[Rook Queen Knight Bishop]
     valid_conversions.include?(choice)
-  end
-
-  def reverse_fen_color
-    if @movement.fen_to_color == 'black'
-      'white'
-    else
-      'black'
-    end
   end
 
   def get_movement_direction_from_player(piece_selection)
@@ -320,7 +278,7 @@ class Game
     result = false
     if is_notation?(selection)
       location = selection_to_location(selection)
-      if valid_location?(location) && (!@board.empty_location?(location) && (@board.get_value_of_square(location).team == @movement.fen_to_color)) && @movement.can_piece_move?(location)
+      if valid_location?(location) && (!@board.empty_location?(location) && (@board.get_value_of_square(location).team == @active_color_clock.fen_to_color)) && @movement.can_piece_move?(location)
         result = true
       end
     end

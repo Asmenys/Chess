@@ -19,14 +19,14 @@ class Game_display
 
   def display_state_of_the_game
     reset_display
-    announce_turn(@game.movement.fen_to_color)
+    announce_turn(@game.active_color_clock.fen_to_color)
   end
 
   def announce_game_result
     if @game.is_stalemate?
       'the game has come to a stalemate'
     elsif @game.checkmate?
-      announce_win(@game.reverse_fen_color)
+      announce_win(@game.active_color_clock.reverse_fen_color)
     elsif @game.move_repetitions == 3
       'the game has come to a draw as a result of repetetive movements'
     end
@@ -38,7 +38,7 @@ class Game_display
 
   def display_state_of_the_game
     reset_display
-    announce_turn(@game.movement.fen_to_color)
+    announce_turn(@game.active_color_clock.fen_to_color)
   end
 
   def choose_piece_or_command_menu

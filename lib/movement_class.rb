@@ -6,15 +6,15 @@ class Movement
   include Location_conversion
   attr_reader :board
 
-  def initialize(board, active_color, en_passant)
+  def initialize(board, active_color_clock, en_passant)
     @board = board
-    @active_color = active_color
+    @active_color_clock = active_color_clock
     @en_passant = en_passant
   end
 
   def self_to_fen
     fen_string = ''
-    fen_string += "#{@active_color} "
+    fen_string += "#{@active_color_clock.active_color} "
     fen_string += "#{castling_to_fen} "
     fen_string += "#{en_passant_to_fen} "
     fen_string
@@ -32,7 +32,7 @@ class Movement
   end
 
   def no_legal_movements_left?
-    piece_location_array = @board.get_piece_locations_of_color(fen_to_color)
+    piece_location_array = @board.get_piece_locations_of_color(@active_color_clock.fen_to_color)
     result = true
     piece_location_array.each do |piece_location|
       if can_piece_move?(piece_location)
@@ -99,7 +99,7 @@ class Movement
     if destination_value.nil?
       movement_direction.destination == @en_passant
     else
-      destination_value.team != fen_to_color
+      destination_value.team != @active_color_clock.fen_to_color
     end
   end
 
@@ -119,14 +119,6 @@ class Movement
       movement_direction_array += get_castling(current_location)
     end
     filter_movements_for_check(movement_direction_array)
-  end
-
-  def update_active_color
-    @active_color = if @active_color == 'w'
-                      'b'
-                    else
-                      'w'
-                    end
   end
 
   def check_movement_directions_for_conversion(movement_direction_array)
@@ -180,7 +172,7 @@ class Movement
       if node.empty?
         captureable_nodes << node unless @en_passant != node.index
       else
-        captureable_nodes << node unless node.value.team == fen_to_color
+        captureable_nodes << node unless node.value.team == @active_color_clock.fen_to_color
       end
     end
     captureable_nodes
@@ -276,7 +268,7 @@ class Movement
   def remove_friendly_destinations(array_of_paths)
     paths_without_friendly_pieces = []
     array_of_paths.each do |path|
-      path.pop if !path.last_node.value.nil? && (path.last_node.value.team == fen_to_color)
+      path.pop if !path.last_node.value.nil? && (path.last_node.value.team == @active_color_clock.fen_to_color)
       paths_without_friendly_pieces << path
     end
     paths_without_friendly_pieces
@@ -307,13 +299,8 @@ class Movement
     if square_value.nil?
       false
     else
-      square_value.team == fen_to_color
+      square_value.team == @active_color_clock.fen_to_color
     end
-  end
-
-  def fen_to_color
-    color_hash = { 'white' => 'w', 'black' => 'b' }
-    color_hash.key(@active_color)
   end
 
   def would_leave_king_in_check?(movement_direction)
@@ -350,7 +337,7 @@ class Movement
   end
 
   def king_exists?
-    @board.find_king(fen_to_color).nil? == false
+    @board.find_king(@active_color_clock.fen_to_color).nil? == false
   end
 
   def execute_movement_directions(movement_directions)
@@ -390,7 +377,7 @@ class Movement
   end
 
   def get_pawn_location_from_en_passant
-    case @active_color
+    case @active_color_clock.active_color
     when 'w'
       [@en_passant[0] + 1, @en_passant[1]]
     when 'b'
@@ -399,7 +386,7 @@ class Movement
   end
 
   def is_king_in_check?
-    kings_node = @board.find_king(fen_to_color)
+    kings_node = @board.find_king(@active_color_clock.fen_to_color)
     is_square_under_attack?(kings_node.index)
   end
 
@@ -424,7 +411,7 @@ class Movement
   end
 
   def filter_out_friendly_nodes(node_array)
-    node_array.delete_if { |node| node.value.team == fen_to_color }
+    node_array.delete_if { |node| node.value.team == @active_color_clock.fen_to_color }
     node_array
   end
 

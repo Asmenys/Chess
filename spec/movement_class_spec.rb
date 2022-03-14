@@ -281,7 +281,7 @@ describe Movement do
         expect(game.movement.is_square_under_attack?([0, 0])).to be true
       end
       it '[5, 0] is under attack by black bishop' do
-        game.movement.update_active_color
+        game.active_color_clock.update_active_color
         expect(game.movement.is_square_under_attack?([5, 0])).to be true
       end
       it '[4, 3] is not under attack by any pieces' do
@@ -392,18 +392,7 @@ describe Movement do
       expect(game.movement.filter_out_friendly_nodes(node_array)).to eq expected_array_result
     end
   end
-  describe '#fen_to_color' do
-    context 'converts the active fen color to a color used by other functions' do
-      it 'when current color is w returns white' do
-        game = Load_game.new.game
-        expect(game.movement.fen_to_color).to eq 'white'
-      end
-      it 'when current color is b returns black' do
-        game = Load_game.new('8/8/8/8/8/8/8/8 b - - 0 1').game
-        expect(game.movement.fen_to_color).to eq 'black'
-      end
-    end
-  end
+
   describe '#can_pieces_attack?' do
     context 'given a populated node array and a final mov. destination checks if any pieces can move to such destination' do
       let(:game) { Load_game.new.game }
