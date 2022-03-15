@@ -16,6 +16,8 @@ require_relative 'command_directions'
 require_relative 'movement_clock'
 require_relative 'move_logger'
 require_relative 'active_color_clock'
+require_relative 'command_interpreter'
+
 class Game
   include Piece_creation
   include Path_utilities
@@ -31,27 +33,7 @@ class Game
     @active_color_clock = active_color_clock
     @movement_logger = Move_logger.new(active_color_clock)
     @game_display = Game_display.new(self)
-  end
-
-  def save_game
-    create_save_dir unless does_save_dir_exist?
-    File.open("saves/#{get_file_name}", 'w') { |save_file| save_file.write(self_to_fen.to_s) }
-  end
-
-  def does_save_dir_exist?
-    Dir.exist?('saves/')
-  end
-
-  def get_file_name
-    "saved_game_#{get_file_name_index}"
-  end
-
-  def create_save_dir
-    Dir.mkdir('saves/')
-  end
-
-  def get_file_name_index
-    Dir.glob('saves/**').length.to_s
+    @command_interpreter = Command_interpreter.new
   end
 
   def self_to_fen
@@ -65,15 +47,15 @@ class Game
     until is_game_over?
       @game_display.display_state_of_the_game
       until valid_piece_selection?(player_game_input = get_player_game_input)
-        next unless is_a_command?(player_game_input)
+        next unless @command_interpreter.is_a_command?(player_game_input)
 
-        command_execution_results = execute_command(player_game_input)
+        command_execution_results = @command_interpreter.execute_command(player_game_input)
         if command_execution_results.ends_the_game
           break
         else
+          @game_display.reset_display
           puts command_execution_results.command_message
         end
-        break if command_execution_results.ends_the_game
       end
       if !command_execution_results.nil? && command_execution_results.ends_the_game
         game_result_message = command_execution_results.command_message
@@ -94,41 +76,8 @@ class Game
   end
 
   def valid_player_game_input?(player_game_input)
-    is_a_command?(player_game_input) || valid_piece_selection?(player_game_input)
+    @command_interpreter.is_a_command?(player_game_input) || valid_piece_selection?(player_game_input)
   end
-
-  def is_a_command?(player_game_input)
-    %w[save draw resign ls].include?(player_game_input.downcase)
-  end
-
-  def execute_command(command)
-    command_result_message = ''
-    command_direction = Command_directions.new
-    case command
-    when 'save'
-      @game_display.reset_display
-      save_game
-      @game_display.announce_saved_game
-    when 'draw'
-      if player_agrees_to_a_draw?
-        command_direction.ends_the_game = true
-        command_result_message = 'Players have agreed to a draw'
-      end
-    when 'resign'
-      command_result_message = 'Player has resigned from the game'
-      command_direction.ends_the_game = true
-    when 'ls'
-      @game_display.reset_display
-      display_possible_commands
-    end
-    command_direction.command_message = command_result_message
-    command_direction
-  end
-
-  def display_possible_commands
-    puts 'save, resign, draw'
-  end
-
   def game_turn(piece_selection)
     movement_direction = get_movement_direction_from_player(piece_selection)
     will_capture = @movement.will_result_in_capture?(movement_direction)
