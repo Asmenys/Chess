@@ -24,4 +24,13 @@ class Player_display
   def promt_to_choose_destination_after_invalid_choice
     puts 'Please choose a valid destination from the following list'
   end
+
+  def promt_to_choose_promotion
+    puts 'Your pawn is eligible for promotion, choose a desirable promotion of your pawn, valid inputs are -> Queen, Rook, Knight, Bishop'
+  end
+
+  def promt_to_choose_promotion_after_invalid
+    puts 'Please choose a valid promotion option, valid choices are -> Queen, Rook, Knight, Bishop'
+  end
+
 end

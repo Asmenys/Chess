@@ -55,14 +55,6 @@ class Game_display
     puts 'This piece does not have any legal moves, please choose another piece'
   end
 
-  def promt_to_choose_promotion
-    puts 'Your pawn is eligible for promotion, choose a desirable promotion of your pawn, valid inputs are -> Queen, Rook, Knight, Bishop'
-  end
-
-  def promt_to_choose_promotion_after_invalid
-    puts 'Please choose a valid promotion option, valid choices are -> Queen, Rook, Knight, Bishop'
-  end
-
   def reset_display
     system 'clear'
     @game.board_display.display_board
