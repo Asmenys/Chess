@@ -17,7 +17,8 @@ require_relative 'movement_clock'
 require_relative 'move_logger'
 require_relative 'active_color_clock'
 require_relative 'command_interpreter'
-
+require_relative 'display/player_display'
+require_relative 'player'
 class Game
   include Piece_creation
   include Path_utilities
@@ -34,6 +35,7 @@ class Game
     @movement_logger = Move_logger.new(active_color_clock)
     @game_display = Game_display.new(self)
     @command_interpreter = Command_interpreter.new
+    @player = Player.new
   end
 
   def self_to_fen
@@ -46,7 +48,7 @@ class Game
     game_result_message = ''
     until is_game_over?
       @game_display.display_state_of_the_game
-      until valid_piece_selection?(player_game_input = get_player_game_input)
+      until valid_piece_selection?(player_game_input = get_valid_player_game_input)
         next unless @command_interpreter.is_a_command?(player_game_input)
 
         command_execution_results = @command_interpreter.execute_command(player_game_input)
@@ -66,11 +68,11 @@ class Game
     @game_display.game_result_announcement(game_result_message)
   end
 
-  def get_player_game_input
-    @game_display.choose_piece_or_command_menu
-    until valid_player_game_input?(player_game_input = gets.chomp)
+  def get_valid_player_game_input
+    @player.player_display.choose_piece_or_command
+    until valid_player_game_input?(player_game_input = @player.get_game_input)
       @game_display.reset_display
-      @game_display.prompt_to_choose_piece_after_invalid_choice
+      @player.player_display.choose_piece_or_command
     end
     player_game_input
   end
@@ -78,6 +80,7 @@ class Game
   def valid_player_game_input?(player_game_input)
     @command_interpreter.is_a_command?(player_game_input) || valid_piece_selection?(player_game_input)
   end
+
   def game_turn(piece_selection)
     movement_direction = get_movement_direction_from_player(piece_selection)
     will_capture = @movement.will_result_in_capture?(movement_direction)
@@ -139,9 +142,9 @@ class Game
   end
 
   def get_player_promotion_selection
-    @game_display.promt_to_choose_promotion
+    @player.player_display.promt_to_choose_promotion
     until valid_promotion_selection?(choice = gets.chomp)
-      @game_display.promt_to_choose_promotion_after_invalid
+      @player.player_display.promt_to_choose_promotion_after_invalid
     end
     choice
   end
@@ -180,9 +183,9 @@ class Game
 
   def get_valid_destination_selection(notation_array)
     destination_count = notation_array.length - 1
-    @game_display.prompt_to_choose_destination
+    @player.player_display.prompt_to_choose_destination
     until valid_destination_selection?(choice = gets.chomp, notation_array)
-      @game_display.promt_to_choose_destination_after_invalid_choice
+      @player.player_display.promt_to_choose_destination_after_invalid_choice
     end
     choice
   end

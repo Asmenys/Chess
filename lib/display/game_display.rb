@@ -41,10 +41,6 @@ class Game_display
     announce_turn(@game.active_color_clock.fen_to_color)
   end
 
-  def choose_piece_or_command_menu
-    puts 'Enter the location of a piece you would like to move or ls for possible commands'
-  end
-
   def display_destinations(destination_array)
     result_string = ''
     destination_array.each_with_index do |destination, index|
@@ -78,29 +74,5 @@ class Game_display
 
   def prompt_possible_movements
     puts 'This piece has the following movements available to it'
-  end
-
-  def prompt_whether_wants_to_move_with_this_piece
-    puts 'Do you wish to move with this piece? Y/n'
-  end
-
-  def prompt_to_choose_destination
-    puts 'Choose a destination from the following list'
-  end
-
-  def promt_to_choose_destination_after_invalid_choice
-    puts 'Please choose a valid destination from the following list'
-  end
-
-  def promt_to_choose_piece
-    puts 'Choose a piece on the board using its coordinates'
-  end
-
-  def prompt_to_choose_piece_after_invalid_choice
-    puts "Please choose a valid location on the board. A valid location is considered a location that holds a piece belonging to you written in board coordinates as such 'e4', 'a8'."
-  end
-
-  def choose_another
-    puts 'Would you like to choose another piece?'
   end
 end

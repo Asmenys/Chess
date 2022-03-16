@@ -8,13 +8,13 @@ describe Game do
 
   describe '#is_a_command?' do
     context 'given a string returns a bool' do
-      it 'when the string represents a command returns true' do
+      xit 'when the string represents a command returns true' do
         expect(default_game.is_a_command?('resign')).to be true
       end
-      it 'when the string does not represent a command returns false' do
+      xit 'when the string does not represent a command returns false' do
         expect(default_game.is_a_command?('whatever')).to be false
       end
-      it 'when the string is empty returns false' do
+      xit 'when the string is empty returns false' do
         expect(default_game.is_a_command?('')).to be false
       end
     end
@@ -29,14 +29,14 @@ describe Game do
   describe '#game_loop' do
     context 'plays the game' do
       it 'fools gambit leads into a black win' do
-        allow(default_game).to receive(:get_player_game_input).and_return('f7', 'e2', 'g7', 'd1')
+        allow(default_game).to receive(:get_valid_player_game_input).and_return('f7', 'e2', 'g7', 'd1')
         allow(default_game).to receive(:get_valid_destination_selection).and_return('f6', 'e4', 'g5', 'h5')
         allow(default_game).to receive(:player_would_like_to_propose_draw?).and_return(false)
         expect(default_game.game_loop).to eq('black Wins the game!')
       end
       it 'dutch defense results in white win' do
-        allow(default_game).to receive(:get_player_game_input).and_return('d7', 'f2', 'c8', 'h2', 'g4', 'g2', 'e7', 'g4',
-                                                                          'd8')
+        allow(default_game).to receive(:get_valid_player_game_input).and_return('d7', 'f2', 'c8', 'h2', 'g4', 'g2', 'e7', 'g4',
+                                                                                'd8')
         allow(default_game).to receive(:get_valid_destination_selection).and_return('d5', 'f4', 'g4', 'h3', 'h5', 'g4',
                                                                                     'e5', 'h5', 'h4')
         allow(default_game).to receive(:player_would_like_to_propose_draw?).and_return(false)
