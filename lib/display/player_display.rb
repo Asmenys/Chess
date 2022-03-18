@@ -32,5 +32,4 @@ class Player_display
   def promt_to_choose_promotion_after_invalid
     puts 'Please choose a valid promotion option, valid choices are -> Queen, Rook, Knight, Bishop'
   end
-
 end

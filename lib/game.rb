@@ -19,6 +19,7 @@ require_relative 'active_color_clock'
 require_relative 'command_interpreter'
 require_relative 'display/player_display'
 require_relative 'player'
+require_relative 'save_game'
 class Game
   include Piece_creation
   include Path_utilities
@@ -35,7 +36,7 @@ class Game
     @active_color_clock = active_color_clock
     @movement_logger = Move_logger.new(active_color_clock)
     @game_display = Game_display.new(self)
-    @command_interpreter = Command_interpreter.new(@player)
+    @command_interpreter = Command_interpreter.new(@player, Save_game.new(self))
   end
 
   def self_to_fen
