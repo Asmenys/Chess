@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Command_interpreter
+  def initialize(player)
+    @player = player
+  end
   def execute_command(command)
     command_result_message = ''
     command_direction = Command_directions.new
@@ -10,7 +13,7 @@ class Command_interpreter
       # command_result_message = 'game has been saved'
       # does not work yet, need to refactor into a save_game class
     when 'draw'
-      if player_agrees_to_a_draw?
+      if @player.agrees_to_a_draw?
         command_direction.ends_the_game = true
         command_result_message = 'Players have agreed to a draw'
       end

@@ -27,6 +27,7 @@ class Game
   attr_accessor :board
 
   def initialize(board, movement_manager, active_color_clock, movement_clock)
+    @player = Player.new
     @board = board
     @board_display = Board_display.new(board)
     @movement_clock = movement_clock
@@ -34,8 +35,7 @@ class Game
     @active_color_clock = active_color_clock
     @movement_logger = Move_logger.new(active_color_clock)
     @game_display = Game_display.new(self)
-    @command_interpreter = Command_interpreter.new
-    @player = Player.new
+    @command_interpreter = Command_interpreter.new(@player)
   end
 
   def self_to_fen
