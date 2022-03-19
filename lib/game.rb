@@ -112,47 +112,12 @@ class Game
     result
   end
 
-  def would_players_like_to_draw?
-    @game_display.reset_display
-    if player_would_like_to_propose_draw?
-      @game_display.reset_display
-      result = player_agrees_to_a_draw?
-    end
-    reset_display
-    result
-  end
-
-  def player_would_like_to_propose_draw?
-    puts 'would you like to propose a draw Y/n'
-    response = gets.chomp
-    %w[Y y].include?(response)
-  end
-
-  def player_agrees_to_a_draw?
-    puts 'Would you like to agree to draw?'
-    response = gets.chomp
-    %w[Y y].include?(response)
-  end
-
   def convert_pawn(movement_direction)
     promotion_choice = get_player_promotion_selection
     piece_color = @active_color_clock.fen_to_color
     new_piece = create_piece(piece_color, promotion_choice)
     new_piece.moved
     @board.set_square_to(movement_direction.destination, new_piece)
-  end
-
-  def get_player_promotion_selection
-    @player.player_display.promt_to_choose_promotion
-    until valid_promotion_selection?(choice = gets.chomp)
-      @player.player_display.promt_to_choose_promotion_after_invalid
-    end
-    choice
-  end
-
-  def valid_promotion_selection?(choice)
-    valid_conversions = %w[Rook Queen Knight Bishop]
-    valid_conversions.include?(choice)
   end
 
   def get_movement_direction_from_player(piece_selection)

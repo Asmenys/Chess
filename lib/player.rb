@@ -44,4 +44,9 @@ class Player
     end
     choice
   end
+
+  def valid_promotion_selection?(choice)
+    valid_conversions = %w[Rook Queen Knight Bishop]
+    valid_conversions.include?(choice)
+  end
 end
