@@ -17,7 +17,7 @@ class Player
 
   def would_players_like_to_draw?
     @game_display.reset_display
-    if player_would_like_to_propose_draw?
+    if would_like_to_propose_draw?
       @game_display.reset_display
       result = agrees_to_a_draw?
     end
