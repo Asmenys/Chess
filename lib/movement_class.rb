@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'pry-byebug'
 class Movement
   include Path_utilities
   include Location_conversion
