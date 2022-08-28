@@ -15,6 +15,7 @@ A simple CLI implementation of the notorious board game Chess in ruby.
  - Draw: Propose a draw, upon both parties agreeing to the draw ends the game.
  
  **SPECIAL**
+ - Option parser: parse arguments sent from the terminal.
  - The board: The board is flipped upside down, this is a feature, not a mistake.
  - Pawn Jumps: Pawn pieces may jump two cells if possible.
  - Promotions: Pawns may promote to other pieces if conditions are right.
