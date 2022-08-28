@@ -1,8 +1,25 @@
-# Chess
-A cli implementation of the chess game.
+#Chess
 
-Chess is a simple player versus player game.
+A simple CLI implementation of the notorious board game Chess in ruby.
 
-Created for personal learning purposes.
+ ##How to play
+ 1. Clone the repository.
+ 2. Launch the script.rb using your ruby interpreter.
+ 3. Enjoy.
 
-So far this has been the biggest project I've made so far. The creation process was made possible by minor appliance of OOP concepts, testing and especially planning. My negligence for planning has taught me a big lesson in how important it is for big projects such as this. Testing has made the development process much easier than it could have been, the ability to spot issues early on and being very useful for refactoring some of the code made this project doable. Regarding the OOP concepts, I've gotten a chance to refresh my knowledge on concepts like inheritance and SOLID although I've still got much to learn.
+###Features
+ ##Core
+ - Chess checks: Prevents any moves that would leave the king under a check as such moves are illegal.
+ - Captures: Removes pieces if they are attacked by an enemy.
+ - Resign: Resign/Exit the game.
+ - Draw: Propose a draw, upon both parties agreeing to the draw ends the game.
+ 
+ **SPECIAL**
+ - The board: The board is flipped upside down, this is a feature, not a mistake.
+ - Pawn Jumps: Pawn pieces may jump two cells if possible.
+ - Promotions: Pawns may promote to other pieces if conditions are right.
+ - Castling: Kings may castle with either left or right rook if conditions are right.
+ - En Passant: Pawns may be captured after a double jump.
+
+ 
+
