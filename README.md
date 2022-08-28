@@ -4,7 +4,7 @@ A simple CLI implementation of the notorious board game Chess in ruby.
 
  ## How to play
  1. Clone the repository.
- 2. Launch the script.rb using your ruby interpreter.
+ 2. Execute script.rb for further instructions or simply execute it with the `-p` flag i.e `ruby script.rb -p`.
  3. Enjoy.
 
 ### Features
