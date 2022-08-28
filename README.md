@@ -1,13 +1,13 @@
-#Chess
+# Chess
 
 A simple CLI implementation of the notorious board game Chess in ruby.
 
- ##How to play
+ ## How to play
  1. Clone the repository.
  2. Launch the script.rb using your ruby interpreter.
  3. Enjoy.
 
-###Features
+### Features
  ##Core
  - Chess checks: Prevents any moves that would leave the king under a check as such moves are illegal.
  - Captures: Removes pieces if they are attacked by an enemy.
