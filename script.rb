@@ -1,5 +1,4 @@
 require_relative 'lib/load_game.rb'
-require 'pry-byebug'
 require 'optparse'
 
 options = {}
