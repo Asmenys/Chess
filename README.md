@@ -7,8 +7,8 @@ A simple CLI implementation of the notorious board game Chess in ruby.
  2. Execute script.rb for further instructions or simply execute it with the `-p` flag i.e `ruby script.rb -p`.
  3. Enjoy.
 
-### Features
-## Core
+## Features
+### Core
  - Chess checks: Prevents any moves that would leave the king under a check as such moves are illegal.
  - Captures: Removes pieces if they are attacked by an enemy.
  - Resign: Resign/Exit the game.
