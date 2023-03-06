@@ -22,5 +22,6 @@ A simple CLI implementation of the notorious board game Chess in ruby.
  - Castling: Kings may castle with either left or right rook if conditions are right.
  - En Passant: Pawns may be captured after a double jump.
 
- 
-
+ ### Implementation
+ - Over 150 rspec tests covering the functionallity of the application writen following TDD principles.
+ - Design based on OOP paradigms.
